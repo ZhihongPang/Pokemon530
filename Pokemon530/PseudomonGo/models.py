@@ -7,6 +7,9 @@ class Player(models.Model):
     level = models.IntegerField()
     num_animals = models.IntegerField()
 
+    def __str__(self):
+        return self.username
+
 
 class Animal(models.Model):
     owner_id = models.ForeignKey(Player, on_delete=models.CASCADE)
@@ -19,6 +22,9 @@ class Animal(models.Model):
     defense = models.FloatField()
     speed = models.FloatField()
 
+    def __str__(self):
+        return self.animal_name
+
 
 class Robot(models.Model):
     type = models.CharField(max_length=25)
@@ -26,3 +32,6 @@ class Robot(models.Model):
     attack = models.FloatField()
     defense = models.FloatField()
     speed = models.FloatField()
+
+    def __str__(self):
+        return self.robot_type
