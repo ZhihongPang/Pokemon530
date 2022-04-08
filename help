@@ -1,0 +1,7 @@
+Getting Started
+
+1. git clone Django project to local machine: https://github.com/ZhihongPang/Pokemon530.git
+2. Make sure you're within you're virtual environment
+3. Run `pip install -r requirements.txt` to get all the dependencies required
+4. Make a new feature branch for any stories (format: feature/foo)
+5. Once completed, create a PR to merge your feaure branch on the develop branch
