@@ -1,0 +1,19 @@
+<html>
+<head>
+    <title>{% block title %}Battle System Beta{% endblock %}</title>
+</head>
+
+<body>
+    <h1>Battle</h1>
+    <form action="/battle/" method="post">
+        <label for="battle">player: </label>
+        <select>
+            <option disabled selected value> -- select an option -- </option>
+            {% for p in players %}
+                <option>{{p.id}} {{ p.username }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Select">
+    </form>
+</body>
+</html>

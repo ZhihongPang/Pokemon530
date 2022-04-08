@@ -17,4 +17,8 @@ class AnimalSerializer(serializers.ModelSerializer):
 class RobotSerializer(serializers.ModelSerializer):
     class Meta:
         model = Robot
-        fields = ('id','type','health','attack','defense','speed')
+        fields = ('id','robot_type','health','attack','defense','speed')
+
+class InventorySerializer(serializers.Serializer):
+    player = PlayerSerializer()
+    animals = AnimalSerializer(many=True)

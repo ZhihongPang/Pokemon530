@@ -1,7 +1,11 @@
 from django.shortcuts import render
+from django.http.response import JsonResponse
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
-from .serializer import PlayerSerializer, AnimalSerializer, RobotSerializer
-from .models import Player, Animal, Robot
+from rest_framework.decorators import api_view
+
+from .serializer import *
+from .models import *
 
 
 # Create your views here.
@@ -17,11 +21,28 @@ class RobotView(viewsets.ModelViewSet):
     serializer_class = RobotSerializer
     queryset = Robot.objects.all()
 
-def battle(request):
-    import requests
+class PlayerInventoryViewSet(viewsets.ViewSet):
+    """
+    A simple API ViewSet for listing the Player and their owned Animals.
+    """
+    serializer_class = RobotSerializer
+    queryset = Robot.objects.all()
+    
+    @api_view(['GET'])
+    def list(self, pk):
+        from collections import namedtuple
 
-    animals = requests.get('http://127.0.0.1:8000/api/animals/?format=json')
-    robots = requests.get('http://127.0.0.1:8000/api/robots/?format=json')
+        Inventory = namedtuple('Inventory', ('player', 'animals'))
+        inventory = Inventory(
+            player=get_object_or_404(Player, pk=pk),
+            animals=Animal.objects.filter(owner_id=pk),
+        )
+        serializer = InventorySerializer(inventory)
+        return JsonResponse(serializer.data)
+
+def battle_system_beta(request):
+    if request.method == 'POST':
+        pass
     return render(request, 'battle.html', {
-        'animals':animals, 'robots':robots
+        'players': Player.objects.all(),
     })
