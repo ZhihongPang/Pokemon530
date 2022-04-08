@@ -27,7 +27,7 @@ class Animal(models.Model):
 
 
 class Robot(models.Model):
-    type = models.CharField(max_length=25)
+    robot_type = models.CharField(max_length=25)
     health = models.FloatField()
     attack = models.FloatField()
     defense = models.FloatField()
