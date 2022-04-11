@@ -40,9 +40,12 @@ class PlayerInventoryViewSet(viewsets.ViewSet):
         serializer = InventorySerializer(inventory)
         return JsonResponse(serializer.data)
 
-def battle_system_beta(request):
-    if request.method == 'POST':
-        pass
+def BattleSystem(request, pk):
     return render(request, 'battle.html', {
-        'players': Player.objects.all(),
+        'player': get_object_or_404(Player, pk=pk).username,
+        'animals': Animal.objects.filter(owner_id=pk),
+        'robots': Robot.objects.all()
     })
+
+def Index(request):
+    return render(request, 'index.html')

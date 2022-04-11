@@ -1,19 +1,64 @@
-<html>
+<!doctype html>
+<html lang="en">
 <head>
+    {% load static %}
     <title>{% block title %}Battle System Beta{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
 <body>
-    <h1>Battle</h1>
-    <form action="/battle/" method="post">
-        <label for="battle">player: </label>
-        <select>
-            <option disabled selected value> -- select an option -- </option>
-            {% for p in players %}
-                <option>{{p.id}} {{ p.username }}</option>
-            {% endfor %}
-        </select>
-        <input type="submit" value="Select">
-    </form>
+    <h1 class="text-center mb-5">Battle Demo: Player {{ player }}</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm text-center">
+                <label for="animal">Pick</label>
+                <select id="animal-dropdown" onchange="animal();">
+                    <option disabled selected value> -- select an animal -- </option>
+                    {% for a in animals %}
+                        <option value="{{ a.id }}">{{ a.animal_name }}</option>
+                    {% endfor %}
+                </select>
+                <h2>Animal Picked</h2>
+                <img src="..." alt="..." class="img-thumbnail">
+                <p>Animal Name: <span id="animal-picked"></span></p>
+                <p>Animal HP: <span id="animal-hp" class="text-success"></span></p>
+                <button id="animal-atk" onclick="battle();" disabled type="button" class="btn btn-danger">ATTACK</button>
+                <button type="button" class="btn btn-primary">DEFEND</button>
+                <button type="button" class="btn btn-success">SOMETHING ELSE</button>
+            </div>
+
+            <div class="col-sm text-center border border-primary">Animations here...</div>
+
+            <div class="col-sm text-center">
+                <label for="robot">Pick</label>
+                <select id="robot-dropdown" onchange="robot();" disabled>
+                    <option disabled selected value> -- select a robot -- </option>
+                    {% for r in robots %}
+                        <option value="{{ r.id }}">{{ r.robot_type }}</option>
+                    {% endfor %}
+                </select>
+                <h2>Robot Picked</h2>
+                <img src="..." alt="..." class="img-thumbnail">
+                <p>Robot Type: <span id="robot-picked"></span></p>
+                <p>Robot HP: <span id="robot-hp" class="text-danger"></span></p>
+            </div>
+        </div> 
+    </div>
+    <div class="container text-center mt-5">
+        <h2>Battle log: <span id="status" class="text-danger">just started</span></h2>
+        <h2 id="winner" class="text-success"></h2>
+    </div>
+    <div class="text-center mt-5 ml-5 mr-5 border border-warning">
+        <p>
+            💡How it works💡: Battle demo is getting JavaScript from /static/ and getting animal data via our (api/animals/pk) every time the option changes in the dropdown 
+            -- same with robots (api/robots/pk).
+        </p>
+        <p><strong>TODO</strong> After match ends, HTTP PUT needs to occur to send data to app server about player/animal stats post Robot match. Also implement <strong>DEFEND</strong>, etc...</p>
+    </div>
+    <script src="{% static 'battle.js' %}"></script>   
 </body>
 </html>

@@ -24,7 +24,8 @@ router.register(r'animals', views.AnimalView, 'animal')
 router.register(r'robots', views.RobotView, 'robot')
 
 urlpatterns = [
+    path('', views.Index, name='home'),
     path('api/', include(router.urls)),
     path('api/players/<int:pk>/inventory', views.PlayerInventoryViewSet.list, name='player inventory'),
-    path('battle/', views.battle_system_beta, name='battle')
+    path('battle/<int:pk>', views.BattleSystem, name='battle')
 ]
