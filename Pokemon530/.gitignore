@@ -274,7 +274,7 @@ pip-selfcheck.json
 
 # IntelliJ
 /out/
-
+ 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
 
