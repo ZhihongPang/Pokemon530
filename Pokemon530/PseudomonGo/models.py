@@ -35,3 +35,4 @@ class Robot(models.Model):
 
     def __str__(self):
         return self.robot_type
+

@@ -47,4 +47,5 @@ class Migration(migrations.Migration):
                 ('owner_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='PseudomonGo.player')),
             ],
         ),
+
     ]
