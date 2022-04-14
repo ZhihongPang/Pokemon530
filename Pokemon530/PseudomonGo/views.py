@@ -5,8 +5,8 @@ from rest_framework import viewsets
 from rest_framework.decorators import api_view
 
 from .serializer import *
-from .models import *
-
+from .admin import *
+from Pokemon530 import settings
 
 # Create your views here.
 class PlayerView(viewsets.ModelViewSet):
@@ -49,3 +49,7 @@ def BattleSystem(request, pk):
 
 def Index(request):
     return render(request, 'index.html')
+
+# calls map html to load
+def map(request):
+    return render(request, 'map.html')
