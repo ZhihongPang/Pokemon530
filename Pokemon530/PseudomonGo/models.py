@@ -67,14 +67,30 @@ class Move(models.Model):
     def_multiplier = models.FloatField(default=1)
     spd_multiplier = models.FloatField(default=1)
     move_description = models.CharField(max_length=150)
+
+    ATTACK = 'A'
+    STATUS = 'S'
     MOVE_TYPE = [
-        ('A', 'Attack'),
-        ('S', 'Status'),
+        (ATTACK, 'Attack'),
+        (STATUS, 'Status'),
     ]
-    target = [
-        ('S', 'Self'),
-        ('O', 'Opponent'),
+    move_type = models.CharField(
+        max_length=2,
+        choices=MOVE_TYPE,
+        default=ATTACK,
+    )
+
+    SELF = 'S'
+    OPPONENT = 'O'
+    TARGET = [
+        (SELF, 'Self'),
+        (OPPONENT, 'Opponent'),
     ]
+    target = models.CharField(
+        max_length=2,
+        choices=TARGET,
+        default=OPPONENT,
+    )
 
     def __str__(self):
         return self.move_name
@@ -82,13 +98,25 @@ class Move(models.Model):
 
 class Item(models.Model):
     item_name = models.CharField(max_length=25)
+
+    COMMON = 'C'
+    UNCOMMON = 'U'
+    RARE = 'R'
+    EPIC = 'E'
+    LEGENDARY = 'L'
     ITEM_RARITY = [
-        ('C', 'Common'),
-        ('U', 'Uncommon'),
-        ('R', 'Rare'),
-        ('E', 'Epic'),
-        ('L', 'Legendary'),
+        (COMMON, 'Common'),
+        (UNCOMMON, 'Uncommon'),
+        (RARE, 'Rare'),
+        (EPIC, 'Epic'),
+        (LEGENDARY, 'Legendary'),
     ]
+    item_rarity = models.CharField(
+        max_length=2,
+        choices=ITEM_RARITY,
+        default=COMMON,
+    )
+
     item_cost = models.IntegerField
     item_type = models.CharField(max_length=25)
     item_description = models.CharField(max_length=150)
