@@ -1,38 +1,106 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 # Create your models here.
+# Player Model linked to the auth_user model
 class Player(models.Model):
-    username = models.CharField(max_length=50)
-    level = models.IntegerField()
-    num_animals = models.IntegerField()
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    level = models.IntegerField(default=1)
+    num_animals = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.username
+        return self.user.username
+
+
+class EntityClass(models.Model):
+    class_name = models.CharField(max_length=50)
+    class_description = models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.class_name
+
+
+class Entity(models.Model):
+    entity_name = models.CharField(max_length=50)
+    entity_class = models.ForeignKey(EntityClass, on_delete=models.CASCADE)
+    base_atk = models.IntegerField
+    Base_def = models.IntegerField
+    Base_hp = models.IntegerField
+    entity_desc = models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.entity_name
 
 
 class Animal(models.Model):
-    owner_id = models.ForeignKey(Player, on_delete=models.CASCADE)
+    player = models.ForeignKey(Player, on_delete=models.CASCADE)
+    animal_species = models.ForeignKey(Entity, on_delete=models.CASCADE)
+    animal_class = models.ForeignKey(EntityClass, on_delete=models.CASCADE, null=True)
     animal_name = models.CharField(max_length=50)
-    animal_type = models.CharField(max_length=50)
-    animal_species = models.CharField(max_length=50)
     photograph_path = models.CharField(max_length=100)
-    health = models.FloatField()
-    attack = models.FloatField()
-    defense = models.FloatField()
-    speed = models.FloatField()
+    health = models.IntegerField()
+    attack = models.IntegerField()
+    defense = models.IntegerField()
+    speed = models.IntegerField()
 
     def __str__(self):
         return self.animal_name
 
 
-class Robot(models.Model):
-    robot_type = models.CharField(max_length=25)
-    health = models.FloatField()
-    attack = models.FloatField()
-    defense = models.FloatField()
-    speed = models.FloatField()
+class StatusCondition(models.Model):
+    status_name = models.CharField(max_length=25)
 
     def __str__(self):
-        return self.robot_type
+        return self.status_name
 
+
+class Move(models.Model):
+    entity_class = models.ManyToManyField(EntityClass)
+    entity = models.ManyToManyField(Entity)
+    move_name = models.CharField(max_length=50)
+    status_inflicted = models.ForeignKey(StatusCondition, on_delete=models.CASCADE)
+    infliction_chance = models.IntegerField
+    accuracy = models.IntegerField
+    base_damage = models.IntegerField(default=0)
+    atk_multiplier = models.FloatField(default=1)
+    def_multiplier = models.FloatField(default=1)
+    spd_multiplier = models.FloatField(default=1)
+    move_description = models.CharField(max_length=150)
+    MOVE_TYPE = [
+        ('A', 'Attack'),
+        ('S', 'Status'),
+    ]
+    target = [
+        ('S', 'Self'),
+        ('O', 'Opponent'),
+    ]
+
+    def __str__(self):
+        return self.move_name
+
+
+class Item(models.Model):
+    item_name = models.CharField(max_length=25)
+    ITEM_RARITY = [
+        ('C', 'Common'),
+        ('U', 'Uncommon'),
+        ('R', 'Rare'),
+        ('E', 'Epic'),
+        ('L', 'Legendary'),
+    ]
+    item_cost = models.IntegerField
+    item_type = models.CharField(max_length=25)
+    item_description = models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.item_name
+
+
+class PlayerInventory(models.Model):
+    player_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    item_id = models.ForeignKey(Item, on_delete=models.CASCADE)
+    amount = models.IntegerField
+
+    def __str__(self):
+        return self
