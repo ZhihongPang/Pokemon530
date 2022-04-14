@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django_google_maps import fields as map_fields
 
+
 # Create your models here.
 # Player Model linked to the auth_user model
 class Player(models.Model):
@@ -131,8 +132,9 @@ class PlayerInventory(models.Model):
     amount = models.IntegerField
 
     def __str__(self):
-        return self
-
+        return self 
+      
+      
 # prepares for a widget location
 class Rental(models.Model):
     address = map_fields.AddressField(max_length=200)
