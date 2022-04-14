@@ -17,5 +17,5 @@ from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('PseudomonGo.urls'))
+    path('', include('PseudomonGo.urls')),
 ]
