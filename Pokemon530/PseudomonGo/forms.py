@@ -3,5 +3,5 @@ from .models import AnimalImage
 
 class ImageForm(forms.ModelForm):
     class Meta:
-        model= AnimalImage
-        fields= ["name", "animal_description", "image_file"]
+        model = AnimalImage
+        fields = ["name", "animal_description", "image_file"]

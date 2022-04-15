@@ -53,13 +53,22 @@ class Animal(models.Model):
 
 class AnimalImage(models.Model):
     # player_id = models.ForeignKey(Player, on_delete=models.CASCADE)
-    name= models.CharField(max_length=500)
+    name = models.CharField(max_length=500)
     animal_description = models.TextField(max_length=500)
     image_file = models.FileField(upload_to='images/', null=True, verbose_name="")
     pub_date = models.DateTimeField('date published',default=timezone.now)
 
     def __str__(self):
         return self.name + ": " + str(self.image_file)
+
+    def was_published_recently(self):
+        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+    
+    def has_animal_name(self):
+        return self.name
+        
+    def has_animal_description(self):
+        return self.animal_description
 
 
 class StatusCondition(models.Model):
