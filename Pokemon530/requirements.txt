@@ -1,8 +1,3 @@
-# Pokemon530
-You need python 3.9 to build this Django Project
-
-Here are all the dependencies required for this project to work:
------------------------------------------------------------------
 asgiref==3.5.0
 certifi==2021.10.8
 charset-normalizer==2.0.12

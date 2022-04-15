@@ -1,4 +1,5 @@
 """Pokemon530 URL Configuration
+
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.0/topics/http/urls/
 Examples:
@@ -13,11 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
-from django.conf import settings
-from django.conf.urls.static import static
+from django.urls import path, include
+from rest_framework import routers
+from PseudomonGo import views
+
+router = routers.DefaultRouter()
+# router.register(r'players', views.PlayerView, 'player')
+# router.register(r'animals', views.AnimalView, 'animal')
+# router.register(r'entities', views.EntityView, 'entity')
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('PseudomonGo.urls')),
-] + static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
+    path('', views.Index, name='home'),
+    # path('api/', include(router.urls)),
+    path('animals/', views.AnimalUpload, name="Upload"),
+    path('api/players/<int:pk>/inventory', views.PlayerInventoryViewSet.list, name='player inventory'),
+    path('battle/<int:pk>', views.BattleSystem, name='battle')
+]
