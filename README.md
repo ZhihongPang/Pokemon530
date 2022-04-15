@@ -31,5 +31,10 @@ $ python manage.py runserver
 * 2nd command is to start up the project using the Django framework
 * Note that you may need to run `$ python manage.py migrate` if you haven't migrated any of the models to your local SQLite DB
 * The app should be running in port :8000 by default
+* IMPORTANT: If your app is still not running, you will need to store a SECRET_KEY in an env file for Django to work properly. See [here](https://docs.gitguardian.com/secrets-detection/detectors/specifics/django_secret_key) for more info.
 ## Testing
 * All tests are stored in PseudomonGo/tests.py
+* To run the test suite:
+```bash
+$ python managge.py test
+```
