@@ -8,7 +8,8 @@ from rest_framework.decorators import api_view
 from .serializer import *
 from .models import *
 from .forms import ImageForm
-
+from .admin import *
+from Pokemon530 import settings
 
 # Create your views here.
 class PlayerView(viewsets.ModelViewSet):
@@ -67,3 +68,7 @@ def AnimalUpload(request):
 
 def Index(request):
     return render(request, 'index.html')
+
+# calls map html to load
+def map(request):
+    return render(request, 'map.html')

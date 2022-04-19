@@ -28,5 +28,6 @@ urlpatterns = [
     # path('api/', include(router.urls)),
     path('animals/', views.AnimalUpload, name="Upload"),
     path('api/players/<int:pk>/inventory', views.PlayerInventoryViewSet.list, name='player inventory'),
-    path('battle/<int:pk>', views.BattleSystem, name='battle')
+    path('battle/<int:pk>', views.BattleSystem, name='battle'),
+    path("map/", views.map, name="map")
 ]
