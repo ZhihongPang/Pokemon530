@@ -19,13 +19,14 @@ from rest_framework import routers
 from PseudomonGo import views
 
 router = routers.DefaultRouter()
-router.register(r'players', views.PlayerView, 'player')
-router.register(r'animals', views.AnimalView, 'animal')
-router.register(r'robots', views.RobotView, 'robot')
+# router.register(r'players', views.PlayerView, 'player')
+# router.register(r'animals', views.AnimalView, 'animal')
+# router.register(r'entities', views.EntityView, 'entity')
 
 urlpatterns = [
     path('', views.Index, name='home'),
-    path('api/', include(router.urls)),
+    # path('api/', include(router.urls)),
+    path('animals/', views.AnimalUpload, name="Upload"),
     path('api/players/<int:pk>/inventory', views.PlayerInventoryViewSet.list, name='player inventory'),
     path('battle/<int:pk>', views.BattleSystem, name='battle'),
     path("map/", views.map, name="map")

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Player,Animal,Robot
+from .models import Player,Animal,Entity
 
 
 class PlayerSerializer(serializers.ModelSerializer):
@@ -10,14 +10,18 @@ class PlayerSerializer(serializers.ModelSerializer):
 class AnimalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Animal
-        fields = ('id','owner_id','animal_name','animal_type',
-                    'animal_species','photograph_path','health',
-                    'attack','defense','speed')
+        # We can expand on this idea later
+        # fields = ('id','owner_id','animal_name','animal_type',
+        #             'animal_species','photograph_path','health',
+        #             'attack','defense','speed')
+        # for now, this is the bare minimum required
+        fields = ('player_id', 'animal_name', 'photo_path', 'animal_description')
 
-class RobotSerializer(serializers.ModelSerializer):
+class EntitySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Robot
-        fields = ('id','robot_type','health','attack','defense','speed')
+        model = Entity
+        fields = ('entity_name','entity_class','entity_desc',
+                    'health','attack','defense','speed')
 
 class InventorySerializer(serializers.Serializer):
     player = PlayerSerializer()

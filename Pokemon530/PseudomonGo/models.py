@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
+import datetime
+from django.utils import timezone
 from django_google_maps import fields as map_fields
+
 
 
 # Create your models here.
@@ -35,18 +38,39 @@ class Entity(models.Model):
 
 
 class Animal(models.Model):
-    player = models.ForeignKey(Player, on_delete=models.CASCADE)
-    animal_species = models.ForeignKey(Entity, on_delete=models.CASCADE)
-    animal_class = models.ForeignKey(EntityClass, on_delete=models.CASCADE, null=True)
+    player_id = models.ForeignKey(Player, on_delete=models.CASCADE)
     animal_name = models.CharField(max_length=50)
-    photograph_path = models.CharField(max_length=100)
-    health = models.IntegerField()
-    attack = models.IntegerField()
-    defense = models.IntegerField()
-    speed = models.IntegerField()
+    photo_path = models.CharField(max_length=100)    
+    animal_description = models.TextField(max_length=500)
+
+    # animal_species = models.ForeignKey(Entity, on_delete=models.CASCADE)
+    # animal_class = models.ForeignKey(EntityClass, on_delete=models.CASCADE, null=True)
+    # health = models.IntegerField()
+    # attack = models.IntegerField()
+    # defense = models.IntegerField()
+    # speed = models.IntegerField()
 
     def __str__(self):
         return self.animal_name
+
+class AnimalImage(models.Model):
+    # player_id = models.ForeignKey(Player, on_delete=models.CASCADE)
+    name = models.CharField(max_length=500)
+    animal_description = models.TextField(max_length=500)
+    image_file = models.FileField(upload_to='images/', null=True, verbose_name="")
+    pub_date = models.DateTimeField('date published',default=timezone.now)
+
+    def __str__(self):
+        return self.name + ": " + str(self.image_file)
+
+    def was_published_recently(self):
+        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+    
+    def has_animal_name(self):
+        return self.name
+        
+    def has_animal_description(self):
+        return self.animal_description
 
 
 class StatusCondition(models.Model):
