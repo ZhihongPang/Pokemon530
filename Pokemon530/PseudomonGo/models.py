@@ -5,11 +5,11 @@ from django.utils import timezone
 from django_google_maps import fields as map_fields
 
 
-
 # Create your models here.
 # Player Model linked to the auth_user model
 class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    experience = models.IntegerField(default=0)
     level = models.IntegerField(default=1)
     num_animals = models.IntegerField(default=0)
 
@@ -38,23 +38,26 @@ class Entity(models.Model):
 
 
 class Animal(models.Model):
-    player_id = models.ForeignKey(Player, on_delete=models.CASCADE)
+    player = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     animal_name = models.CharField(max_length=50)
     photo_path = models.CharField(max_length=100)    
     animal_description = models.TextField(max_length=500)
 
-    # animal_species = models.ForeignKey(Entity, on_delete=models.CASCADE)
-    # animal_class = models.ForeignKey(EntityClass, on_delete=models.CASCADE, null=True)
-    # health = models.IntegerField()
-    # attack = models.IntegerField()
-    # defense = models.IntegerField()
-    # speed = models.IntegerField()
+    animal_species = models.ForeignKey(Entity, on_delete=models.CASCADE, default=1)
+    animal_class = models.ForeignKey(EntityClass, on_delete=models.CASCADE, default=1)
+    health = models.IntegerField(default=100)
+    attack = models.IntegerField(default=1)
+    defense = models.IntegerField(default=1)
+    speed = models.IntegerField(default=1)
+    level = models.IntegerField(default=1)
+    experience = models.IntegerField(default=0)
 
     def __str__(self):
         return self.animal_name
 
+
 class AnimalImage(models.Model):
-    # player_id = models.ForeignKey(Player, on_delete=models.CASCADE)
+    player = models.ForeignKey(Player, on_delete=models.CASCADE, default=1)
     name = models.CharField(max_length=500)
     animal_description = models.TextField(max_length=500)
     image_file = models.FileField(upload_to='images/', null=True, verbose_name="")
@@ -139,9 +142,26 @@ class Item(models.Model):
     item_rarity = models.CharField(
         max_length=2,
         choices=ITEM_RARITY,
-        default=COMMON,
-    )
-
+        default=COMMON,)
+    healing = models.IntegerField(default=0)
+    ATK = 'AT'
+    DEF = 'D'
+    SPD = 'S'
+    NONE = 'N'
+    ALL = 'AL'
+    STAT_BUFFED = [
+        (ATK, 'Attack'),
+        (DEF, 'Defense'),
+        (SPD, 'Speed'),
+        (NONE, 'None'),
+        (ALL, 'ALL')
+    ]
+    stat_buffed = models.CharField(
+        max_length=4,
+        choices=STAT_BUFFED,
+        default=NONE)
+    buff_multiplier = models.IntegerField(default=1)
+    status_cured = models.CharField(max_length=25, default='none')
     item_cost = models.IntegerField
     item_type = models.CharField(max_length=25)
     item_description = models.CharField(max_length=150)
@@ -156,7 +176,7 @@ class PlayerInventory(models.Model):
     amount = models.IntegerField
 
     def __str__(self):
-        return self 
+        return self.player_id
       
       
 # prepares for a widget location
