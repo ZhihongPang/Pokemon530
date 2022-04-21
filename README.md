@@ -38,4 +38,4 @@ Most API access is restricted to authenticated users for security reasons. You *
 <br />
 Head over to [/admin](http://127.0.0.1:8000/admin/) and login. You should be able to access most API routes at [/api](http://127.0.0.1:8000/api/) if done correctly. Some APIs are not listed there so check out `PseudomonGo/urls.py`
 ## ToDo
-- [ ] For prod releases -- Set `DEBUG = False` to disable browsable API (or don't since this is just a school project 🤷)
+- [ ] For prod releases -- Set `DEBUG = False` to disable browsable API!
