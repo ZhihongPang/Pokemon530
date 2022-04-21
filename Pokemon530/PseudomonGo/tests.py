@@ -59,4 +59,4 @@ class EntityClassTestCase(TestCase):
         en_1 = EntityClass.objects.get(class_name="Foo")
         en_2 = EntityClass.objects.get(class_name="Baz")
         self.assertEqual(str(en_1), 'Foo')
-        self.assertEqual(str(en_1), 'Baz')
+        self.assertEqual(str(en_2), 'Baz')

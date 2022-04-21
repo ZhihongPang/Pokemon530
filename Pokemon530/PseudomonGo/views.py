@@ -1,4 +1,5 @@
 from pdb import lasti2lineno
+from django import views
 from django.shortcuts import render
 from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404
@@ -9,44 +10,70 @@ from .serializer import *
 from .models import *
 from .forms import ImageForm
 from .admin import *
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from Pokemon530 import settings
 
-# Create your views here.
+
+'''
+Basic views for all models in .models to be accessed in /api
+'''
+class UserView(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+    permission_classes = [AllowAny]
+
 class PlayerView(viewsets.ModelViewSet):
     serializer_class = PlayerSerializer
     queryset = Player.objects.all()
+    permission_classes = [IsAuthenticated]
 
-# class AnimalView(viewsets.ModelViewSet):
-#     serializer_class = AnimalSerializer
-#     queryset = Animal.objects.all()
+class EntityClassView(viewsets.ModelViewSet):
+    serializer_class = EntityClassSerializer
+    queryset = EntityClass.objects.all()
 
 class EntityView(viewsets.ModelViewSet):
     serializer_class = EntitySerializer
     queryset = Entity.objects.all()
 
-class PlayerInventoryViewSet(viewsets.ViewSet):
-    """
-    A simple API ViewSet for listing the Player and their owned Animals.
-    """
-    serializer_class = EntitySerializer
-    queryset = Entity.objects.all()
-    
-    @api_view(['GET'])
-    def list(self, pk):
-        from collections import namedtuple
+class AnimalView(viewsets.ModelViewSet):
+    serializer_class = AnimalSerializer
+    queryset = Animal.objects.all()
+    permission_classes = [IsAuthenticated]
 
-        Inventory = namedtuple('Inventory', ('player', 'animals'))
-        inventory = Inventory(
-            player = get_object_or_404(Player, pk=pk),
-            animals = Animal.objects.filter(owner_id=pk),
-        )
-        serializer = InventorySerializer(inventory)
-        return JsonResponse(serializer.data)
+class AnimalImageView(viewsets.ModelViewSet):
+    serializer_class = AnimalImageSerializer
+    queryset = AnimalImage.objects.all()
+    permission_classes = [IsAuthenticated]
 
-def BattleSystem(request, pk):
+class StatusConditionView(viewsets.ModelViewSet):
+    serializer_class = StatusConditionSerializer
+    queryset = StatusCondition.objects.all()
+    permission_classes = [IsAuthenticated]
+
+class MoveView(viewsets.ModelViewSet):
+    serializer_class = MoveSerializer
+    queryset = Move.objects.all()
+
+class ItemView(viewsets.ModelViewSet):
+    serializer_class = ItemSerializer
+    queryset = Item.objects.all()
+    permission_classes = [IsAuthenticated]
+
+class PlayerInventoryView(viewsets.ModelViewSet):
+    serializer_class = PlayerInventorySerializer
+    queryset = PlayerInventory.objects.all()
+    permission_classes = [IsAuthenticated]
+
+class RentalView(viewsets.ModelViewSet):
+    serializer_class = RentalSerializer
+    queryset = Rental.objects.all()
+
+
+# custom views go here
+
+def battleSystem(request):
     return render(request, 'battle.html', {
-        'player': get_object_or_404(Player, pk=pk).username,
-        'animals': Animal.objects.filter(owner_id=pk),
+        'animals': Animal.objects.all(),
         'entities': Entity.objects.all()
     })
 
@@ -66,7 +93,7 @@ def AnimalUpload(request):
       
     return render(request, 'images.html', context)
 
-def Index(request):
+def index(request):
     return render(request, 'index.html')
 
 # calls map html to load
