@@ -18,7 +18,7 @@ GOOGLE_API_KEY=[YOUR_KEY]
 ```bash
 $ cd Pokemon530
 $ pip install -r requirements.txt 	# Download all python dependencies for the project
-$ python manage.py migrate 			# Migrate models to your local database
+$ python manage.py migrate          # Migrate models to your local database
 $ python manage.py runserver 		# Start up the project using Django
 ```
 **NOTE:**
@@ -36,6 +36,6 @@ $ python manage.py test PseudomonGo/tests   # runs unit tests in /tests
 ## For Developers
 Most API access is restricted to authenticated users for security reasons. You **may** need to create an [admin user](https://docs.djangoproject.com/en/1.8/intro/tutorial02/#creating-an-admin-user) to access them
 <br />
-Head over to [/admin](http://127.0.0.1:8000/admin/) and login. You should be able to access all API routes at [/api](http://127.0.0.1:8000/api/) if done correctly
+Head over to [/admin](http://127.0.0.1:8000/admin/) and login. You should be able to access all API routes at [/api](http://127.0.0.1:8000/api/) if done correctly. Some APIs are not listed there so check out `PseudomonGo/urls.py`
 ## ToDo
 - [ ] For prod releases -- Set `DEBUG = False` to disable browsable API (or don't since this is just a school project 🤷)

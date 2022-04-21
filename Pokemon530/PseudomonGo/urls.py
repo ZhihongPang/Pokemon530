@@ -38,6 +38,10 @@ router.register(r'rentals', views.RentalView, 'rental')
 
 urlpatterns = [
     path('api/', include(router.urls)), # For Devs -- Core API routes
+    path('api/register/', views.RegisterView.as_view(), name='register'),
+    path('api/login/', views.LoginView.as_view(), name='login'),
+    path('api/authenticated-user/', views.AuthenticatedUserView.as_view(), name='authenticated-user'),
+    path('api/logout/', views.LogoutView.as_view(), name='logout'),
     path('', views.index, name='home'), # this needs to redirect to the main dashboard page
 
     # app pages' routes go here

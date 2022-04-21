@@ -4,7 +4,11 @@ from django.shortcuts import render
 from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
-from rest_framework.decorators import api_view
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.exceptions import AuthenticationFailed
+
+import jwt, datetime
 
 from .serializer import *
 from .models import *
@@ -15,12 +19,11 @@ from Pokemon530 import settings
 
 
 '''
-Basic views for all models in .models to be accessed in /api
+Basic Model API Views for all models in .models to be accessed in /api
 '''
 class UserView(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
-    permission_classes = [AllowAny]
 
 class PlayerView(viewsets.ModelViewSet):
     serializer_class = PlayerSerializer
@@ -68,9 +71,78 @@ class RentalView(viewsets.ModelViewSet):
     serializer_class = RentalSerializer
     queryset = Rental.objects.all()
 
+'''
+Other API views go here
+'''
+class RegisterView(APIView):
+    permission_classes = [AllowAny]
 
-# custom views go here
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
+class LoginView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        email = request.data['email']
+        password = request.data['password']
+        user = User.objects.filter(email=email).first()
+        if user is None:
+            raise AuthenticationFailed('User not found')
+        if not user.check_password(password):
+            raise AuthenticationFailed('Incorrect password')
+
+        payload = {
+            'id': user.id,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+            'iat': datetime.datetime.utcnow()
+        }
+
+        token = jwt.encode(payload, 'secret', algorithm='HS256').decode('utf-8')
+        response = Response()
+        response.set_cookie(key='pseudomongo_jwt', value=token, httponly=True)
+        response.data = {
+            'pseudomongo_jwt': token
+        }
+        return response
+
+class AuthenticatedUserView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        token = request.COOKIES.get('pseudomongo_jwt')
+        if not token:
+            raise AuthenticationFailed('Unauthenticated')
+        try:
+            payload = jwt.decode(token, 'secret', algorithm=['HS256'])
+        except:
+            raise AuthenticationFailed('Unauthenticated')
+
+        user = User.objects.filter(id=payload['id']).first()
+        serializer = UserSerializer(user)
+        data = serializer.data
+        data.update({
+            'status': 'login success'
+        })
+        return Response(data)
+
+class LogoutView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        response = Response()
+        response.delete_cookie('pseudomongo_jwt')
+        response.data = {
+            'message': 'success'
+        }
+        return response
+
+'''
+Custom views go here
+'''
 def battleSystem(request):
     return render(request, 'battle.html', {
         'animals': Animal.objects.all(),

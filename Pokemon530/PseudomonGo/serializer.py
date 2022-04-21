@@ -8,7 +8,18 @@ Basic serializers for all models in .models
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'username', 'password', 'user_permissions')
+        fields = ('email', 'username', 'password')
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
+
+    def create(self, validated_data):
+        password = validated_data.pop('password', None)
+        instance = User(**validated_data)
+        if password is not None:
+            instance.set_password(password)
+        instance.save()
+        return instance
 
 class PlayerSerializer(serializers.ModelSerializer):
     class Meta:
