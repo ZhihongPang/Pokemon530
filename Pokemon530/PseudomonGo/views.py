@@ -74,8 +74,10 @@ class RentalView(viewsets.ModelViewSet):
 '''
 Other API views go here
 '''
+
+# api for registering a user
 class RegisterView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [AllowAny] # creating users is publicly available
 
     def post(self, request):
         serializer = UserSerializer(data=request.data)
@@ -83,8 +85,9 @@ class RegisterView(APIView):
         serializer.save()
         return Response(serializer.data)
 
+# api for logging in
 class LoginView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [AllowAny] # let logins be publicly available
 
     def post(self, request):
         email = request.data['email']
@@ -95,6 +98,7 @@ class LoginView(APIView):
         if not user.check_password(password):
             raise AuthenticationFailed('Incorrect password')
 
+        # set cookie properties for token
         payload = {
             'id': user.id,
             'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
@@ -109,6 +113,7 @@ class LoginView(APIView):
         }
         return response
 
+# api for checking if user is logged in
 class AuthenticatedUserView(APIView):
     permission_classes = [AllowAny]
 
@@ -129,6 +134,7 @@ class AuthenticatedUserView(APIView):
         })
         return Response(data)
 
+# api for deleeting the cookie -> logs out curr user
 class LogoutView(APIView):
     permission_classes = [AllowAny]
 

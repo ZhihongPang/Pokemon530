@@ -23,7 +23,7 @@ from PseudomonGo import views
 Core APIs for standard actions across the app
 '''
 router = routers.DefaultRouter()
-router.register(r'users', views.UserView, 'user') # this is especially useful for the login page
+router.register(r'users', views.UserView, 'user')
 router.register(r'players', views.PlayerView, 'player')
 router.register(r'entity-classes', views.EntityClassView, 'entity-class')
 router.register(r'entities', views.EntityView, 'entity')
@@ -38,6 +38,8 @@ router.register(r'rentals', views.RentalView, 'rental')
 
 urlpatterns = [
     path('api/', include(router.urls)), # For Devs -- Core API routes
+
+    # for creating users and logging them in/out
     path('api/register/', views.RegisterView.as_view(), name='register'),
     path('api/login/', views.LoginView.as_view(), name='login'),
     path('api/authenticated-user/', views.AuthenticatedUserView.as_view(), name='authenticated-user'),

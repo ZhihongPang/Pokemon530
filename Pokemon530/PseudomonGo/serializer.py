@@ -13,6 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
             'password': {'write_only': True}
         }
 
+    # for post requests when creating a user via a login page
     def create(self, validated_data):
         password = validated_data.pop('password', None)
         instance = User(**validated_data)
