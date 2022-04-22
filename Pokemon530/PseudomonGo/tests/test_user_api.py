@@ -21,7 +21,7 @@ class UserAPITests(APITestCase):
 
     def test_login(self):
         data = {
-            'email': 'test@test.com',
+            'username': 'testuser',
             'password': '12345'
         }
         response = self.client.post('/api/login/', data)
