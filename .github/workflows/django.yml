@@ -7,18 +7,6 @@ defaults:
   working-directory: ./Pokemon530
 
 jobs:
-
-  create-envfile:
-
-      runs-on: ubuntu-latest
-
-      steps:
-      - name: Make envfile
-        uses: SpicyPizza/create-envfile@v1.3
-        with:
-          envkey_DEBUG: false
-          envkey_GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-          envkey_SECRET_KEY: ${{ secrets.SECRET_KEY }}
           
   build:
 
@@ -26,10 +14,16 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.9, 3.10]
+        python-version: [3.9]
 
     steps:
     - uses: actions/checkout@v3
+    - name: Create env file
+      run: |
+        touch .env
+        echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
+        echo GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }} >> .env
+        cat .env
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
