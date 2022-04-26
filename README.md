@@ -1,4 +1,6 @@
 # Pokemon530
+![django workflow](https://github.com/ZhihongPang/Pokemon530/actions/workflows/django.yml/badge.svg)
+<br />
 [Heroku Hosting Here (Coming Soon)](#)
 # Running the Django application
 ## System Requirements
