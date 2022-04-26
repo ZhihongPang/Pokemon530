@@ -47,11 +47,6 @@ class AnimalSerializer(serializers.ModelSerializer):
         # for now, this is the bare minimum required
         fields = ('player', 'animal_name', 'photo_path', 'animal_description')
 
-class AnimalImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AnimalImage
-        fields = '__all__'
-
 class StatusConditionSerializer(serializers.ModelSerializer):
     class Meta:
         model = StatusCondition

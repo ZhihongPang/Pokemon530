@@ -40,8 +40,9 @@ class Entity(models.Model):
 class Animal(models.Model):
     player = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     animal_name = models.CharField(max_length=50)
-    photo_path = models.CharField(max_length=100)    
     animal_description = models.TextField(max_length=500)
+    photo_path = models.FileField(upload_to='images/', null=True, verbose_name="")   
+    pub_date = models.DateTimeField('date published',default=timezone.now)
 
     animal_species = models.ForeignKey(Entity, on_delete=models.CASCADE, default=1)
     animal_class = models.ForeignKey(EntityClass, on_delete=models.CASCADE, default=1)
@@ -52,28 +53,45 @@ class Animal(models.Model):
     level = models.IntegerField(default=1)
     experience = models.IntegerField(default=0)
 
-    def __str__(self):
-        return self.animal_name
-
-
-class AnimalImage(models.Model):
-    player = models.ForeignKey(Player, on_delete=models.CASCADE, default=1)
-    name = models.CharField(max_length=500)
-    animal_description = models.TextField(max_length=500)
-    image_file = models.FileField(upload_to='images/', null=True, verbose_name="")
-    pub_date = models.DateTimeField('date published',default=timezone.now)
-
+    # the default string of the animal is the animal name + its image path
     def __str__(self):
         return self.name + ": " + str(self.image_file)
 
     def was_published_recently(self):
         return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
     
+    # use this function if you want just the name of the animal
     def has_animal_name(self):
         return self.name
         
     def has_animal_description(self):
         return self.animal_description
+
+class AnimalSpecies(models.Model):
+    pass
+
+class AnimalClass(models.Model):
+    pass
+
+# # outdated animal class
+# class AnimalImage(models.Model):
+#     player = models.ForeignKey(Player, on_delete=models.CASCADE, default=1)
+#     name = models.CharField(max_length=500)
+#     animal_description = models.TextField(max_length=500)
+#     image_file = models.FileField(upload_to='images/', null=True, verbose_name="")
+#     pub_date = models.DateTimeField('date published',default=timezone.now)
+
+#     def __str__(self):
+#         return self.name + ": " + str(self.image_file)
+
+#     def was_published_recently(self):
+#         return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+    
+#     def has_animal_name(self):
+#         return self.name
+        
+#     def has_animal_description(self):
+#         return self.animal_description
 
 
 class StatusCondition(models.Model):

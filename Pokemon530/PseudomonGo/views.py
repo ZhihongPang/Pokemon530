@@ -43,11 +43,6 @@ class AnimalView(viewsets.ModelViewSet):
     queryset = Animal.objects.all()
     permission_classes = [IsAuthenticated]
 
-class AnimalImageView(viewsets.ModelViewSet):
-    serializer_class = AnimalImageSerializer
-    queryset = AnimalImage.objects.all()
-    permission_classes = [IsAuthenticated]
-
 class StatusConditionView(viewsets.ModelViewSet):
     serializer_class = StatusConditionSerializer
     queryset = StatusCondition.objects.all()
@@ -156,7 +151,7 @@ def battleSystem(request):
     })
 
 def AnimalUpload(request):    
-    last_image = AnimalImage.objects.order_by('-pub_date')[:5]
+    last_image = Animal.objects.order_by('-pub_date')[:5]
     # image_file = last_image.image_file if last_image else None
     form = ImageForm(request.POST or None, request.FILES or None)
     
