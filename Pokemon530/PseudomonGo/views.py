@@ -150,7 +150,7 @@ class LogoutView(APIView):
 Custom views go here
 '''
 def battleSystem(request):
-    return render(request, 'battle.html', {
+    return render(request, 'PseudomonGo/battle.html', {
         'animals': Animal.objects.all(),
         'entities': Entity.objects.all()
     })
@@ -169,11 +169,11 @@ def AnimalUpload(request):
                 'form': form,
             }
       
-    return render(request, 'images.html', context)
+    return render(request, 'PseudomonGo/images.html', context)
 
 def index(request):
-    return render(request, 'index.html')
+    return render(request, 'PseudomonGo/index.html')
 
 # calls map html to load
 def map(request):
-    return render(request, 'map.html')
+    return render(request, 'PseudomonGo/map.html')
