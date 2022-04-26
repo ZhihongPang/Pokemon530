@@ -7,6 +7,19 @@ defaults:
   working-directory: ./Pokemon530
 
 jobs:
+
+  create-envfile:
+
+      runs-on: ubuntu-latest
+
+      steps:
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          envkey_DEBUG: false
+          envkey_GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          envkey_SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          
   build:
 
     runs-on: ubuntu-latest
