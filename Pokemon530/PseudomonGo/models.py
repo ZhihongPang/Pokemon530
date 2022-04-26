@@ -12,6 +12,7 @@ class Player(models.Model):
     experience = models.IntegerField(default=0)
     level = models.IntegerField(default=1)
     num_animals = models.IntegerField(default=0)
+    money = models.IntegerField(default=0)
 
     def __str__(self):
         return self.user.username
