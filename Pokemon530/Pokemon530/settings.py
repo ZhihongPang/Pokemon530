@@ -48,6 +48,15 @@ INSTALLED_APPS = [
     'rest_framework',
 ]
 
+# This is to restrict access to the API to admins only i.e. members of Pokemon530
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAdminUser',
+        #'rest_framework.permissions.IsAuthenticated'
+    ]
+}
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -136,7 +145,8 @@ GOOGLE_MAPS_API_KEY = 'GOOGLE_API_KEY'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
-     'http://localhost:3000',
+    'http://localhost:8000',
 ]
