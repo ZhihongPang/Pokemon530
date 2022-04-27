@@ -47,7 +47,7 @@ urlpatterns = [
     path('api/logout/', views.LogoutView.as_view(), name='logout'),
 
     # for developer documentation
-    path('docs/', views.index, name='home'),
+    path('docs/', views.index, name='docs'),
 
     # home page where the dashboard will be
     path('', TemplateView.as_view(template_name='PseudomonGo/home.html'), name='home'),
