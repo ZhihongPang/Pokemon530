@@ -29,9 +29,10 @@ class EntityClass(models.Model):
 class Entity(models.Model):
     entity_name = models.CharField(max_length=50)
     entity_class = models.ForeignKey(EntityClass, on_delete=models.CASCADE)
-    base_atk = models.IntegerField
-    Base_def = models.IntegerField
-    Base_hp = models.IntegerField
+    base_atk = models.IntegerField(default=75)
+    Base_def = models.IntegerField(default=50)
+    Base_hp = models.IntegerField(default=100)
+    Base_spd = models.IntegerField(default=50)
     entity_desc = models.CharField(max_length=150)
 
     def __str__(self):
@@ -90,7 +91,7 @@ class Move(models.Model):
     move_name = models.CharField(max_length=50)
     status_inflicted = models.ForeignKey(StatusCondition, on_delete=models.CASCADE)
     infliction_chance = models.IntegerField
-    accuracy = models.IntegerField
+    accuracy = models.IntegerField(default=100)
     base_damage = models.IntegerField(default=0)
     atk_multiplier = models.FloatField(default=1)
     def_multiplier = models.FloatField(default=1)
@@ -163,7 +164,7 @@ class Item(models.Model):
         default=NONE)
     buff_multiplier = models.IntegerField(default=1)
     status_cured = models.CharField(max_length=25, default='none')
-    item_cost = models.IntegerField
+    item_cost = models.IntegerField(default=0)
     item_type = models.CharField(max_length=25)
     item_description = models.CharField(max_length=150)
 
@@ -172,12 +173,12 @@ class Item(models.Model):
 
 
 class PlayerInventory(models.Model):
-    player_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    item_id = models.ForeignKey(Item, on_delete=models.CASCADE)
-    amount = models.IntegerField
+    player = models.ForeignKey(User, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    amount = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.player_id
+        return self.player.username+"-"+self.item.item_name
       
       
 # prepares for a widget location
