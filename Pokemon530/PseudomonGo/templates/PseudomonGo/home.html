@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="{% url 'home' %}">Welcome, {{ user.username }}</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+              <a class="nav-link" href="{% url 'battle' %}">Battle</a>
+              <a class="nav-link" href="{% url 'map' %}">Map</a>
+              <a class="nav-link" href="{% url 'Upload' %}">Upload</a>
+
+              <!-- Would love to get these 2 to float right somehow... -->
+              <a class="nav-link text-info" href="{% url 'password_reset' %}">Reset Password</a>
+              <a class="nav-link text-danger" href="{% url 'logout' %}">Log Out</a>
+            </div>
+          </div>
+        </div>
+    </nav>
+    <!-- This is only a sample dashboard -->
+    <div class="text-center">
+        <h1>Hello!</h1>
+        <p>Your Current Progess:</p>
+        <div class="container" id="user-current-stats">
+            <div class="row">
+              <div class="col">
+                {{ user.username }}'s Stats
+                <div class="progress mb-3">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%">
+                        CURRENT LEVEL: 75
+                    </div>
+                </div>
+                <div class="progress mb-3">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 85%">
+                        ACQUIRED MONEY: 85
+                    </div>
+                </div>
+                <div class="progress mb-3">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 65%">
+                        ANIMALS OWNED: 65
+                    </div>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                        CURRENT HEALTH: 100
+                    </div>
+                </div>
+              </div>
+              <div class="col">
+                {{ user.username }}'s Animals
+                <div class="list-group">
+                    <button type="button" class="list-group-item list-group-item-action active" aria-current="true">
+                      Charmander
+                    </button>
+                    <button type="button" class="list-group-item list-group-item-action">Pikachu</button>
+                    <button type="button" class="list-group-item list-group-item-action">Squirtle</button>
+                    <button type="button" class="list-group-item list-group-item-action">Foo</button>
+                    <button type="button" class="list-group-item list-group-item-action" disabled>Bar</button>
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="container mt-5" id="user-items">
+            <h3>Your Items</h3>
+            <div class="container">
+                <div class="row">
+                  <div class="col">
+                    <div class="card" style="width: 18rem;">
+                        <img src="https://static.wikia.nocookie.net/minecraft/images/2/23/EyeOfEnder.png/revision/latest/scale-to-width-down/250?cb=20200325012255" class="card-img-top" alt="...">
+                        <div class="card-body">
+                          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="card" style="width: 18rem;">
+                        <img src="https://cpng.pikpng.com/pngl/s/413-4131312_diamond-item-minecraft-blue-minecraft-diamond-no-background.png" class="card-img-top" alt="...">
+                        <div class="card-body">
+                          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="card" style="width: 18rem;">
+                        <img src="https://static.wikia.nocookie.net/minecraft_gamepedia/images/7/75/Water_Bottle_JE2_BE2.png/revision/latest/smart/width/250/height/250?cb=20191027055423" class="card-img-top" alt="...">
+                        <div class="card-body">
+                          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+</div>
+{% else %}
+<nav class="navbar navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">PseudomonGo</a>
+      
+    </div>
+</nav>
+<div class="text-center">
+    <p>You are not logged in</p>
+    <a href="{% url 'login' %}">Log In</a>
+    |
+    <a href="{% url 'signup' %}">Sign Up</a>
+    |
+    <a href="{% url 'password_reset' %}">Reset Password</a>
+</div>
+{% endif %}
+{% endblock %}
