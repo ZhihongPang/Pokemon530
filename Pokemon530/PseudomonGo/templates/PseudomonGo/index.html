@@ -1,4 +1,12 @@
 <!doctype html>
+{% load static %}
+
+<link
+rel="stylesheet"
+type="text/css"
+href="{% static 'PseudomonGo/css/bootstrap.css' %}"
+/>
+
 <html>
     <head>
         <title>Our Funky HTML Page</title>
@@ -6,15 +14,23 @@
         <meta name="keywords" content="html tutorial template">
     </head>
     <body>
+        <div class="card" style="width: 18rem;">
+            <img src="{% static 'PseudomonGo/img/Tigers.jpg' %}" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Look at these tigers go!!!</h5>
+                <p class="card-text">An example card! You can put any text on here, like options for a menu!</p>
+                <a href="#" class="btn btn-primary">This button goes nowhere but it can go somewhere :)</a>
+            </div>
+        </div>
         <h1>PseudomonGo Content goes here</h1>
-        <img src="https://media.giphy.com/media/6sBo35faOCdVe/giphy.gif" alt="funny animation GIF"> 
+        <img src="https://media.giphy.com/media/6sBo35faOCdVe/giphy.gif" alt="funny animation GIF">
         <p>Notable links</p>
         <ul>
             <li><a href="http://127.0.0.1:8000/api">/api</a> (Index of APIs)</li>
-            <li>/api/register (API for user registration)</li>
-            <li>/api/login (API for user login)</li>
-            <li>/api/authenticated-user (API for user authentication)</li>
-            <li>/api/logout (API for user logging out)</li>
+            <li><a href="http://127.0.0.1:8000/api/register">/api/register</a> (API for user registration)</li>
+            <li><a href="http://127.0.0.1:8000/api/login">/api/login</a> (API for user login)</li>
+            <li><a href="http://127.0.0.1:8000/api/authenticated-user">/api/authenticated-user</a> (API for user authentication)</li>
+            <li><a href="http://127.0.0.1:8000/api/logout">/api/logout</a>  (API for user logging out)</li>
             <li><a href="http://127.0.0.1:8000/animals">/animals</a> (Upload an Animal photo here)</li>
             <li><a href="http://127.0.0.1:8000/map">/map</a> (displays the map)</li>
             <li><a href="http://127.0.0.1:8000/battle">/battle</a> (Battle system demo as per story)</li>
