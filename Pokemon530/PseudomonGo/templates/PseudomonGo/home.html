@@ -25,81 +25,11 @@
           </div>
         </div>
     </nav>
-    <!-- This is only a sample dashboard -->
-    <div class="text-center">
-        <h1>Hello!</h1>
-        <p>Your Current Progess:</p>
-        <div class="container" id="user-current-stats">
-            <div class="row">
-              <div class="col">
-                {{ user.username }}'s Stats
-                <div class="progress mb-3">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%">
-                        CURRENT LEVEL: 75
-                    </div>
-                </div>
-                <div class="progress mb-3">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 85%">
-                        ACQUIRED MONEY: 85
-                    </div>
-                </div>
-                <div class="progress mb-3">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 65%">
-                        ANIMALS OWNED: 65
-                    </div>
-                </div>
-                <div class="progress">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                        CURRENT HEALTH: 100
-                    </div>
-                </div>
-              </div>
-              <div class="col">
-                {{ user.username }}'s Animals
-                <div class="list-group">
-                    <button type="button" class="list-group-item list-group-item-action active" aria-current="true">
-                      Charmander
-                    </button>
-                    <button type="button" class="list-group-item list-group-item-action">Pikachu</button>
-                    <button type="button" class="list-group-item list-group-item-action">Squirtle</button>
-                    <button type="button" class="list-group-item list-group-item-action">Foo</button>
-                    <button type="button" class="list-group-item list-group-item-action" disabled>Bar</button>
-                  </div>
-              </div>
-            </div>
-        </div>
-        <div class="container mt-5" id="user-items">
-            <h3>Your Items</h3>
-            <div class="container">
-                <div class="row">
-                  <div class="col">
-                    <div class="card" style="width: 18rem;">
-                        <img src="https://static.wikia.nocookie.net/minecraft/images/2/23/EyeOfEnder.png/revision/latest/scale-to-width-down/250?cb=20200325012255" class="card-img-top" alt="...">
-                        <div class="card-body">
-                          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        </div>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="card" style="width: 18rem;">
-                        <img src="https://cpng.pikpng.com/pngl/s/413-4131312_diamond-item-minecraft-blue-minecraft-diamond-no-background.png" class="card-img-top" alt="...">
-                        <div class="card-body">
-                          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        </div>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="card" style="width: 18rem;">
-                        <img src="https://static.wikia.nocookie.net/minecraft_gamepedia/images/7/75/Water_Bottle_JE2_BE2.png/revision/latest/smart/width/250/height/250?cb=20191027055423" class="card-img-top" alt="...">
-                        <div class="card-body">
-                          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        </div>
-                    </div>
-                  </div>
-                </div>
-            </div>
-        </div>
-    </div> 
+    <!-- This is where the dashboard will be -->
+    <main id="dashboard" class="text-center">
+        <h1>Hello, {{ user.username }}. Your dashboard is still under construction.</h1>
+        <p>In the meantime, check out our developer docs <a href="{% url 'docs' %}">HERE</a></p>
+    </main> 
 </div>
 {% else %}
 <nav class="navbar navbar-light bg-light">
