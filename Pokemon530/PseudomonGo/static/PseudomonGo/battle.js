@@ -7,6 +7,7 @@
 let a_atk = 100;
 let a_hp = 100;
 let a_name = "";
+let a_photo = "asdfdasfasd";
 //and of the robot
 let r_atk = 100;
 let r_hp = 100;
@@ -16,9 +17,6 @@ let r_type = "";
 const animal = async () => {
     let a_dd = document.getElementById("animal-dropdown");
     a_name = a_dd.options[a_dd.selectedIndex].text;
-    document.getElementById("animal-picked").innerHTML = a_name;
-    document.getElementById("animal-hp").innerHTML = a_hp; //starting hp
-    document.getElementById("robot-dropdown").disabled = false;
 
     //dictate how to fetch animal battle stats given url of api
     const a_url = "http://127.0.0.1:8000/api/animals/"+a_dd.value+"/?format=json";
@@ -33,10 +31,16 @@ const animal = async () => {
             let animal = data;
             a_atk = animal['attack'];
             a_hp = animal['health'];
+            a_photo = animal['photo_path']
         })
         .catch((error) => {
             console.log(error);
         });
+
+    document.getElementById("animal-picked").innerHTML = a_name;
+    document.getElementById("animal-hp").innerHTML = a_hp; //starting hp
+    document.getElementById("robot-dropdown").disabled = false;
+    document.getElementById("animal-photo").src = "/static/PseudomonGo/animalimg/"+a_photo;
 };
 
 const robot = async () => {
