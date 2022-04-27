@@ -45,7 +45,7 @@ class AnimalSerializer(serializers.ModelSerializer):
         #             'animal_species','photograph_path','health',
         #             'attack','defense','speed')
         # for now, this is the bare minimum required
-        fields = ('player', 'animal_name', 'photo_path', 'animal_description')
+        fields = '__all__'
 
 class AnimalImageSerializer(serializers.ModelSerializer):
     class Meta:

@@ -20,7 +20,7 @@ class Player(models.Model):
 
 class EntityClass(models.Model):
     class_name = models.CharField(max_length=50)
-    class_description = models.CharField(max_length=150)
+    class_description = models.CharField(max_length=500)
 
     def __str__(self):
         return self.class_name
@@ -33,7 +33,7 @@ class Entity(models.Model):
     Base_def = models.IntegerField(default=50)
     Base_hp = models.IntegerField(default=100)
     Base_spd = models.IntegerField(default=50)
-    entity_desc = models.CharField(max_length=150)
+    entity_desc = models.CharField(max_length=500)
 
     def __str__(self):
         return self.entity_name
@@ -90,13 +90,13 @@ class Move(models.Model):
     entity = models.ManyToManyField(Entity)
     move_name = models.CharField(max_length=50)
     status_inflicted = models.ForeignKey(StatusCondition, on_delete=models.CASCADE)
-    infliction_chance = models.IntegerField
+    infliction_chance = models.IntegerField(default=100)
     accuracy = models.IntegerField(default=100)
     base_damage = models.IntegerField(default=0)
     atk_multiplier = models.FloatField(default=1)
     def_multiplier = models.FloatField(default=1)
     spd_multiplier = models.FloatField(default=1)
-    move_description = models.CharField(max_length=150)
+    move_description = models.CharField(max_length=500)
 
     ATTACK = 'A'
     STATUS = 'S'
@@ -166,7 +166,7 @@ class Item(models.Model):
     status_cured = models.CharField(max_length=25, default='none')
     item_cost = models.IntegerField(default=0)
     item_type = models.CharField(max_length=25)
-    item_description = models.CharField(max_length=150)
+    item_description = models.CharField(max_length=500)
 
     def __str__(self):
         return self.item_name

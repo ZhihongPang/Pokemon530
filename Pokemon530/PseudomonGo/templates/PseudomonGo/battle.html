@@ -7,8 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-</head>
+    <link
+            rel="stylesheet"
+            type="text/css"
+            href="{% static 'PseudomonGo/css/bootstrap.css' %}"
+    /></head>
 
 <body>
     <h1 class="text-center mb-5">Battle Demo: Player {{ player }}</h1>
@@ -26,9 +29,23 @@
                 <img src="..." alt="..." class="img-thumbnail">
                 <p>Animal Name: <span id="animal-picked"></span></p>
                 <p>Animal HP: <span id="animal-hp" class="text-success"></span></p>
-                <button id="animal-atk" onclick="battle();" disabled type="button" class="btn btn-danger">ATTACK</button>
-                <button type="button" class="btn btn-primary">DEFEND</button>
-                <button type="button" class="btn btn-success">SOMETHING ELSE</button>
+                <!-- <button id="animal-atk" onclick="battle();" disabled type="button" class="btn btn-danger">ATTACK</button> -->
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" class="btn btn-primary">Move 1</button>
+                            <button type="button" class="btn btn-primary">Move 2</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" class="btn btn-primary">Move 3</button>
+                            <button type="button" class="btn btn-primary">Move 4</button>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary">Item</button>
+                <button type="button" class="btn btn-success">RUN</button>
             </div>
 
             <div class="col-sm text-center border border-primary">Animations here...</div>

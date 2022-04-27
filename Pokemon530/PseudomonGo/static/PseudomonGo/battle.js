@@ -23,6 +23,8 @@ const animal = async () => {
     //dictate how to fetch animal battle stats given url of api
     const a_url = "http://127.0.0.1:8000/api/animals/"+a_dd.value+"/?format=json";
     console.log(a_url);
+    const test = fetch(a_url);
+    console.log(test);
     await fetch(a_url)
         .then((response) => {
             return response.json();
