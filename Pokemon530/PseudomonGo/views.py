@@ -18,7 +18,7 @@ from .serializer import *
 from .models import *
 from .forms import ImageForm
 from .admin import *
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import BasePermission,AllowAny, IsAuthenticated, SAFE_METHODS
 from Pokemon530 import settings
 
 
@@ -37,10 +37,12 @@ class PlayerView(viewsets.ModelViewSet):
 class EntityClassView(viewsets.ModelViewSet):
     serializer_class = EntityClassSerializer
     queryset = EntityClass.objects.all()
+    permission_classes = [IsAuthenticated]
 
 class EntityView(viewsets.ModelViewSet):
     serializer_class = EntitySerializer
     queryset = Entity.objects.all()
+    permission_classes = [IsAuthenticated]
 
 class AnimalView(viewsets.ModelViewSet):
     serializer_class = AnimalSerializer
@@ -163,9 +165,13 @@ class SignUpView(generic.CreateView):
 Custom views go here
 '''
 def battleSystem(request):
+    robot_class = EntityClass.objects.filter(class_name="Robot")
+    auth = request.user
+    print(auth)
     return render(request, 'PseudomonGo/battle.html', {
-        'animals': Animal.objects.all(),
-        'entities': Entity.objects.all()
+        'player': request.user,
+        'animals': Animal.objects.filter(player=request.user),
+        'robots': Entity.objects.filter(entity_class=robot_class[0])
     })
 
 def AnimalUpload(request):    

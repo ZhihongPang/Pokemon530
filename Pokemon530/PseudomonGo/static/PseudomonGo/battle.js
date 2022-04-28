@@ -8,11 +8,13 @@ let a_atk = 100;
 let a_hp_max = 100;
 let a_hp_now = 100;
 let a_name = "";
-let a_photo = "asdfdasfasd";
+let a_photo = "";
 //and of the robot
+let r_name = ""
 let r_atk = 100;
 let r_hp = 100;
 let r_type = "";
+let r_photo = ""
 
 //dictate how the html page reacts to data changes
 const animal = async () => {
@@ -23,8 +25,6 @@ const animal = async () => {
     //dictate how to fetch animal battle stats given url of api
     const a_url = "http://127.0.0.1:8000/api/animals/"+a_dd.value+"/?format=json";
     console.log(a_url);
-    const test = fetch(a_url);
-    console.log(test);
     await fetch(a_url)
         .then((response) => {
             return response.json();
@@ -54,25 +54,27 @@ const animal = async () => {
 
 const robot = async () => {
     let r_dd = document.getElementById("robot-dropdown");
-    r_type =r_dd.options[r_dd.selectedIndex].text;
-    document.getElementById("robot-picked").innerHTML = r_type
-    document.getElementById("robot-hp").innerHTML = r_hp; //starting hp
-    document.getElementById("animal-atk").disabled = false;
+    r_type = r_dd.options[r_dd.selectedIndex].text;
 
     //dictate how to fetch robot battle stats given url of api
-    const r_url = "http://127.0.0.1:8000/api/robots/"+r_dd.value+"/?format=json";
+    const r_url = "http://127.0.0.1:8000/api/entities/"+r_dd.value+"/?format=json";
     await fetch(r_url)
         .then((response) => {
             return response.json();
         })
         .then((data) => {
             let robot = data;
-            r_atk = robot['attack'];
-            r_hp = robot['health'];
+            r_atk = robot['base_atk'];
+            r_hp = robot['base_hp'];
+            r_name = robot['entity_name']
         })
         .catch((error) => {
             console.log(error);
         });
+    document.getElementById("robot-picked").innerHTML = r_type
+    document.getElementById("robot-hp").innerHTML = r_hp; //starting hp
+    document.getElementById("robot-photo").src = "/static/PseudomonGo/animalimg/"+r_name+".webp";
+    document.getElementById("animal-atk").disabled = false;
 };
 
 const battle = () => {

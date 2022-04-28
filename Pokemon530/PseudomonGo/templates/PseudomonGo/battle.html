@@ -67,11 +67,11 @@
                 <select id="robot-dropdown" onchange="robot();" disabled>
                     <option disabled selected value> -- select a robot -- </option>
                     {% for r in robots %}
-                        <option value="{{ r.id }}">{{ r.robot_type }}</option>
+                        <option value="{{ r.id }}">{{ r.entity_name }}</option>
                     {% endfor %}
                 </select>
                 <h2>Robot Picked</h2>
-                <img src="..." alt="..." class="img-thumbnail">
+                <img src="" id="robot-photo" alt="..." class="img-thumbnail">
                 <p>Robot Type: <span id="robot-picked"></span></p>
                 <p>Robot HP: <span id="robot-hp" class="text-danger"></span></p>
             </div>

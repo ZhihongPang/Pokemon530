@@ -30,9 +30,9 @@ class Entity(models.Model):
     entity_name = models.CharField(max_length=50)
     entity_class = models.ForeignKey(EntityClass, on_delete=models.CASCADE)
     base_atk = models.IntegerField(default=75)
-    Base_def = models.IntegerField(default=50)
-    Base_hp = models.IntegerField(default=100)
-    Base_spd = models.IntegerField(default=50)
+    base_def = models.IntegerField(default=50)
+    base_hp = models.IntegerField(default=100)
+    base_spd = models.IntegerField(default=50)
     entity_desc = models.CharField(max_length=500)
 
     def __str__(self):
