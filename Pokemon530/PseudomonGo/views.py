@@ -11,15 +11,15 @@ from rest_framework.exceptions import AuthenticationFailed
 from .forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
+from django.http import HttpResponse
 
 import jwt, datetime
 
 from .serializer import *
 from .models import *
-from .forms import ImageForm
+from .forms import UploadForm, RateAnimalForm
 from .admin import *
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from Pokemon530 import settings
 
 
 '''
@@ -163,21 +163,52 @@ def battleSystem(request):
         'entities': Entity.objects.all()
     })
 
-def AnimalUpload(request):    
-    last_image = Animal.objects.order_by('-pub_date')[:5]
-    # image_file = last_image.image_file if last_image else None
-    form = ImageForm(request.POST or None, request.FILES or None)
-    
+# animal functions
+def animalUpload(request):
+    player_animals = Animal.objects.filter(player=request.user)
+    form = UploadForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         form.save()
-        
-    context= {
-                'last_animal': last_image,
-                # 'image_file': image_file,
+    context = {
+                'player_animals': player_animals,
                 'form': form,
             }
-      
-    return render(request, 'PseudomonGo/images.html', context)
+    return render(request, 'PseudomonGo/upload.html', context)
+
+def animalRemove(request):
+    player_animals = Animal.objects.filter(player=request.user)
+    remove = player_animals.filter(animal_name=request.POST.get("animal_name")) # delete all animals of the same name
+    remove.delete()
+        
+    context = {
+                'player_animals': player_animals
+            }
+    return render(request, 'PseudomonGo/remove.html', context)
+
+def animalView(request):
+    player_animals = Animal.objects.filter(player=request.user)
+    context = {
+                'player_animals': player_animals
+            }
+    return render(request, 'PseudomonGo/animals.html', context)
+
+def animals(request):
+    all_animals = Animal.objects.all()
+    context = {
+                'player_animals': all_animals
+            }
+    return render(request, 'PseudomonGo/animals.html', context)
+
+def animalReview(request, animal_id):
+    animal = get_object_or_404(Animal, slug=animal_id)
+    if request.method == "POST":
+        form = RateAnimalForm(request.POST)
+        if form.is_valid():
+            rating = Rating(animal=animal, rating=form.cleaned_data["rating"])
+            rating.save()
+    else:
+        form = RateAnimalForm()
+    return render(request, "PseudomonGo/review.html", {"animal": animal, "form": form})
 
 def index(request):
     return render(request, 'PseudomonGo/index.html')

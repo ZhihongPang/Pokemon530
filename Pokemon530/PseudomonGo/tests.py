@@ -15,8 +15,8 @@ class AnimalModelTests(TestCase):
         self.assertIs(animal.was_published_recently(), True)
     def test_animal_name(self):
         animal = Animal()
-        animal.name = "Horse"
-        self.assertIs(animal.has_animal_name(), "Horse")
+        animal.animal_name = "Horse"
+        self.assertIs(animal.animal_name, "Horse")
     def test_animal_description(self):
         animal=Animal()
         animal.animal_description = "This is a horse, trust me bro"
@@ -29,10 +29,10 @@ class AnimalModelTests(TestCase):
     # tests to see if the animal upload is correctly reflected in the database
     def test_animal_upload_name(self):
         animal = Animal()
-        animal.name = "Horse"
+        animal.animal_name = "Horse"
         animal.save()
         animal_from_database = Animal.objects.last() # the last entry to the databse should be made by the test case
-        self.assertEqual(animal_from_database.name, animal.name)
+        self.assertEqual(animal_from_database.animal_name, animal.animal_name)
     def test_animal_upload_description(self):
         animal = Animal()
         animal.animal_description = "This is a horse, trust me bro"

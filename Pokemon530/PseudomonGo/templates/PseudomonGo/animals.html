@@ -1,0 +1,14 @@
+{% block title %}All Animals {% endblock %}
+
+{% block content %}
+</ul>
+{% if player_animals %}
+    <ul>
+        {% for animal in player_animals %}
+        <li><a href="{% url 'animals' animal.slug %}">{{ animal.animal_name }}: </a><img src="{{ MEDIA_URL }}{{ animal.photo_path }}"></li>
+        {% endfor %}
+    </ul>
+    {% else %} 
+        <p> No animals in the database. </p>
+    {% endif %}
+{% endblock %}

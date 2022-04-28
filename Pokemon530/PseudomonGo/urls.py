@@ -56,7 +56,11 @@ urlpatterns = [
     path("accounts/signup/", views.SignUpView.as_view(), name="signup"),
 
     # app pages' routes go here
-    path('animals/', views.AnimalUpload, name="Upload"),
+    path('upload/', views.animalUpload, name="upload"),
+    path('remove/', views.animalRemove, name='remove'),
+    path('view/', views.animalView, name='view'),
+    path('animals/', views.animals, name='animals'),
+    path('animals/<slug:animal_id>', views.animalReview, name='animals'),
     path('battle/', views.battleSystem, name='battle'),
     path("map/", views.map, name="map")
 ]

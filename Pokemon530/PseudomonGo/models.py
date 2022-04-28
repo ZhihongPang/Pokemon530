@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 import datetime
 from django.utils import timezone
+from django.db.models import Avg
 from django_google_maps import fields as map_fields
 
 
@@ -40,9 +41,11 @@ class Entity(models.Model):
 
 
 class Animal(models.Model):
+    slug = models.SlugField(primary_key=True, max_length=200)
     player = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     animal_name = models.CharField(max_length=50)
     animal_description = models.TextField(max_length=500)
+    animal_location = models.CharField(max_length=50, verbose_name="Sighted Location")
     photo_path = models.FileField(upload_to='images/', null=True, verbose_name="")   
     pub_date = models.DateTimeField('date published',default=timezone.now)
 
@@ -57,44 +60,28 @@ class Animal(models.Model):
 
     # the default string of the animal is the animal name + its image path
     def __str__(self):
-        return self.name + ": " + str(self.image_file)
+        return self.animal_name
 
     def was_published_recently(self):
         return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
     
     # use this function if you want just the name of the animal
     def has_animal_name(self):
-        return self.name
+        return self.animal_name + ": " + str(self.photo_path)
         
     def has_animal_description(self):
         return self.animal_description
-
-class AnimalSpecies(models.Model):
-    pass
-
-class AnimalClass(models.Model):
-    pass
-
-# # outdated animal class
-# class AnimalImage(models.Model):
-#     player = models.ForeignKey(Player, on_delete=models.CASCADE, default=1)
-#     name = models.CharField(max_length=500)
-#     animal_description = models.TextField(max_length=500)
-#     image_file = models.FileField(upload_to='images/', null=True, verbose_name="")
-#     pub_date = models.DateTimeField('date published',default=timezone.now)
-
-#     def __str__(self):
-#         return self.name + ": " + str(self.image_file)
-
-#     def was_published_recently(self):
-#         return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
     
-#     def has_animal_name(self):
-#         return self.name
-        
-#     def has_animal_description(self):
-#         return self.animal_description
+    def avg_rating(self):
+        avg_rating = self.rating_set.all().aggregate(Avg("rating"))["rating__avg"]
+        if not avg_rating:
+            return "not rated"
+        else:
+            return round(avg_rating, 2)
 
+class Rating(models.Model):
+    animal = models.ForeignKey(Animal, on_delete=models.CASCADE)
+    rating = models.IntegerField()
 
 class StatusCondition(models.Model):
     status_name = models.CharField(max_length=25)
