@@ -190,12 +190,12 @@ def animalView(request):
     context = {
                 'player_animals': player_animals
             }
-    return render(request, 'PseudomonGo/animals.html', context)
+    return render(request, 'PseudomonGo/view.html', context)
 
 def animals(request):
     all_animals = Animal.objects.all()
     context = {
-                'player_animals': all_animals
+                'all_animals': all_animals
             }
     return render(request, 'PseudomonGo/animals.html', context)
 

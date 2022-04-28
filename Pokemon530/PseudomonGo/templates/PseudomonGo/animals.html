@@ -2,9 +2,9 @@
 
 {% block content %}
 </ul>
-{% if player_animals %}
+{% if all_animals %}
     <ul>
-        {% for animal in player_animals %}
+        {% for animal in all_animals %}
         <li><a href="{% url 'animals' animal.slug %}">{{ animal.animal_name }}: </a><img src="{{ MEDIA_URL }}{{ animal.photo_path }}"></li>
         {% endfor %}
     </ul>
