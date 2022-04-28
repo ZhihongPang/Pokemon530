@@ -215,7 +215,7 @@ header .logo span {
 
 @media only screen and (max-width: 768px){
 	header {
-		display: block;
+		display: block; 
 	}
 	.nav-btn {
 		display: block;
