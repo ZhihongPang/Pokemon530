@@ -1,23 +1,24 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Upload Animal</title>
+        <title>Animal Upload</title>
     </head>
     <body>
-        <h1>Animal Uploader</h1>
+        <h1>Upload Animal</h1>
         <form enctype="multipart/form-data" method="POST" action="">
             {% csrf_token %}
-            {{ form.as_p }}
-            <br>
-            <input type="submit" value="Upload"/>
+            {{ form.as_p }} <br>
+            <input type="submit" name="Upload" value="Upload"/>     
         </form>
         <br><br>
-        {% if last_animal %}
+        {% if player_animals %}
         <ul>
-            {% for animal in last_animal %}
-            <b>Animal Name: </b> {{ animal.name }} <br>
+            {% for animal in player_animals %}
+            <b>Animal Name: </b> {{ animal.animal_name }} <br>
             <b>Animal Description: </b> {{ animal.animal_description }} <br>
-            <img src="{{ MEDIA_URL }}{{ animal.image_file }}"> <br>
+            <b>Location Sighted: </b> {{ animal.animal_location }} <br>
+            
+            <img src="{{ MEDIA_URL }}{{ animal.photo_path }}"> <br>
             {% endfor %}
         </ul>
         {% else %} 

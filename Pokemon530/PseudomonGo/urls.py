@@ -29,7 +29,6 @@ router.register(r'players', views.PlayerView, 'player')
 router.register(r'entity-classes', views.EntityClassView, 'entity-class')
 router.register(r'entities', views.EntityView, 'entity')
 router.register(r'animals', views.AnimalView, 'animal')
-router.register(r'animal-images', views.AnimalImageView, 'animal-image')
 router.register(r'status-conditions', views.StatusConditionView, 'status-cond')
 router.register(r'moves', views.MoveView, 'move')
 router.register(r'items', views.ItemView, 'item')
@@ -57,7 +56,11 @@ urlpatterns = [
     path("accounts/signup/", views.SignUpView.as_view(), name="signup"),
 
     # app pages' routes go here
-    path('animals/', views.AnimalUpload, name="Upload"),
+    path('upload/', views.animalUpload, name="upload"),
+    path('remove/', views.animalRemove, name='remove'),
+    path('view/', views.animalView, name='view'),
+    path('animals/', views.animals, name='animals'),
+    path('animals/<int:animal_id>', views.animalReview, name='animals'),
     path('battle/', views.battleSystem, name='battle'),
     path("map/", views.map, name="map")
 ]

@@ -1,17 +1,23 @@
 from django import forms
-from .models import AnimalImage, User
+from .models import Animal, User
 from django.contrib.auth import authenticate, get_user_model, password_validation
 from django.core.exceptions import ValidationError
 import unicodedata
 from django.utils.translation import gettext_lazy as _
-from django import forms
 
-
-class ImageForm(forms.ModelForm):
+# forms for upload/removal of animals
+class UploadForm(forms.ModelForm):
     class Meta:
-        model = AnimalImage
-        fields = ["name", "animal_description", "image_file"]
+        model = Animal
+        fields = ["animal_name", "animal_description", "animal_location",
+                  "photo_path", "animal_species", "animal_class"]
 
+class RateAnimalForm(forms.Form):
+    rating = forms.TypedChoiceField(
+        choices=(("5", "⭐⭐⭐⭐⭐"), ("4", "⭐⭐⭐⭐"), ("3", "⭐⭐⭐"), ("2", "⭐⭐"), ("1", "⭐")),
+        coerce=int,
+        required=True,
+    )
 '''
 Forms for signing up new users
 '''
