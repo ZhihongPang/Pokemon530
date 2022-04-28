@@ -60,7 +60,7 @@ urlpatterns = [
     path('remove/', views.animalRemove, name='remove'),
     path('view/', views.animalView, name='view'),
     path('animals/', views.animals, name='animals'),
-    path('animals/<slug:animal_id>', views.animalReview, name='animals'),
+    path('animals/<int:animal_id>', views.animalReview, name='animals'),
     path('battle/', views.battleSystem, name='battle'),
     path("map/", views.map, name="map")
 ]

@@ -200,7 +200,7 @@ def animals(request):
     return render(request, 'PseudomonGo/animals.html', context)
 
 def animalReview(request, animal_id):
-    animal = get_object_or_404(Animal, slug=animal_id)
+    animal = get_object_or_404(Animal, id=animal_id)
     if request.method == "POST":
         form = RateAnimalForm(request.POST)
         if form.is_valid():
@@ -208,7 +208,8 @@ def animalReview(request, animal_id):
             rating.save()
     else:
         form = RateAnimalForm()
-    return render(request, "PseudomonGo/review.html", {"animal": animal, "form": form})
+    context = {"animal": animal, "form": form}
+    return render(request, "PseudomonGo/review.html", context)
 
 def index(request):
     return render(request, 'PseudomonGo/index.html')
