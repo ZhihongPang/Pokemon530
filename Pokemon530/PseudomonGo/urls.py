@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from PseudomonGo import views
+from django.views.generic.base import TemplateView
 
 
 '''
@@ -38,12 +39,21 @@ router.register(r'rentals', views.RentalView, 'rental')
 urlpatterns = [
     path('api/', include(router.urls)), # For Devs -- Core API routes
 
-    # for creating users and logging them in/out
+    # for creating users and logging them in/out -- DEPRECATED!
     path('api/register/', views.RegisterView.as_view(), name='register'),
     path('api/login/', views.LoginView.as_view(), name='login'),
     path('api/authenticated-user/', views.AuthenticatedUserView.as_view(), name='authenticated-user'),
     path('api/logout/', views.LogoutView.as_view(), name='logout'),
-    path('', views.index, name='home'), # this needs to redirect to the main dashboard page
+
+    # for developer documentation
+    path('docs/', views.index, name='docs'),
+
+    # home page where the dashboard will be
+    path('', TemplateView.as_view(template_name='PseudomonGo/home.html'), name='home'),
+    
+    # for signups, login, logout, and password resets
+    path("accounts/", include("django.contrib.auth.urls")),
+    path("accounts/signup/", views.SignUpView.as_view(), name="signup"),
 
     # app pages' routes go here
     path('animals/', views.AnimalUpload, name="Upload"),
