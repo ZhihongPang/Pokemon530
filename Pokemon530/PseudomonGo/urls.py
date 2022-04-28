@@ -17,15 +17,47 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from PseudomonGo import views
+from django.views.generic.base import TemplateView
 
+
+'''
+Core APIs for standard actions across the app
+'''
 router = routers.DefaultRouter()
+router.register(r'users', views.UserView, 'user')
 router.register(r'players', views.PlayerView, 'player')
+router.register(r'entity-classes', views.EntityClassView, 'entity-class')
+router.register(r'entities', views.EntityView, 'entity')
 router.register(r'animals', views.AnimalView, 'animal')
-router.register(r'robots', views.RobotView, 'robot')
+router.register(r'animal-images', views.AnimalImageView, 'animal-image')
+router.register(r'status-conditions', views.StatusConditionView, 'status-cond')
+router.register(r'moves', views.MoveView, 'move')
+router.register(r'items', views.ItemView, 'item')
+router.register(r'player-inventories', views.PlayerInventoryView, 'player-inv')
+router.register(r'rentals', views.RentalView, 'rental')
+
 
 urlpatterns = [
-    path('', views.Index, name='home'),
-    path('api/', include(router.urls)),
-    path('api/players/<int:pk>/inventory', views.PlayerInventoryViewSet.list, name='player inventory'),
-    path('battle/<int:pk>', views.BattleSystem, name='battle')
+    path('api/', include(router.urls)), # For Devs -- Core API routes
+
+    # for creating users and logging them in/out -- DEPRECATED!
+    path('api/register/', views.RegisterView.as_view(), name='register'),
+    path('api/login/', views.LoginView.as_view(), name='login'),
+    path('api/authenticated-user/', views.AuthenticatedUserView.as_view(), name='authenticated-user'),
+    path('api/logout/', views.LogoutView.as_view(), name='logout'),
+
+    # for developer documentation
+    path('docs/', views.index, name='docs'),
+
+    # home page where the dashboard will be
+    path('', TemplateView.as_view(template_name='PseudomonGo/home.html'), name='home'),
+    
+    # for signups, login, logout, and password resets
+    path("accounts/", include("django.contrib.auth.urls")),
+    path("accounts/signup/", views.SignUpView.as_view(), name="signup"),
+
+    # app pages' routes go here
+    path('animals/', views.AnimalUpload, name="Upload"),
+    path('battle/', views.battleSystem, name='battle'),
+    path("map/", views.map, name="map")
 ]
