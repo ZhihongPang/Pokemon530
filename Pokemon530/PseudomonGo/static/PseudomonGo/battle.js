@@ -5,7 +5,8 @@
 
 //attributes of the player's animal
 let a_atk = 100;
-let a_hp = 100;
+let a_hp_max = 100;
+let a_hp_now = 100;
 let a_name = "";
 let a_photo = "asdfdasfasd";
 //and of the robot
@@ -15,6 +16,7 @@ let r_type = "";
 
 //dictate how the html page reacts to data changes
 const animal = async () => {
+
     let a_dd = document.getElementById("animal-dropdown");
     a_name = a_dd.options[a_dd.selectedIndex].text;
 
@@ -30,7 +32,7 @@ const animal = async () => {
         .then((data) => {
             let animal = data;
             a_atk = animal['attack'];
-            a_hp = animal['health'];
+            a_hp_max = animal['health'];
             a_photo = animal['photo_path']
         })
         .catch((error) => {
@@ -38,10 +40,17 @@ const animal = async () => {
         });
 
     document.getElementById("animal-picked").innerHTML = a_name;
-    document.getElementById("animal-hp").innerHTML = a_hp; //starting hp
+    document.getElementById("animal-hp-max").innerHTML = a_hp_max; //starting hp
     document.getElementById("robot-dropdown").disabled = false;
     document.getElementById("animal-photo").src = "/static/PseudomonGo/animalimg/"+a_photo;
+
+    var x = document.querySelector('.progress-bar');
+    var count = (a_hp_now/a_hp_max)*100;
+    x.style.width = count + "%";
+    x.innerHTML = a_hp_now + "/"+a_hp_max;
 };
+
+
 
 const robot = async () => {
     let r_dd = document.getElementById("robot-dropdown");
@@ -67,6 +76,7 @@ const robot = async () => {
 };
 
 const battle = () => {
+    /*
     const responses = [
         `${a_name} inflicted ${a_atk} dmg`,
         `${r_type} inflicted ${r_atk} dmg`,
@@ -83,7 +93,7 @@ const battle = () => {
     setTimeout(() => {
         alert(responses[1]);
         document.getElementById("status").innerHTML = responses[1];
-        document.getElementById("animal-hp").innerHTML = a_hp
+        document.getElementById("animal-hp-max").innerHTML = a_hp
     }, 1500);
     //win condition
     if(a_hp <= 0 || r_hp <= 0) {
@@ -96,4 +106,5 @@ const battle = () => {
         document.getElementById("winner").innerHTML = "Winner 🎉: " + winner;
         document.getElementById("animal-atk").disabled = true;
     }
+     */
 };
