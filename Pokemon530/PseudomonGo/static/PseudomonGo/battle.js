@@ -4,11 +4,12 @@
 //bookmark: https://www.digitalocean.com/community/tutorials/how-to-use-the-javascript-fetch-api-to-get-data
 
 //attributes of the player's animal
-let a_atk = 100;
-let a_hp_max = 100;
+let myJsVariable = JSON.parse(document.getElementById("moves").textContent);
+console.log(myJsVariable)
+
+let animal_data = {};
 let a_hp_now = 100;
 let a_name = "";
-let a_photo = "";
 //and of the robot
 let r_name = ""
 let r_atk = 100;
@@ -16,6 +17,37 @@ let r_hp = 100;
 let r_type = "";
 let r_photo = ""
 
+const fetch_data = (url) => {
+    return fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(res => {
+            return res.json();
+        })
+        .then(data => {
+            return data;
+        });
+}
+
+const render_animal = () =>{
+    document.getElementById("animal-picked").innerHTML = animal_data['animal_name'];
+    document.getElementById("animal-hp-max").innerHTML = animal_data['health']; //starting hp
+    document.getElementById("robot-dropdown").disabled = false;
+    document.getElementById("animal-photo").src = animal_data['photo_path'];
+
+    document.getElementById("move1").innerHTML = animal_data['move1'];
+    document.getElementById("move2").innerHTML = animal_data['move2'];
+    document.getElementById("move3").innerHTML = animal_data['move3'];
+    document.getElementById("move4").innerHTML = animal_data['move4'];
+
+    var x = document.querySelector('.progress-bar');
+    var count = (a_hp_now / animal_data['health']) * 100;
+    x.style.width = count + "%";
+    x.innerHTML = a_hp_now + "/" + animal_data['health'];
+}
 //dictate how the html page reacts to data changes
 const animal = async () => {
 
@@ -24,32 +56,11 @@ const animal = async () => {
 
     //dictate how to fetch animal battle stats given url of api
     const a_url = "http://127.0.0.1:8000/api/animals/"+a_dd.value+"/?format=json";
-    console.log(a_url);
-    await fetch(a_url)
-        .then((response) => {
-            return response.json();
-        })
-        .then((data) => {
-            let animal = data;
-            a_atk = animal['attack'];
-            a_hp_max = animal['health'];
-            a_photo = animal['photo_path']
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-
-    document.getElementById("animal-picked").innerHTML = a_name;
-    document.getElementById("animal-hp-max").innerHTML = a_hp_max; //starting hp
-    document.getElementById("robot-dropdown").disabled = false;
-    document.getElementById("animal-photo").src = "/static/PseudomonGo/animalimg/"+a_photo;
-
-    var x = document.querySelector('.progress-bar');
-    var count = (a_hp_now/a_hp_max)*100;
-    x.style.width = count + "%";
-    x.innerHTML = a_hp_now + "/"+a_hp_max;
+    fetch_data(a_url).then(data => {
+        animal_data = data;
+        render_animal();
+    });
 };
-
 
 
 const robot = async () => {
@@ -77,7 +88,7 @@ const robot = async () => {
     document.getElementById("animal-atk").disabled = false;
 };
 
-const battle = () => {
+const battle = (action) => {
     /*
     const responses = [
         `${a_name} inflicted ${a_atk} dmg`,

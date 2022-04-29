@@ -11,14 +11,15 @@ from rest_framework.exceptions import AuthenticationFailed
 from .forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
+from django.http import HttpResponse
 
 import jwt, datetime
 
 from .serializer import *
 from .models import *
-from .forms import ImageForm
+from .forms import UploadForm, RateAnimalForm
 from .admin import *
-from rest_framework.permissions import BasePermission,AllowAny, IsAuthenticated, SAFE_METHODS
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from Pokemon530 import settings
 
 
@@ -47,11 +48,6 @@ class EntityView(viewsets.ModelViewSet):
 class AnimalView(viewsets.ModelViewSet):
     serializer_class = AnimalSerializer
     queryset = Animal.objects.all()
-    permission_classes = [IsAuthenticated]
-
-class AnimalImageView(viewsets.ModelViewSet):
-    serializer_class = AnimalImageSerializer
-    queryset = AnimalImage.objects.all()
     permission_classes = [IsAuthenticated]
 
 class StatusConditionView(viewsets.ModelViewSet):
@@ -167,28 +163,64 @@ Custom views go here
 def battleSystem(request):
     robot_class = EntityClass.objects.filter(class_name="Robot")
     auth = request.user
-    print(auth)
     return render(request, 'PseudomonGo/battle.html', {
         'player': request.user,
         'animals': Animal.objects.filter(player=request.user),
-        'robots': Entity.objects.filter(entity_class=robot_class[0])
+        'robots': Entity.objects.filter(entity_class=robot_class[0]),
+        'moves': Move.objects.all().values(),
     })
 
-def AnimalUpload(request):    
-    last_image = AnimalImage.objects.order_by('-pub_date')[:5]
-    # image_file = last_image.image_file if last_image else None
-    form = ImageForm(request.POST or None, request.FILES or None)
-    
+
+def animalUpload(request):
+    player_animals = Animal.objects.filter(player=request.user)
+    form = UploadForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         form.save()
-        
-    context= {
-                'last_animal': last_image,
-                # 'image_file': image_file,
-                'form': form,
-            }
-      
-    return render(request, 'PseudomonGo/images.html', context)
+    context = {
+        'player_animals': player_animals,
+        'form': form,
+    }
+    return render(request, 'PseudomonGo/upload.html', context)
+
+
+def animalRemove(request):
+    player_animals = Animal.objects.filter(player=request.user)
+    remove = player_animals.filter(animal_name=request.POST.get("animal_name"))  # delete all animals of the same name
+    remove.delete()
+
+    context = {
+        'player_animals': player_animals
+    }
+    return render(request, 'PseudomonGo/remove.html', context)
+
+
+def animalView(request):
+    player_animals = Animal.objects.filter(player=request.user)
+    context = {
+        'player_animals': player_animals
+    }
+    return render(request, 'PseudomonGo/view.html', context)
+
+
+def animals(request):
+    all_animals = Animal.objects.all()
+    context = {
+        'all_animals': all_animals
+    }
+    return render(request, 'PseudomonGo/animals.html', context)
+
+
+def animalReview(request, animal_id):
+    animal = get_object_or_404(Animal, id=animal_id)
+    if request.method == "POST":
+        form = RateAnimalForm(request.POST)
+        if form.is_valid():
+            rating = Rating(animal=animal, rating=form.cleaned_data["rating"])
+            rating.save()
+    else:
+        form = RateAnimalForm()
+    context = {"animal": animal, "form": form}
+    return render(request, "PseudomonGo/review.html", context)
 
 def index(request):
     return render(request, 'PseudomonGo/index.html')

@@ -1,0 +1,16 @@
+{% block content %}
+    <h1>{{ animal.animal_name }}</h1>
+    <p>Description: {{ animal.animal_description }}</p>
+    <p>Species: {{ animal.animal_species }}</p>
+    <p>Class: {{ animal.animal_class }}</p>
+    <p><img src="{{ MEDIA_URL }}{{ animal.photo_path }}"></p>
+    <p>Avg rating: {{ animal.avg_rating }}</p>
+    <hr>
+    <h2>Rate this animal:</h2>
+    <form method="POST" action="{% url 'animals' animal.id %}">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Rate">
+    </form>
+
+{% endblock %} 
