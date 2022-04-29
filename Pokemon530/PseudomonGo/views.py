@@ -218,6 +218,12 @@ def animalReview(request, animal_id):
 def index(request):
     return render(request, 'PseudomonGo/index.html')
 
+
 # calls map html to load
 def map(request):
     return render(request, 'PseudomonGo/map.html')
+
+
+# calls map html to load
+def dash(request):
+    return render(request, 'PseudomonGo/dash.html')
