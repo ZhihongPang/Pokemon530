@@ -40,12 +40,7 @@ class EntitySerializer(serializers.ModelSerializer):
 class AnimalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Animal
-        # We can expand on this idea later
-        # fields = ('id','owner_id','animal_name','animal_type',
-        #             'animal_species','photograph_path','health',
-        #             'attack','defense','speed')
-        # for now, this is the bare minimum required
-        fields = ('player', 'animal_name', 'photo_path', 'animal_description')
+        fields = '__all__'
 
 class StatusConditionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -71,4 +66,3 @@ class RentalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rental
         fields = '__all__'
-        

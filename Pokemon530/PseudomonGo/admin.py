@@ -2,7 +2,7 @@ from pyexpat import model
 from django.contrib import admin
 from django_google_maps import widgets as map_widgets
 from django_google_maps import fields as map_fields
-from .models import Player, EntityClass, Entity, Animal, \
+from .models import Player, EntityClass, Entity, Animal,\
     StatusCondition, Move, Item, PlayerInventory, Rental
 # Register your models here.
 

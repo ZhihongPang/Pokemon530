@@ -158,9 +158,13 @@ class SignUpView(generic.CreateView):
 Custom views go here
 '''
 def battleSystem(request):
+    robot_class = EntityClass.objects.filter(class_name="Robot")
+    auth = request.user
     return render(request, 'PseudomonGo/battle.html', {
-        'animals': Animal.objects.all(),
-        'entities': Entity.objects.all()
+        'player': request.user,
+        'animals': Animal.objects.filter(player=request.user),
+        'robots': Entity.objects.filter(entity_class=robot_class[0]),
+        'moves': Move.objects.all().values(),
     })
 
 # animal functions
@@ -214,6 +218,12 @@ def animalReview(request, animal_id):
 def index(request):
     return render(request, 'PseudomonGo/index.html')
 
+
 # calls map html to load
 def map(request):
     return render(request, 'PseudomonGo/map.html')
+
+
+# calls map html to load
+def dash(request):
+    return render(request, 'PseudomonGo/dash.html')
