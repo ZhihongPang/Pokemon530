@@ -18,8 +18,8 @@ from django_google_maps import fields as map_fields
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-MEDIA_URL= "/media/"
-MEDIA_ROOT= os.path.join(BASE_DIR, MEDIA_URL)
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 
 # Quick-start development settings - unsuitable for production
@@ -53,7 +53,8 @@ INSTALLED_APPS = [
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAdminUser',
-        #'rest_framework.permissions.IsAuthenticated'
+        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ]
 }
 

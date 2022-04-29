@@ -21,7 +21,7 @@ class Player(models.Model):
 
 class EntityClass(models.Model):
     class_name = models.CharField(max_length=50)
-    class_description = models.CharField(max_length=150)
+    class_description = models.CharField(max_length=500)
 
     def __str__(self):
         return self.class_name
@@ -31,10 +31,10 @@ class Entity(models.Model):
     entity_name = models.CharField(max_length=50)
     entity_class = models.ForeignKey(EntityClass, on_delete=models.CASCADE)
     base_atk = models.IntegerField(default=75)
-    Base_def = models.IntegerField(default=50)
-    Base_hp = models.IntegerField(default=100)
-    Base_spd = models.IntegerField(default=50)
-    entity_desc = models.CharField(max_length=150)
+    base_def = models.IntegerField(default=50)
+    base_hp = models.IntegerField(default=100)
+    base_spd = models.IntegerField(default=50)
+    entity_desc = models.CharField(max_length=500)
 
     def __str__(self):
         return self.entity_name
@@ -45,8 +45,8 @@ class Animal(models.Model):
     animal_name = models.CharField(max_length=50)
     animal_description = models.TextField(max_length=500)
     animal_location = models.CharField(max_length=50, verbose_name="Sighted Location")
-    photo_path = models.FileField(upload_to='images/', null=True, verbose_name="")   
-    pub_date = models.DateTimeField('date published',default=timezone.now)
+    photo_path = models.FileField(upload_to='images/', null=True, verbose_name="", default=None)
+    pub_date = models.DateTimeField('date published', default=timezone.now)
 
     animal_species = models.ForeignKey(Entity, on_delete=models.CASCADE, default=1)
     animal_class = models.ForeignKey(EntityClass, on_delete=models.CASCADE, default=1)
@@ -57,7 +57,18 @@ class Animal(models.Model):
     level = models.IntegerField(default=1)
     experience = models.IntegerField(default=0)
 
+    move1 = models.ForeignKey("Move", on_delete=models.CASCADE, default=None, null=True,
+                              related_name='move1',blank=True)
+    move2 = models.ForeignKey("Move", on_delete=models.CASCADE, default=None, null=True,
+                              related_name='move2', blank=True)
+    move3 = models.ForeignKey("Move", on_delete=models.CASCADE, default=None, null=True,
+                              related_name='move3', blank=True)
+    move4 = models.ForeignKey("Move", on_delete=models.CASCADE, default=None, null=True,
+                              related_name='move4', blank=True)
+
+
     # the default string of the animal is the animal name + its image path
+
     def __str__(self):
         return self.animal_name
 
@@ -78,9 +89,11 @@ class Animal(models.Model):
         else:
             return round(avg_rating, 2)
 
+
 class Rating(models.Model):
     animal = models.ForeignKey(Animal, on_delete=models.CASCADE)
     rating = models.IntegerField()
+
 
 class StatusCondition(models.Model):
     status_name = models.CharField(max_length=25)
@@ -90,17 +103,18 @@ class StatusCondition(models.Model):
 
 
 class Move(models.Model):
-    entity_class = models.ManyToManyField(EntityClass)
+    entity_class = models.ManyToManyField(EntityClass, default=None, blank=True)
     entity = models.ManyToManyField(Entity)
     move_name = models.CharField(max_length=50)
-    status_inflicted = models.ForeignKey(StatusCondition, on_delete=models.CASCADE)
-    infliction_chance = models.IntegerField
+    status_inflicted = models.ForeignKey(StatusCondition, on_delete=models.CASCADE,
+                                         null=True, default=None, blank=True)
+    infliction_chance = models.IntegerField(default=100)
     accuracy = models.IntegerField(default=100)
     base_damage = models.IntegerField(default=0)
     atk_multiplier = models.FloatField(default=1)
     def_multiplier = models.FloatField(default=1)
     spd_multiplier = models.FloatField(default=1)
-    move_description = models.CharField(max_length=150)
+    move_description = models.CharField(max_length=500)
 
     ATTACK = 'A'
     STATUS = 'S'
@@ -170,7 +184,7 @@ class Item(models.Model):
     status_cured = models.CharField(max_length=25, default='none')
     item_cost = models.IntegerField(default=0)
     item_type = models.CharField(max_length=25)
-    item_description = models.CharField(max_length=150)
+    item_description = models.CharField(max_length=500)
 
     def __str__(self):
         return self.item_name
