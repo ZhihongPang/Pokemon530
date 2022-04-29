@@ -34,5 +34,4 @@ jobs:
         pip install -r requirements.txt
     - name: Run Tests
       run: |
-        python manage.py test PseudomonGo/tests
         python manage.py test
