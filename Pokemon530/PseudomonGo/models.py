@@ -75,10 +75,15 @@ class Animal(models.Model):
     def was_published_recently(self):
         return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
     
-    # use this function if you want just the name of the animal
+    # helper functions
     def has_animal_name(self):
         return self.animal_name + ": " + str(self.photo_path)
-        
+    def has_animal_location(self):
+        return self.animal_location
+    def has_animal_species(self):
+        return self.animal_species
+    def has_animal_class(self):
+        return self.animal_class
     def has_animal_description(self):
         return self.animal_description
     
