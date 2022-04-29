@@ -8,7 +8,8 @@ let myJsVariable = JSON.parse(document.getElementById("moves").textContent);
 console.log(myJsVariable)
 
 let animal_data = {};
-let a_hp_now = 100;
+let robot_data = {};
+let a_hp_now = 50;
 let a_name = "";
 //and of the robot
 let r_name = ""
@@ -69,23 +70,14 @@ const robot = async () => {
 
     //dictate how to fetch robot battle stats given url of api
     const r_url = "http://127.0.0.1:8000/api/entities/"+r_dd.value+"/?format=json";
-    await fetch(r_url)
-        .then((response) => {
-            return response.json();
-        })
-        .then((data) => {
-            let robot = data;
-            r_atk = robot['base_atk'];
-            r_hp = robot['base_hp'];
-            r_name = robot['entity_name']
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-    document.getElementById("robot-picked").innerHTML = r_type
-    document.getElementById("robot-hp").innerHTML = r_hp; //starting hp
-    document.getElementById("robot-photo").src = "/static/PseudomonGo/animalimg/"+r_name+".webp";
-    document.getElementById("animal-atk").disabled = false;
+
+    fetch_data(r_url).then(data => {
+        robot_data= data;
+        render_animal();
+        document.getElementById("robot-picked").innerHTML = robot_data['entity_name']
+        document.getElementById("robot-hp").innerHTML = robot_data['base_hp']; //starting hp
+        document.getElementById("robot-photo").src = "http://127.0.0.1:8000/media/images/" + robot_data['entity_name']+ ".webp";
+    });
 };
 
 const battle = (action) => {

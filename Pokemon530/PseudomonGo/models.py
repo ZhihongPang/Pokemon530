@@ -45,8 +45,8 @@ class Animal(models.Model):
     animal_name = models.CharField(max_length=50)
     animal_description = models.TextField(max_length=500)
     animal_location = models.CharField(max_length=50, verbose_name="Sighted Location")
-    photo_path = models.FileField(upload_to='images/', null=True, verbose_name="")   
-    pub_date = models.DateTimeField('date published',default=timezone.now)
+    photo_path = models.FileField(upload_to='images/', null=True, verbose_name="", default=None)
+    pub_date = models.DateTimeField('date published', default=timezone.now)
 
     animal_species = models.ForeignKey(Entity, on_delete=models.CASCADE, default=1)
     animal_class = models.ForeignKey(EntityClass, on_delete=models.CASCADE, default=1)
