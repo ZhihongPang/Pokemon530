@@ -1,3 +1,6 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'PseudomonGo/css/dash-position.css' %}" />
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -6,9 +9,21 @@
         <meta name="keywords" content="html tutorial template">
     </head>
     <body>
-        <h1>map content here</h1>
-        <img src="https://media.giphy.com/media/B14Ym7cs4PxwRUdCtN/giphy.gif" alt="funny animation gif"> 
-        <p>This is just going to be it for now, we can expand it to be the whole page + add stuff later</p>
+        <div class="sidebar">
+            <nav>
+                <a href="#">Pseudomon<span>Go</span></a>
+                <ul>
+                    <li class="active"><a href="{% url 'dash' %}">Dashboard</a></li>
+                    <li><a href="#">Battle</a></li>
+                    <li><a href="{% url 'map' %}">Explore</a></li>
+                    <li><a href="#">Inventory</a></li>
+                    <li><a href="#">Friends</a></li>
+                    <li><a href="#">Profile</a></li>
+                    <li><a href="#">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    
     </body>
     <!-- calls google api -->
     <script type="text/javascript"
@@ -26,7 +41,7 @@
     
                 const marker = new google.maps.Marker({
                     position: umbc,
-                    map: map,
+                    map: map, 
                 });
     
             }
@@ -40,6 +55,6 @@
         </script>
 
     <div class="col-md-6">
-        <div id="map" style="width:100%; height:500px; background-color:#CCC;"></div>
+        <div id="map" style="width:87%; height:100%; background-color:#CCC; float: right;"></div>
     </div>
 </html>
