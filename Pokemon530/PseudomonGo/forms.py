@@ -5,7 +5,6 @@ from django.core.exceptions import ValidationError
 import unicodedata
 from django.utils.translation import gettext_lazy as _
 
-
 # forms for upload/removal of animals
 class UploadForm(forms.ModelForm):
     class Meta:
@@ -13,20 +12,15 @@ class UploadForm(forms.ModelForm):
         fields = ["animal_name", "animal_description", "animal_location",
                   "photo_path", "animal_species", "animal_class"]
 
-
 class RateAnimalForm(forms.Form):
     rating = forms.TypedChoiceField(
         choices=(("5", "⭐⭐⭐⭐⭐"), ("4", "⭐⭐⭐⭐"), ("3", "⭐⭐⭐"), ("2", "⭐⭐"), ("1", "⭐")),
         coerce=int,
         required=True,
     )
-
-
 '''
 Forms for signing up new users
 '''
-
-
 class UsernameField(forms.CharField):
     def to_python(self, value):
         return unicodedata.normalize("NFKC", super().to_python(value))
@@ -37,7 +31,6 @@ class UsernameField(forms.CharField):
             "autocapitalize": "none",
             "autocomplete": "username",
         }
-
 
 class UserCreationForm(forms.ModelForm):
     """

@@ -44,10 +44,9 @@ class Animal(models.Model):
     player = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     animal_name = models.CharField(max_length=50)
     animal_description = models.TextField(max_length=500)
-    animal_location = models.CharField(max_length=50, verbose_name="Sighted Location", default="UMBC")
-    photo_path = models.FileField(upload_to='images/', null=True, verbose_name="")
-    pub_date = models.DateTimeField('date published', default=timezone.now)
-
+    animal_location = models.CharField(max_length=50, verbose_name="Sighted Location")
+    photo_path = models.FileField(upload_to='images/', null=True, verbose_name="")   
+    pub_date = models.DateTimeField('date published',default=timezone.now)
 
     animal_species = models.ForeignKey(Entity, on_delete=models.CASCADE, default=1)
     animal_class = models.ForeignKey(EntityClass, on_delete=models.CASCADE, default=1)
@@ -67,19 +66,22 @@ class Animal(models.Model):
     move4 = models.ForeignKey("Move", on_delete=models.CASCADE, default=None, null=True,
                               related_name='move4', blank=True)
 
+
+    # the default string of the animal is the animal name + its image path
+
     def __str__(self):
         return self.animal_name
 
     def was_published_recently(self):
         return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
-
+    
     # use this function if you want just the name of the animal
     def has_animal_name(self):
         return self.animal_name + ": " + str(self.photo_path)
-
+        
     def has_animal_description(self):
         return self.animal_description
-
+    
     def avg_rating(self):
         avg_rating = self.rating_set.all().aggregate(Avg("rating"))["rating__avg"]
         if not avg_rating:

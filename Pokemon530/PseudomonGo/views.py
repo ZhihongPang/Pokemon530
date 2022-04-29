@@ -20,7 +20,6 @@ from .models import *
 from .forms import UploadForm, RateAnimalForm
 from .admin import *
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from Pokemon530 import settings
 
 
 '''
@@ -38,12 +37,10 @@ class PlayerView(viewsets.ModelViewSet):
 class EntityClassView(viewsets.ModelViewSet):
     serializer_class = EntityClassSerializer
     queryset = EntityClass.objects.all()
-    permission_classes = [IsAuthenticated]
 
 class EntityView(viewsets.ModelViewSet):
     serializer_class = EntitySerializer
     queryset = Entity.objects.all()
-    permission_classes = [IsAuthenticated]
 
 class AnimalView(viewsets.ModelViewSet):
     serializer_class = AnimalSerializer
@@ -170,45 +167,41 @@ def battleSystem(request):
         'moves': Move.objects.all().values(),
     })
 
-
+# animal functions
 def animalUpload(request):
     player_animals = Animal.objects.filter(player=request.user)
     form = UploadForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         form.save()
     context = {
-        'player_animals': player_animals,
-        'form': form,
-    }
+                'player_animals': player_animals,
+                'form': form,
+            }
     return render(request, 'PseudomonGo/upload.html', context)
-
 
 def animalRemove(request):
     player_animals = Animal.objects.filter(player=request.user)
-    remove = player_animals.filter(animal_name=request.POST.get("animal_name"))  # delete all animals of the same name
+    remove = player_animals.filter(animal_name=request.POST.get("animal_name")) # delete all animals of the same name
     remove.delete()
-
+        
     context = {
-        'player_animals': player_animals
-    }
+                'player_animals': player_animals
+            }
     return render(request, 'PseudomonGo/remove.html', context)
-
 
 def animalView(request):
     player_animals = Animal.objects.filter(player=request.user)
     context = {
-        'player_animals': player_animals
-    }
+                'player_animals': player_animals
+            }
     return render(request, 'PseudomonGo/view.html', context)
-
 
 def animals(request):
     all_animals = Animal.objects.all()
     context = {
-        'all_animals': all_animals
-    }
+                'all_animals': all_animals
+            }
     return render(request, 'PseudomonGo/animals.html', context)
-
 
 def animalReview(request, animal_id):
     animal = get_object_or_404(Animal, id=animal_id)
