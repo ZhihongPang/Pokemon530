@@ -11,6 +11,7 @@ let animal_data = {};
 let robot_data = {};
 let a_hp_now = 50;
 let a_name = "";
+let move_data = [];
 //and of the robot
 let r_name = ""
 let r_atk = 100;
@@ -39,16 +40,50 @@ const render_animal = () =>{
     document.getElementById("robot-dropdown").disabled = false;
     document.getElementById("animal-photo").src = animal_data['photo_path'];
 
-    document.getElementById("move1").innerHTML = animal_data['move1'];
-    document.getElementById("move2").innerHTML = animal_data['move2'];
-    document.getElementById("move3").innerHTML = animal_data['move3'];
-    document.getElementById("move4").innerHTML = animal_data['move4'];
+    let animal_moves = [4];
+    animal_moves[0] = animal_data['move1'];
+    animal_moves[1] = animal_data['move2'];
+    animal_moves[2] = animal_data['move3'];
+    animal_moves[3] = animal_data['move4'];
+    moves(animal_moves);
 
-    var x = document.querySelector('.progress-bar');
-    var count = (a_hp_now / animal_data['health']) * 100;
+    let x = document.querySelector('.progress-bar');
+    let count = (a_hp_now / animal_data['health']) * 100;
     x.style.width = count + "%";
     x.innerHTML = a_hp_now + "/" + animal_data['health'];
 }
+
+const render_moves = (move_number) =>{
+    if(!move_data[move_number]['move_name']){
+        move_data[move_number]['move_name'] = 'None';
+    }
+    switch(move_number){
+        case 0:
+            document.getElementById("move1").innerHTML = move_data[0]['move_name'];
+            break;
+        case 1:
+            document.getElementById("move2").innerHTML = move_data[1]['move_name'];
+            break;
+        case 2:
+            document.getElementById("move3").innerHTML = move_data[2]['move_name'];
+            break;
+        case 3:
+            document.getElementById("move4").innerHTML = move_data[3]['move_name'];
+            break;
+    }
+}
+
+const moves = (move_ids) => {
+    for (let i = 0; i < 4; i++){
+        const a_url = "http://127.0.0.1:8000/api/moves/" + move_ids[i] + "/?format=json";
+        fetch_data(a_url).then(data => {
+            move_data[i] = data;
+            console.log(move_data[i]);
+            render_moves(i);
+        });
+    }
+}
+
 //dictate how the html page reacts to data changes
 const animal = async () => {
 
@@ -58,6 +93,7 @@ const animal = async () => {
     //dictate how to fetch animal battle stats given url of api
     const a_url = "http://127.0.0.1:8000/api/animals/"+a_dd.value+"/?format=json";
     fetch_data(a_url).then(data => {
+        console.log(data);
         animal_data = data;
         render_animal();
     });
@@ -72,15 +108,37 @@ const robot = async () => {
     const r_url = "http://127.0.0.1:8000/api/entities/"+r_dd.value+"/?format=json";
 
     fetch_data(r_url).then(data => {
-        robot_data= data;
-        render_animal();
+        robot_data = data;
         document.getElementById("robot-picked").innerHTML = robot_data['entity_name']
         document.getElementById("robot-hp").innerHTML = robot_data['base_hp']; //starting hp
         document.getElementById("robot-photo").src = "http://127.0.0.1:8000/media/images/" + robot_data['entity_name']+ ".webp";
     });
 };
 
+const make_move = (move_num) =>{
+    
+}
+
+/* 0 - Move 1
+*  1 - Move 2
+*  2 - Move 3
+*  3 - Move 4
+*  4 - Item
+*  5 - Run
+*/
 const battle = (action) => {
+    console.log(action);
+    switch(action){
+        case 4:
+            console.log("Items!");
+            break;
+        case 5:
+            console.log("Run!");
+            break;
+        default:
+            make_move(action);
+            console.log("Move")
+    }
     /*
     const responses = [
         `${a_name} inflicted ${a_atk} dmg`,

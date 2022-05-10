@@ -58,7 +58,7 @@ class Animal(models.Model):
     experience = models.IntegerField(default=0)
 
     move1 = models.ForeignKey("Move", on_delete=models.CASCADE, default=None, null=True,
-                              related_name='move1',blank=True)
+                              related_name='move1', blank=True)
     move2 = models.ForeignKey("Move", on_delete=models.CASCADE, default=None, null=True,
                               related_name='move2', blank=True)
     move3 = models.ForeignKey("Move", on_delete=models.CASCADE, default=None, null=True,

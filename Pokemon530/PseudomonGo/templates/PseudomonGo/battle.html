@@ -43,29 +43,22 @@
                     <p class="card-text">Health: <span id="animal-hp-max" class="text-success"></span></p>
                     <div class="container">
                         <div class="row">
-                            <div class="col">
-                                <button type="button" onclick="battle('move1')" class="btn btn-primary"><span
-                                        id="move1" class="text-success"></span></button>
-                                <button type="button" onclick="battle('move2')" class="btn btn-primary"><span
-                                        id="move2" class="text-success"></span></button>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <button type="button" onclick="battle('move3')" class="btn btn-primary"><span
-                                        id="move3" class="text-success"></span></button>
-                                <button type="button" onclick="battle('move4')" class="btn btn-primary"><span
-                                        id="move4" class="text-success"></span></button>
-                            </div>
+                            <button type="button" onclick="battle(0)" class="btn btn-primary btn-lg"><span
+                                    id="move1" class="text"></span></button>
+                            <button type="button" onclick="battle(1)" class="btn btn-primary btn-lg"><span
+                                    id="move2" class="text"></span></button>
+                            <button type="button" onclick="battle(2)" class="btn btn-primary btn-lg"><span
+                                    id="move3" class="text"></span></button>
+                            <button type="button" onclick="battle(3)" class="btn btn-primary btn-lg"><span
+                                    id="move4" class="text"></span></button>
                         </div>
                     </div>
                 </div>
             </div>
-            <button type="button" onclick="battle()" class="btn btn-primary">Item</button>
-            <button type="button" class="btn btn-success">Run</button>
-            <!-- <button id="animal-atk" onclick="battle();" disabled type="button" class="btn btn-danger">ATTACK</button> -->
+            <button type="button" onclick="battle(4)" class="btn btn-primary">Item</button>
+            <button type="button" onclick="battle(5)" class="btn btn-danger">Run</button>
         </div>
-        <div class="col-sm text-center border border-primary">Animations here...</div>
+        <div class="col-sm text-center border border-primary" style="height: 20rem;">Animations here...</div>
 
         <div class="col-sm text-center">
             <label for="robot">Pick</label>
