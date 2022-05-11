@@ -9,13 +9,14 @@ console.log(myJsVariable)
 
 let animal_data = {};
 let robot_data = {};
-let a_hp_now = 50;
+let a_hp_now = 0;
 let a_name = "";
 let move_data = [];
 //and of the robot
 let r_name = ""
 let r_atk = 100;
 let r_hp = 100;
+let r_hp_now = 100;
 let r_type = "";
 let r_photo = ""
 
@@ -33,6 +34,12 @@ const fetch_data = (url) => {
             return data;
         });
 }
+const update_a_health = () =>{
+    let animal_health = document.querySelectorAll('.progress-bar')[0];
+    let count = (a_hp_now / animal_data['health']) * 100;
+    animal_health.style.width = count + "%";
+    animal_health.innerHTML = a_hp_now + "/" + animal_data['health'];
+}
 
 const render_animal = () =>{
     document.getElementById("animal-picked").innerHTML = animal_data['animal_name'];
@@ -46,11 +53,23 @@ const render_animal = () =>{
     animal_moves[2] = animal_data['move3'];
     animal_moves[3] = animal_data['move4'];
     moves(animal_moves);
+    a_hp_now = animal_data['health'];
+    update_a_health();
+}
 
-    let x = document.querySelector('.progress-bar');
-    let count = (a_hp_now / animal_data['health']) * 100;
-    x.style.width = count + "%";
-    x.innerHTML = a_hp_now + "/" + animal_data['health'];
+const update_r_health = () => {
+    let robot_health = document.querySelectorAll('.progress-bar')[1];
+    let count = (r_hp_now / robot_data['base_hp']) * 100;
+    robot_health.style.width = count + "%";
+    robot_health.innerHTML = r_hp_now + "/" + robot_data['base_hp'];
+}
+
+const render_robot = () => {
+    document.getElementById("robot-picked").innerHTML = robot_data['entity_name']
+    document.getElementById("robot-hp").innerHTML = robot_data['base_hp']; //starting hp
+    document.getElementById("robot-photo").src = "http://127.0.0.1:8000/media/images/" + robot_data['entity_name'] + ".webp";
+
+    update_r_health();
 }
 
 const render_moves = (move_number) =>{
@@ -109,14 +128,19 @@ const robot = async () => {
 
     fetch_data(r_url).then(data => {
         robot_data = data;
-        document.getElementById("robot-picked").innerHTML = robot_data['entity_name']
-        document.getElementById("robot-hp").innerHTML = robot_data['base_hp']; //starting hp
-        document.getElementById("robot-photo").src = "http://127.0.0.1:8000/media/images/" + robot_data['entity_name']+ ".webp";
+        r_hp_now = robot_data['base_hp']
+        render_robot();
     });
 };
 
 const make_move = (move_num) =>{
-    
+    let damage1 = (((2 * animal_data['level'])/5)+2);
+    let damage2 = move_data[move_num]['base_damage'];
+    let damage3 = animal_data['attack']/robot_data['base_def'];
+    let damage = damage1*damage2*damage3/50;
+    console.log(damage);
+    r_hp_now -= Math.ceil(damage);
+    update_r_health();
 }
 
 /* 0 - Move 1
