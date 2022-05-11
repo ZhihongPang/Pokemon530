@@ -7,6 +7,22 @@
 let myJsVariable = JSON.parse(document.getElementById("moves").textContent);
 console.log(myJsVariable)
 
+const animal = {
+    max_hp:0,
+    curr_hp:0,
+    attack:0,
+    defense:0,
+    speed:0,
+    name:"",
+}
+const robot = {
+    max_hp: 0,
+    curr_hp: 0,
+    attack: 0,
+    defense: 0,
+    speed: 0,
+    name: "",
+}
 let animal_data = {};
 let robot_data = {};
 let a_hp_now = 0;
@@ -140,13 +156,51 @@ const robot = async () => {
     });
 };
 
-const make_move = (move_num, attacker_atk, defender_def, level) =>{
+const calc_damage = (move_num, attacker_atk, defender_def, level) =>{
     let damage1 = (((2 * level)/5)+2);
     let damage2 = move_data[move_num]['base_damage'];
     let damage3 = attacker_atk/defender_def;
     let damage = damage1*damage2*damage3/50;
     console.log(damage);
     return Math.ceil(damage);
+}
+
+
+const animal_move = (move_num, attacker, defender) =>{
+    if (move_data[move_num]['base_damage'] > 0) {
+        let damage = calc_damage(move_num, animal_data['attack'], robot_data['base_def'], animal_data['level']);
+        r_hp_now -= damage;
+        update_r_health();
+        update_log(robot_data['entity_name'] + " took " + damage + " damage!");
+    }
+    if(move_data[move_num]['target'] == "O"){
+        if (move_data[move_num]['atk_multiplier'] != 1) {
+            robot_data['base_atk'] *= move_data[move_num]['atk_multiplier'];
+            update_log(robot_data['entity_name'] + "'s Attack Fell!");
+        }
+        if (move_data[move_num]['def_multiplier'] != 1) {
+            robot_data['base_def'] *= move_data[move_num]['def_multiplier'];
+            update_log(robot_data['entity_name'] + "'s Defense Fell!");
+        }
+        if (move_data[move_num]['spd_multiplier'] != 1) {
+            robot_data['base_spd'] *= move_data[move_num]['spd_multiplier'];
+            update_log(robot_data['entity_name'] + "'s Speed Fell!");
+        }
+    }
+    else if (move_data[move_num]['target'] == "S") {
+        if (move_data[move_num]['atk_multiplier'] != 1) {
+            animal_data['attack'] *= move_data[move_num]['atk_multiplier'];
+            update_log(animal_data['animal_name'] + "'s Attack Rose!");
+        }
+        if (move_data[move_num]['def_multiplier'] != 1) {
+            animal_data['defense'] *= move_data[move_num]['def_multiplier'];
+            update_log(animal_data['animal_name'] + "'s Defense Rose!");
+        }
+        if (move_data[move_num]['spd_multiplier'] != 1) {
+            animal_data['speed'] *= move_data[move_num]['spd_multiplier'];
+            update_log(animal_data['animal_name'] + "'s Speed Rose!");
+        }
+    }
 }
 
 const update_log = (message) => {
@@ -176,24 +230,6 @@ const battle = (action) => {
             let move_log ="<b>"+animal_data['animal_name'] +
                 " used " + move_data[action]['move_name'] + "!" +"</b>";
             update_log(move_log);
-            if(move_data[action]['base_damage'] > 0){
-                let damage = make_move(action, animal_data['attack'], robot_data['base_def'], animal_data['level']);
-                r_hp_now -= damage;
-                update_r_health();
-                update_log(robot_data['entity_name'] + " took " + damage + " damage!");
-            }
-            if(move_data[action]['atk_multiplier'] != 1){
-                robot_data['base_atk'] *= move_data[action]['atk_multiplier'];
-                update_log(robot_data['entity_name'] + "'s Attack Fell!");
-            }
-            if (move_data[action]['def_multiplier'] != 1) {
-                robot_data['base_def'] *= move_data[action]['def_multiplier'];
-                update_log(robot_data['entity_name'] + "'s Defense Fell!");
-            }
-            if (move_data[action]['spd_multiplier'] != 1) {
-                robot_data['base_spd'] *= move_data[action]['spd_multiplier'];
-                update_log(robot_data['entity_name'] + "'s Speed Fell!");
-            }
+            animal_move(action);
     }
-
 };
