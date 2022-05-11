@@ -12,6 +12,7 @@ let robot_data = {};
 let a_hp_now = 0;
 let a_name = "";
 let move_data = [];
+let battle_log = "";
 //and of the robot
 let r_name = ""
 let r_atk = 100;
@@ -35,6 +36,9 @@ const fetch_data = (url) => {
         });
 }
 const update_a_health = () =>{
+    if(a_hp_now < 0){
+        a_hp_now = 0;
+    }
     let animal_health = document.querySelectorAll('.progress-bar')[0];
     let count = (a_hp_now / animal_data['health']) * 100;
     animal_health.style.width = count + "%";
@@ -58,6 +62,9 @@ const render_animal = () =>{
 }
 
 const update_r_health = () => {
+    if(r_hp_now < 0){
+        r_hp_now = 0;
+    }
     let robot_health = document.querySelectorAll('.progress-bar')[1];
     let count = (r_hp_now / robot_data['base_hp']) * 100;
     robot_health.style.width = count + "%";
@@ -133,15 +140,21 @@ const robot = async () => {
     });
 };
 
-const make_move = (move_num) =>{
-    let damage1 = (((2 * animal_data['level'])/5)+2);
+const make_move = (move_num, attacker_atk, defender_def, level) =>{
+    let damage1 = (((2 * level)/5)+2);
     let damage2 = move_data[move_num]['base_damage'];
-    let damage3 = animal_data['attack']/robot_data['base_def'];
+    let damage3 = attacker_atk/defender_def;
     let damage = damage1*damage2*damage3/50;
     console.log(damage);
-    r_hp_now -= Math.ceil(damage);
-    update_r_health();
+    return Math.ceil(damage);
 }
+
+const update_log = (message) => {
+    document.getElementById("status").innerHTML = message + '<br>';
+    battle_log = battle_log.concat(message + '<br>');
+    document.getElementById("battle_log").innerHTML = battle_log;
+}
+
 
 /* 0 - Move 1
 *  1 - Move 2
@@ -160,38 +173,27 @@ const battle = (action) => {
             console.log("Run!");
             break;
         default:
-            make_move(action);
-            console.log("Move")
+            let move_log ="<b>"+animal_data['animal_name'] +
+                " used " + move_data[action]['move_name'] + "!" +"</b>";
+            update_log(move_log);
+            if(move_data[action]['base_damage'] > 0){
+                let damage = make_move(action, animal_data['attack'], robot_data['base_def'], animal_data['level']);
+                r_hp_now -= damage;
+                update_r_health();
+                update_log(robot_data['entity_name'] + " took " + damage + " damage!");
+            }
+            if(move_data[action]['atk_multiplier'] != 1){
+                robot_data['base_atk'] *= move_data[action]['atk_multiplier'];
+                update_log(robot_data['entity_name'] + "'s Attack Fell!");
+            }
+            if (move_data[action]['def_multiplier'] != 1) {
+                robot_data['base_def'] *= move_data[action]['def_multiplier'];
+                update_log(robot_data['entity_name'] + "'s Defense Fell!");
+            }
+            if (move_data[action]['spd_multiplier'] != 1) {
+                robot_data['base_spd'] *= move_data[action]['spd_multiplier'];
+                update_log(robot_data['entity_name'] + "'s Speed Fell!");
+            }
     }
-    /*
-    const responses = [
-        `${a_name} inflicted ${a_atk} dmg`,
-        `${r_type} inflicted ${r_atk} dmg`,
-    ]
-    //calculate animals' dmg versus robot's hp
-    r_hp -= a_atk;
-    setTimeout(() => {
-        alert(responses[0]);
-        document.getElementById("status").innerHTML = responses[0];
-        document.getElementById("robot-hp").innerHTML = r_hp;
-    });
-    //same thing as above but for robot to player's animal
-    a_hp -= r_atk;
-    setTimeout(() => {
-        alert(responses[1]);
-        document.getElementById("status").innerHTML = responses[1];
-        document.getElementById("animal-hp-max").innerHTML = a_hp
-    }, 1500);
-    //win condition
-    if(a_hp <= 0 || r_hp <= 0) {
-        let winner = "";
-        if(a_hp <= 0) {
-            winner = `${r_type}`;
-        } else {
-            winner = `${a_name}`;
-        }
-        document.getElementById("winner").innerHTML = "Winner 🎉: " + winner;
-        document.getElementById("animal-atk").disabled = true;
-    }
-     */
+
 };
