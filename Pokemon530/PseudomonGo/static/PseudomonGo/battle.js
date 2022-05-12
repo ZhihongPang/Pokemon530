@@ -258,8 +258,8 @@ const battle = (action) => {
     let robot_action = Math.floor(Math.random()*robots[0].move_data.length);
     let robot_log = "<b>" + robots[0].name +
         " used " + robots[0].move_data[action]['move_name'] + "!" + "</b>";
-    make_move(robots[0].move_data[robot_action], robots[0], animals[0], ROBOT);
     update_log(robot_log);
+    make_move(robots[0].move_data[robot_action], robots[0], animals[0], ROBOT);
     console.log(robot_action);
 
 };

@@ -12,6 +12,9 @@
             type="text/css"
             href="{% static 'PseudomonGo/css/bootstrap.css' %}"
     />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+            crossorigin="anonymous"></script>
     <style>
         .row-margin-05 {
             margin-top: 0.5em;
@@ -36,7 +39,7 @@
 <div class="d-flex justify-content-center align-items-start">
     <div class="p-2">
         <label for="animal">Pick</label>
-        <select id="animal-dropdown" onchange="animal();">
+        <select class = "form-select" id="animal-dropdown" onchange="animal();" aria-label="Animal Select">
             <option disabled selected value> -- select an animal --</option>
             {% for a in animals %}
                 <option value="{{ a.id }}">{{ a.animal_name }}</option>
@@ -69,8 +72,18 @@
                                 id="move4" class="text"></span></button>
                     </div>
                     <div class="d-flex justify-content-center flex-row">
-                            <button type="button" onclick="battle(4)" class="btn btn-primary">Item</button>
-                            <button type="button" onclick="battle(5)" class="btn btn-danger">Run</button>
+                        <div class="dropdown">
+                            <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton1"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                Item
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                {% for i in items %}
+                                    <li><a class="dropdown-item" href="#">{{ i.item.item_name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <button type="button" onclick="battle(5)" class="btn btn-danger">Run</button>
                     </div>
                 </div>
             </div>
@@ -83,7 +96,7 @@
 
     <div class="p-2">
         <label for="robot">Pick</label>
-        <select id="robot-dropdown" onchange="robot();" disabled>
+        <select class="form-select" id="robot-dropdown" onchange="robot();" disabled>
             <option disabled selected value> -- select a robot --</option>
             {% for r in robots %}
                 <option value="{{ r.id }}">{{ r.entity_name }}</option>

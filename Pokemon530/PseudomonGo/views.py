@@ -165,6 +165,7 @@ def battleSystem(request):
         'animals': Animal.objects.filter(player=request.user),
         'robots': Entity.objects.filter(entity_class=robot_class[0]),
         'moves': Move.objects.all().values(),
+        'items': PlayerInventory.objects.filter(player=request.user)
     })
 
 # animal functions
