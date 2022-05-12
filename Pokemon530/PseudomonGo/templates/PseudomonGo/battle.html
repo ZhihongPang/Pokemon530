@@ -39,7 +39,7 @@
 <div class="d-flex justify-content-center align-items-start">
     <div class="p-2">
         <label for="animal">Pick</label>
-        <select class = "form-select" id="animal-dropdown" onchange="animal();" aria-label="Animal Select">
+        <select class="form-select" id="animal-dropdown" onchange="animal();" aria-label="Animal Select">
             <option disabled selected value> -- select an animal --</option>
             {% for a in animals %}
                 <option value="{{ a.id }}">{{ a.animal_name }}</option>
@@ -62,28 +62,28 @@
                 <p class="card-text">Health: <span id="animal-hp" class="text-success"></span></p>
                 <div class="container">
                     <div class="d-flex align-items-start flex-column entire row" style="height: 200px;">
-                        <button type="button" onclick="battle(0)" class="btn btn-success btn-lg mb-auto p-2"><span
+                        <button type="button" disabled id="move1" onclick="battle(0)" class="btn btn-success btn-lg mb-auto p-2"><span
                                 id="move1" class="text"></span></button>
-                        <button type="button" onclick="battle(1)" class="btn btn-success btn-lg mb-auto p-2"><span
+                        <button type="button" disabled id="move2" onclick="battle(1)" class="btn btn-success btn-lg mb-auto p-2"><span
                                 id="move2" class="text"></span></button>
-                        <button type="button" onclick="battle(2)" class="btn btn-success btn-lg mb-auto p-2" ><span
+                        <button type="button" disabled id="move3" onclick="battle(2)" class="btn btn-success btn-lg mb-auto p-2"><span
                                 id="move3" class="text"></span></button>
-                        <button type="button" onclick="battle(3)" class="btn btn-success btn-lg mb-auto p-2"><span
+                        <button type="button" disabled id="move4" onclick="battle(3)" class="btn btn-success btn-lg mb-auto p-2"><span
                                 id="move4" class="text"></span></button>
                     </div>
                     <div class="d-flex justify-content-center flex-row">
                         <div class="dropdown">
-                            <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton1"
+                            <button class="btn btn-warning dropdown-toggle" type="button" disabled id="items"
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                 Item
                             </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <ul class="dropdown-menu" aria-labelledby="move1">
                                 {% for i in items %}
                                     <li><a class="dropdown-item" href="#">{{ i.item.item_name }}</a></li>
                                 {% endfor %}
                             </ul>
                         </div>
-                        <button type="button" onclick="battle(5)" class="btn btn-danger">Run</button>
+                        <button type="button" disabled id="run" onclick="battle(5)" class="btn btn-danger">Run</button>
                     </div>
                 </div>
             </div>
@@ -91,7 +91,8 @@
     </div>
 
 
-    <div class="overflow-auto text-center border border-primary" id="battle_log" style="height: 20rem; width: 30rem"></div>
+    <div class="overflow-auto text-center border border-primary" id="battle_log"
+         style="height: 20rem; width: 30rem"></div>
 
 
     <div class="p-2">

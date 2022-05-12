@@ -9,6 +9,33 @@ console.log(myJsVariable)
 
 const ANIMAL = 0;
 const ROBOT = 1;
+let active_robots = 0;
+let active_animals = 0;
+
+
+const switch_buttons = () =>{
+    console.log("Switching Buttons");
+    if(document.getElementById("move1").disabled == true){
+        document.getElementById("move1").disabled = false;
+        document.getElementById("move2").disabled = false;
+        document.getElementById("move3").disabled = false;
+        document.getElementById("move4").disabled = false;
+        document.getElementById("items").disabled = false;
+        document.getElementById("run").disabled = false;
+    }
+    else{
+        document.getElementById("move1").disabled = true;
+        document.getElementById("move2").disabled = true;
+        document.getElementById("move3").disabled = true;
+        document.getElementById("move4").disabled = true;
+        document.getElementById("items").disabled = true;
+        document.getElementById("run").disabled = true;
+    }
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 class Entity {
     constructor(name, max_hp, curr_hp, attack, defense, speed, level, photo_path, move_data=[]) {
@@ -48,15 +75,13 @@ const fetch_data = (url) => {
 const update_health = (entity, type) =>{
     let max_hp = entity.max_hp;
     let curr_hp = entity.curr_hp;
-    if(curr_hp < 0){
-        curr_hp = 0;
-    }
+
     let health_bar;
-    if(type == ANIMAL){
+    if(type == ROBOT){
         health_bar = document.querySelectorAll('.progress-bar')[0];
         document.getElementById("animal-hp").innerHTML = curr_hp;
     }
-    else if(type == ROBOT){
+    else if(type == ANIMAL){
         health_bar = document.querySelectorAll('.progress-bar')[1];
         document.getElementById("robot-hp").innerHTML = curr_hp;
     }
@@ -83,7 +108,7 @@ const render_animal = () =>{
 const render_robot = () => {
     document.getElementById("robot-picked").innerHTML = robots[0].name;
     document.getElementById("robot-hp").innerHTML = robots[0].max_hp; //starting hp
-    document.getElementById("robot-photo").src = "http://127.0.0.1:8000/media/images/" + robots[0].name + ".webp";
+    document.getElementById("robot-photo").src = "/media/images/" + robots[0].name + ".webp";
 
     update_health(robots[0], ROBOT);
 }
@@ -110,7 +135,7 @@ const render_moves = (move_number) =>{
 
 const get_animal_moves = (move_ids) => {
     for (let i = 0; i < 4; i++){
-        const a_url = "http://127.0.0.1:8000/api/moves/" + move_ids[i] + "/?format=json";
+        const a_url = "/api/moves/" + move_ids[i] + "/?format=json";
         fetch_data(a_url).then(data => {
             animals[0].move_data[i] = data;
             console.log(animals[0].move_data[i]);
@@ -134,7 +159,7 @@ const animal = async () => {
     let a_dd = document.getElementById("animal-dropdown");
 
     //dictate how to fetch animal battle stats given url of api
-    const a_url = "http://127.0.0.1:8000/api/animals/"+a_dd.value+"/?format=json";
+    const a_url = "/api/animals/"+a_dd.value+"/?format=json";
     fetch_data(a_url).then(data => {
         console.log(data);
         animal_data = data;
@@ -156,7 +181,7 @@ const robot = async () => {
     let r_dd = document.getElementById("robot-dropdown");
 
     //dictate how to fetch robot battle stats given url of api
-    const r_url = "http://127.0.0.1:8000/api/entities/"+r_dd.value+"/?format=json";
+    const r_url = "/api/entities/"+r_dd.value+"/?format=json";
 
     fetch_data(r_url).then(data => {
         robot_data = data;
@@ -172,13 +197,14 @@ const robot = async () => {
         render_robot();
         get_robot_moves();
     });
+    switch_buttons();
 };
 
-const calc_damage = (move, attacker, defender) =>{
+const calc_damage = (move, attacker, target) =>{
     let base_dmg = move['base_damage'];
     let level = attacker.level;
     let atk = attacker.attack;
-    let def = defender.defense;
+    let def = target.defense;
     let damage = ((((2 * level)/5)+2)*(atk/def)*base_dmg)/50;
     console.log(damage);
     return Math.ceil(damage);
@@ -209,21 +235,28 @@ const edit_stats = (move, target) =>{
         update_log(target.name + "'s Speed Fell!");
     }
 }
-
-const make_move = (move, attacker, defender, attacker_type) =>{
-    if (move['base_damage'] > 0) {
-        let damage = calc_damage(move, attacker, defender);
-        defender.curr_hp -= damage;
-        update_health(defender, attacker_type);
-        update_log(defender.name + " took " + damage + " damage!");
-    }
-
+const dictate_target = (move, attacker, target, attacker_type) => {
     if(move['target'] == 'O'){
-        edit_stats(move, defender);
+        make_move(move, attacker, target, attacker_type);
+    } else if (move['target'] == 'S') {
+        make_move(move, attacker, attacker, attacker_type);
     }
-    else if(move['target'] == 'S'){
-        edit_stats(move, attacker);
+}
+
+const make_move = (move, attacker, target, attacker_type) =>{
+    let move_log = "<b>" + attacker.name +
+        " used " + move['move_name'] + "!" + "</b>";
+    update_log(move_log);
+    if (move['base_damage'] > 0) {
+        let damage = calc_damage(move, attacker, target);
+        target.curr_hp -= damage;
+        if(target.curr_hp < 0){
+            target.curr_hp = 0;
+        }
+        update_health(target, attacker_type);
+        update_log(target.name + " took " + damage + " damage!");
     }
+    edit_stats(move, target);
 }
 
 const update_log = (message) => {
@@ -232,6 +265,17 @@ const update_log = (message) => {
     document.getElementById("battle_log").innerHTML = battle_log;
 }
 
+const check_win = (attacker, target) => {
+    if(target.curr_hp == 0){
+        let faint_msg = target.name + ' fainted!' + '<br>';
+        document.getElementById("status").innerHTML = faint_msg
+        update_log(faint_msg);
+        return true;
+    }
+    else{
+        return false;
+    }
+}
 
 /* 0 - Move 1
 *  1 - Move 2
@@ -240,7 +284,8 @@ const update_log = (message) => {
 *  4 - Item
 *  5 - Run
 */
-const battle = (action) => {
+const battle = async(action) => {
+    let robot_action = Math.floor(Math.random() * robots[0].move_data.length);
     console.log(action);
     switch(action){
         case 4:
@@ -250,16 +295,35 @@ const battle = (action) => {
             console.log("Run!");
             break;
         default:
-            let move_log ="<b>"+animals[0].name +
-                " used " + animals[0].move_data[action]['move_name'] + "!" +"</b>";
-            update_log(move_log);
-            make_move(animals[0].move_data[action], animals[0], robots[0], ANIMAL);
+            switch_buttons();
+            if(animals[0].speed > robots[0].speed){
+                dictate_target(animals[0].move_data[action], animals[0], robots[0], ANIMAL);
+                if(check_win(animals[0], robots[0])){
+                    return;
+                }
+                await sleep(1000);
+                dictate_target(robots[0].move_data[robot_action], robots[0], animals[0], ROBOT);
+                if (check_win(robots[0], animals[0])) {
+                    return;
+                }
+            }
+            else if(animals[0].speed < robots[0].speed){
+                dictate_target(robots[0].move_data[robot_action], robots[0], animals[0], ROBOT);
+                if(check_win(robots[0], animals[0]))
+                {
+                    return;
+                }
+                await sleep(1000);
+                dictate_target(animals[0].move_data[action], animals[0], robots[0], ANIMAL);
+                if (check_win(animals[0], robots[0])) {
+                    return;
+                }
+            }
+            switch_buttons();
+            return;
     }
-    let robot_action = Math.floor(Math.random()*robots[0].move_data.length);
-    let robot_log = "<b>" + robots[0].name +
-        " used " + robots[0].move_data[action]['move_name'] + "!" + "</b>";
-    update_log(robot_log);
-    make_move(robots[0].move_data[robot_action], robots[0], animals[0], ROBOT);
+    await sleep(1000);
+    dictate_target(robots[0].move_data[robot_action], robots[0], animals[0], ROBOT);
     console.log(robot_action);
-
+    switch_buttons();
 };
