@@ -1,6 +1,7 @@
 {% block title %}All Animals {% endblock %}
 
 {% block content %}
+{% if user.is_authenticated %}
 </ul>
 {% if all_animals %}
     <ul>
@@ -11,4 +12,5 @@
     {% else %} 
         <p> No animals in the database. </p>
     {% endif %}
+{% endif %}
 {% endblock %}

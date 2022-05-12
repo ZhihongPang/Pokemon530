@@ -1,3 +1,5 @@
+{% block content %}
+{% if user.is_authenticated %}
 <main id=app>
     <title>Animals</title>
     {% load static %}
@@ -31,4 +33,6 @@
     
 </main>
 <script src="{% static 'PseudomonGo/js/animal-view.js' %}"></script>
+{% endif %}
+{% endblock %}
  
