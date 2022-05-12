@@ -109,7 +109,7 @@ class StatusCondition(models.Model):
 
 class Move(models.Model):
     entity_class = models.ManyToManyField(EntityClass, default=None, blank=True)
-    entity = models.ManyToManyField(Entity)
+    entity = models.ManyToManyField(Entity, related_name='moves')
     move_name = models.CharField(max_length=50)
     status_inflicted = models.ForeignKey(StatusCondition, on_delete=models.CASCADE,
                                          null=True, default=None, blank=True)
