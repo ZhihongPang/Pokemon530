@@ -190,3 +190,6 @@ def index(request):
 # calls map html to load
 def map(request):
     return render(request, 'PseudomonGo/map.html')
+
+def profile(request):
+    return render(request, 'PseudomonGo/profile.html')

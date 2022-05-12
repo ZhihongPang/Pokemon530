@@ -1,5 +1,6 @@
 from pyexpat import model
 from django.contrib import admin
+from .models import Profile
 from django_google_maps import widgets as map_widgets
 from django_google_maps import fields as map_fields
 from .models import Player, EntityClass, Entity, Animal, AnimalImage, \
@@ -17,7 +18,7 @@ admin.site.register(Move)
 admin.site.register(Item)
 admin.site.register(PlayerInventory)
 admin.site.register(Rental)
-
+admin.site.register(Profile)
 
 # widget!
 class RentalAdmin(admin.ModelAdmin):

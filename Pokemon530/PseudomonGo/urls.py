@@ -59,5 +59,8 @@ urlpatterns = [
     # app pages' routes go here
     path('animals/', views.AnimalUpload, name="Upload"),
     path('battle/', views.battleSystem, name='battle'),
-    path("map/", views.map, name="map")
+    path("map/", views.map, name="map"),
+
+    # profile page
+    path('profile/', views.profile, name="profile"),
 ]

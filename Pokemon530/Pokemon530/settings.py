@@ -138,6 +138,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # Directory where uploaded media is saved.
+MEDIA_URL = '/media/' # Public URL at the browser
+
 GOOGLE_MAPS_API_KEY = 'GOOGLE_API_KEY'
 
 # Default primary key field type
