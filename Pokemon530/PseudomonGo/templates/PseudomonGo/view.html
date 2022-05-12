@@ -1,20 +1,34 @@
-<html>
-        {% if player_animals %}
-        <b>Here are all of the animals you own:</b>
-        <ul>
-            {% for animal in player_animals %}
+<main id=app>
+    <title>Animals</title>
+    {% load static %}
+    <link
+        rel="stylesheet"
+        type="text/css"
+        href="{% static 'PseudomonGo/css/animal-view.css' %}"
+    />
+
+    <h1>All Animals</h1>
+    {% if player_animals %}
+    <section class="cards">
+      <ul style="display:inline">
+          {% for animal in player_animals %}
+          <div class="card animal animated">
             <b>Animal Name: </b> {{ animal.animal_name }} <br>
             <b>Animal Description: </b> {{ animal.animal_description }} <br>
             <b>Location Sighted: </b> {{ animal.animal_location }} <br>
+            <b>Rating: </b> {{ animal.avg_rating }} <br>
             
             <img src="{{ MEDIA_URL }}{{ animal.photo_path }}"> <br>
-            {% endfor %}
-        </ul>
-        {% else %} 
-            <b>You have no animals bro!</b> 
-            <p> No animals in the database. </p>
-        {% endif %}
-        <br><br>
-        </p>
-    </body>
-</html>
+          </div>
+          
+          {% endfor %}
+      </ul>
+    </section>
+    <style class="hover"></style>
+      {% else %} 
+          <p> No animals in the database. </p>
+      {% endif %}
+    
+</main>
+<script src="{% static 'PseudomonGo/js/animal-view.js' %}"></script>
+ 
