@@ -27,6 +27,7 @@ $ python manage.py runserver 		# Start up the project using Django
 * You don't need to run `python manage.py migrate` if you've migrated previously
 * The app should be running locally in port [:8000](http://127.0.0.1:8000/) by default
 * If not, check to make sure that port 8000 is open on your localhost
+* You will need to add at least one animal and one robot in order for the battle system to work
 ## Testing
 All tests are stored in `PseudomonGo/tests.py` and in `PseudomonGo/tests`
 <br />
