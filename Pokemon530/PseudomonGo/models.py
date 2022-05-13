@@ -56,9 +56,10 @@ class Animal(models.Model):
     speed = models.IntegerField(default=1)
     level = models.IntegerField(default=1)
     experience = models.IntegerField(default=0)
+    active = models.BooleanField(default=True)
 
     move1 = models.ForeignKey("Move", on_delete=models.CASCADE, default=None, null=True,
-                              related_name='move1',blank=True)
+                              related_name='move1', blank=True)
     move2 = models.ForeignKey("Move", on_delete=models.CASCADE, default=None, null=True,
                               related_name='move2', blank=True)
     move3 = models.ForeignKey("Move", on_delete=models.CASCADE, default=None, null=True,
@@ -109,16 +110,16 @@ class StatusCondition(models.Model):
 
 class Move(models.Model):
     entity_class = models.ManyToManyField(EntityClass, default=None, blank=True)
-    entity = models.ManyToManyField(Entity)
+    entity = models.ManyToManyField(Entity, related_name='moves')
     move_name = models.CharField(max_length=50)
     status_inflicted = models.ForeignKey(StatusCondition, on_delete=models.CASCADE,
                                          null=True, default=None, blank=True)
     infliction_chance = models.IntegerField(default=100)
     accuracy = models.IntegerField(default=100)
     base_damage = models.IntegerField(default=0)
-    atk_multiplier = models.FloatField(default=1)
-    def_multiplier = models.FloatField(default=1)
-    spd_multiplier = models.FloatField(default=1)
+    atk_stage = models.IntegerField(default=0)
+    def_stage = models.IntegerField(default=0)
+    spd_stage = models.IntegerField(default=0)
     move_description = models.CharField(max_length=500)
 
     ATTACK = 'A'
