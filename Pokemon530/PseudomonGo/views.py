@@ -233,3 +233,8 @@ def map(request):
 # calls map html to load
 def dash(request):
     return render(request, 'PseudomonGo/dash.html')
+
+def profile(request):
+    return render(request, 'PseudomonGo/profile.html',{
+     'player': Player.objects.filter(user=request.user).first
+    })

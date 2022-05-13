@@ -136,6 +136,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+MEDIA_URL = '/images/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
+
 GOOGLE_MAPS_API_KEY = 'GOOGLE_API_KEY'
 
 # Default primary key field type

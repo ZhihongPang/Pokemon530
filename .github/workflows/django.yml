@@ -18,7 +18,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Create env file
+    - name: Create ENV File
       run: |
         touch .env
         echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
@@ -32,6 +32,10 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+    - name: Make Migrations
+      run: |
+        python manage.py makemigrations
+        python manage.py migrate
     - name: Run Tests
       run: |
         python manage.py test
