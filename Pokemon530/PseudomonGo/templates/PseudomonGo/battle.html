@@ -39,7 +39,7 @@
 <div class="d-flex justify-content-center align-items-start">
     <div class="p-2">
         <label for="animal">Pick</label>
-        <select class="form-select" disabled id="animal-dropdown" onchange="animal();" aria-label="Animal Select">
+        <select class="form-select" disabled id="animal-dropdown" onchange="switch_animal();" aria-label="Animal Select">
             {% for a in animals %}
                 <option value="{{ a.id }}">{{ a.animal_name }}</option>
             {% endfor %}

@@ -56,6 +56,7 @@ class Animal(models.Model):
     speed = models.IntegerField(default=1)
     level = models.IntegerField(default=1)
     experience = models.IntegerField(default=0)
+    active = models.BooleanField(default=True)
 
     move1 = models.ForeignKey("Move", on_delete=models.CASCADE, default=None, null=True,
                               related_name='move1', blank=True)

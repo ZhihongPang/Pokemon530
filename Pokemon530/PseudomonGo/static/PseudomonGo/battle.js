@@ -196,12 +196,15 @@ const get_robot_moves = () => {
 }
 
 //dictate how the html page reacts to data changes
-const animal = async () => {
+const switch_animal = async () => {
     switch_on();
     let a_dd = document.getElementById("animal-dropdown");
     //dictate how to fetch animal battle stats given url of api
+    update_log(animals[current_animal].name + " switch out!");
     const picked = a_dd.selectedIndex;
     current_animal = picked;
+    await sleep(1000);
+    update_log("Go " + animals[current_animal].name + "!");
     render_animal();
     battle(6);
 };
