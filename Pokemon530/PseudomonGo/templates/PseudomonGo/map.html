@@ -1,4 +1,5 @@
 {% load static %}
+
 <link rel="stylesheet" type="text/css" href="{% static 'PseudomonGo/css/dash-position.css' %}" />
 
 <!DOCTYPE html>
@@ -11,40 +12,55 @@
     <body>
         <div class="sidebar">
             <nav>
-                <a href="#">Pseudomon<span>Go</span></a>
+                <a href="/">Pseudomon<span>Go</span></a>
                 <ul>
-                    <li class="active"><a href="{% url 'dash' %}">Dashboard</a></li>
-                    <li><a href="#">Battle</a></li>
-                    <li><a href="{% url 'map' %}">Explore</a></li>
-                    <li><a href="#">Inventory</a></li>
-                    <li><a href="#">Friends</a></li>
-                    <li><a href="#">Profile</a></li>
-                    <li><a href="#">Logout</a></li>
+                    <li><a href="/">Dashboard</a></li>
+                    <li><a href="{% url 'battle' %}">Battle</a></li>
+                    <li class="active"><a href="{% url 'map' %}">Explore</a></li>
+                    <li><a href="{% url 'view' %}">Inventory</a></li>
+                    <li><a href="{% url 'profile' %}">Profile</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
                 </ul>
             </nav>
         </div>
     
     </body>
     <!-- calls google api -->
-    <script type="text/javascript"
-        src="https://maps.googleapis.com/maps/api/js?key=" {GOOGLE_API_KEY}    
-    ></script>
+
+    <script src="//maps.googleapis.com/maps/api/js?key= {{GOOGLE_API_KEY}}"></script>
+
     <!-- creates the map box with a marker at umbc -->
         <script type="text/javascript">
             var map;       
             function initialize() {
                 const umbc = {lat: 39.25428972139465, lng: -76.71001703158903};
                 const map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: 15,
+                    zoom: 16,
                     center: umbc,
                 });
     
                 const marker = new google.maps.Marker({
                     position: umbc,
                     map: map, 
+                    title: "Click to zoom",
                 });
-    
-            }
+
+                map.addListener("center_changed", () => {
+                    // 15 seconds after the center of the map has changed, pan back to the
+                    // marker.
+                    window.setTimeout(() => {
+                    map.panTo(marker.getPosition());
+                    }, 15000);
+                });
+                
+                marker.addListener("click", () => {
+                    map.setZoom(8);
+                    map.setCenter(marker.getPosition());
+                });
+
+            }        
+            
+            //window.initMap = initMap;
 
             google.maps.event.addDomListener(window, 'load', initialize)
             </script> 

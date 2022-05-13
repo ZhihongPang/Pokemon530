@@ -5,6 +5,8 @@
     <title>{% block title %}Battle System Beta{% endblock %}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Loads sidebar -->
+    <link rel="stylesheet" type="text/css" href="{% static 'PseudomonGo/css/dash-position.css' %}" />
 
     <!-- Bootstrap CSS -->
     <link
@@ -35,6 +37,25 @@
 </head>
 
 <body>
+    <!--Navigation bar-->
+    <div class="sidebar">
+        <nav>
+            <a href="/">Pseudomon<span>Go</span></a>
+            <ul>
+                <li><a href="/">Dashboard</a></li>
+                <li class="active"><a href="{% url 'battle' %}">Battle</a></li>
+                <li><a href="{% url 'map' %}">Explore</a></li>
+                <li><a href="{% url 'view' %}">Inventory</a></li>
+                <li><a href="{% url 'profile' %}">Profile</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+    <!--end of Navigation bar-->
+</body>
+
+<body>
+    
 <h1 class="text-center mb-5">Battle Demo: Player {{ player }}</h1>
 <div class="d-flex justify-content-center align-items-start">
     <div class="p-2">

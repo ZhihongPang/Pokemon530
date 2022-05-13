@@ -44,10 +44,7 @@ urlpatterns = [
     path('api/login/', views.LoginView.as_view(), name='login'),
     path('api/authenticated-user/', views.AuthenticatedUserView.as_view(), name='authenticated-user'),
     path('api/logout/', views.LogoutView.as_view(), name='logout'),
-
-    # for developer documentation
-    path('docs/', views.index, name='docs'),
-
+    
     # home page where the dashboard will be
     path('', TemplateView.as_view(template_name='PseudomonGo/home.html'), name='home'),
     
@@ -63,7 +60,6 @@ urlpatterns = [
     path('animals/<int:animal_id>', views.animalReview, name='animals'),
     path('battle/', views.battleSystem, name='battle'),
     path("map/", views.map, name="map"),
-    path("dash/", views.dash, name="dash"),
 
     # profile page
     path('profile/', views.profile, name="profile"),
