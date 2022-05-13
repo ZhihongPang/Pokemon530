@@ -10,6 +10,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, HttpResponseRedirect
 
 from .serializer import *
 from .models import *
@@ -174,6 +175,7 @@ def animalUpload(request):
     form = UploadForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         form.save()
+        return HttpResponseRedirect("/upload")
     context = {
                 'player_animals': player_animals,
                 'form': form,

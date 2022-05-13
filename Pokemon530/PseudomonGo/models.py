@@ -4,6 +4,7 @@ import datetime
 from django.utils import timezone
 from django.db.models import Avg
 from django_google_maps import fields as map_fields
+from PIL import Image
 
 
 # Create your models here.

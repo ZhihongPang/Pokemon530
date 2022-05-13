@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     'PseudomonGo.apps.PseudomongoConfig',
     'corsheaders',
     'rest_framework',
+    'crispy_forms',
 ]
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # This is to restrict access to the API to admins only i.e. members of Pokemon530
 
