@@ -60,5 +60,7 @@ urlpatterns = [
     path('animals/', views.AnimalUpload, name="Upload"),
     path('battle/', views.battleSystem, name='battle'),
     path("map/", views.map, name="map"),
-    path("dash/", views.dash, name="dash")
+    path("dash/", views.dash, name="dash"),
+    path("nav/", views.nav, name="nav")
+
 ]

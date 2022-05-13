@@ -194,3 +194,6 @@ def map(request):
 # calls map html to load
 def dash(request):
     return render(request, 'PseudomonGo/dash.html')
+
+def nav(request):
+    return render(request, 'PseudomonGo/nav.html')    

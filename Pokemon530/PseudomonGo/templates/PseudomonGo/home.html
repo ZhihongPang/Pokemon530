@@ -35,13 +35,11 @@
 
           <div class="sidebar">
               <nav>
-                  <a href="#">Pseudomon<span>Go</span></a>
+                  <a href="/">Pseudomon<span>Go</span></a>
                   <ul>
-                      <li class="active"><a href="#">Dashboard</a></li>
-                      <li><a href="#">Battle</a></li>
+                      <li class="active"><a href="/">Dashboard</a></li>
+                      <li><a href="{% url 'battle' %}">Battle</a></li>
                       <li><a href="{% url 'map' %}">Explore</a></li>
-                      <li><a href="#">Inventory</a></li>
-                      <li><a href="#">Friends</a></li>
                       <li><a href="#">Profile</a></li>
                       <li><a href="{% url 'logout' %}">Logout</a></li>
                   </ul>

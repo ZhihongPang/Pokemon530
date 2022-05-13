@@ -51,6 +51,7 @@ header .logo {
 	padding-left: 8px;
 	color: #fff;
 }
+
 header .logo span {
 	font-weight: 300;
 }
@@ -79,6 +80,7 @@ header .logo span {
 	opacity: 0.7;
 	transition: all 0.2s;
 }
+
 .sidebar nav > a:hover {
 	opacity: 1;
 }
@@ -131,26 +133,10 @@ header .logo span {
 }
 
 .sidebar nav ul li:nth-child(5):hover {
-	background-color: #f1c40f;
-}
-
-.sidebar nav ul li:nth-child(5).active {
-	background-color: #f1c40f;
-}
-
-.sidebar nav ul li:nth-child(6):hover {
-	background-color: #d6103b;
-}
-
-.sidebar nav ul li:nth-child(6).active {
-	background-color: #d6103b;
-}
-
-.sidebar nav ul li:nth-child(7):hover {
 	background-color: #6d6d6d;
 }
 
-.sidebar nav ul li:nth-child(7).active {
+.sidebar nav ul li:nth-child(5).active {
 	background-color: #6d6d6d;
 }
 
