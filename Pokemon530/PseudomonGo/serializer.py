@@ -27,16 +27,6 @@ class PlayerSerializer(serializers.ModelSerializer):
         model = Player
         fields = '__all__'
 
-class EntityClassSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = EntityClass
-        fields = '__all__'
-
-class EntitySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Entity
-        fields = '__all__'
-
 class AnimalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Animal
@@ -50,6 +40,18 @@ class StatusConditionSerializer(serializers.ModelSerializer):
 class MoveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Move
+        fields = '__all__'
+
+class EntitySerializer(serializers.ModelSerializer):
+    moves = MoveSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Entity
+        fields = '__all__'
+
+class EntityClassSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EntityClass
         fields = '__all__'
 
 class ItemSerializer(serializers.ModelSerializer):
