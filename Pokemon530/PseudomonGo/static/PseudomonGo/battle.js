@@ -11,26 +11,26 @@ const ANIMAL = 0;
 const ROBOT = 1;
 let active_robots = 0;
 let active_animals = 0;
+let current_animal = 0;
+let current_robot = 0;
 
 
-const switch_buttons = () =>{
-    console.log("Switching Buttons");
-    if(document.getElementById("move1").disabled == true){
-        document.getElementById("move1").disabled = false;
-        document.getElementById("move2").disabled = false;
-        document.getElementById("move3").disabled = false;
-        document.getElementById("move4").disabled = false;
-        document.getElementById("items").disabled = false;
-        document.getElementById("run").disabled = false;
-    }
-    else{
-        document.getElementById("move1").disabled = true;
-        document.getElementById("move2").disabled = true;
-        document.getElementById("move3").disabled = true;
-        document.getElementById("move4").disabled = true;
-        document.getElementById("items").disabled = true;
-        document.getElementById("run").disabled = true;
-    }
+const switch_off = () =>{
+    document.getElementById("move1").disabled = true;
+    document.getElementById("move2").disabled = true;
+    document.getElementById("move3").disabled = true;
+    document.getElementById("move4").disabled = true;
+    document.getElementById("items").disabled = true;
+    document.getElementById("run").disabled = true;
+
+}
+const switch_on = () =>{
+    document.getElementById("move1").disabled = false;
+    document.getElementById("move2").disabled = false;
+    document.getElementById("move3").disabled = false;
+    document.getElementById("move4").disabled = false;
+    document.getElementById("items").disabled = false;
+    document.getElementById("run").disabled = false;
 }
 
 function sleep(ms) {
@@ -48,16 +48,65 @@ class Entity {
         this.level = level;
         this.photo_path = photo_path;
         this.move_data = move_data;
+        this.atk_stage = 0;
+        this.def_stage = 0;
+        this.spd_stage = 0;
+        this.fainted = false;
     }
 }
 let animals = [];
 let robots = [];
-let animal_data = {};
 let robot_data = {};
 
 let battle_log = "";
-//and of the robot
 
+const stages = new Map([
+    [-6, 0.25],
+    [-5, 0.28],
+    [-4, 0.33],
+    [-3, 0.40],
+    [-2, 0.50],
+    [-1, 0.66],
+    [0, 1],
+    [1, 1.5],
+    [2, 2],
+    [3, 2.5],
+    [4, 3],
+    [5, 3.5],
+    [6, 4],
+])
+
+const initialize_battle = () => {
+    let animal_list = document.getElementById('animal-dropdown');
+    //start at 1 because the first dropdown option is always blank
+    for (let i = 0; i < animal_list.length; i++){
+        console.log("animals: " + animal_list.options[i].value);
+        const a_url = "/api/animals/" + animal_list.options[i].value + "/?format=json";
+        fetch_data(a_url).then(data => {
+            let animal_data = data;
+            animals[i] = new Entity();
+            animals[i].name = animal_data['animal_name'];
+            animals[i].max_hp = animal_data['health'];
+            animals[i].curr_hp = animal_data['health'];
+            animals[i].attack = animal_data['attack'];
+            animals[i].defense = animal_data['defense'];
+            animals[i].speed = animal_data['speed'];
+            animals[i].level = animal_data['level'];
+            animals[i].photo_path = animal_data['photo_path'];
+            let animal_moves = [4];
+            animal_moves[0] = animal_data['move1'];
+            animal_moves[1] = animal_data['move2'];
+            animal_moves[2] = animal_data['move3'];
+            animal_moves[3] = animal_data['move4'];
+            get_animal_moves(animal_moves, i);
+            render_animal();
+            current_animal = 0;
+            console.log("Created data for animal "+animals[i].name);
+            active_animals++;
+        });
+    }
+
+}
 const fetch_data = (url) => {
     return fetch(url, {
         method: 'GET',
@@ -77,11 +126,11 @@ const update_health = (entity, type) =>{
     let curr_hp = entity.curr_hp;
 
     let health_bar;
-    if(type == ROBOT){
+    if(type == ANIMAL){
         health_bar = document.querySelectorAll('.progress-bar')[0];
         document.getElementById("animal-hp").innerHTML = curr_hp;
     }
-    else if(type == ANIMAL){
+    else if(type == ROBOT){
         health_bar = document.querySelectorAll('.progress-bar')[1];
         document.getElementById("robot-hp").innerHTML = curr_hp;
     }
@@ -91,18 +140,11 @@ const update_health = (entity, type) =>{
 }
 
 const render_animal = () =>{
-    document.getElementById("animal-picked").innerHTML = animals[0].name;
-    document.getElementById("animal-hp").innerHTML = animals[0].max_hp; //starting hp
-    document.getElementById("robot-dropdown").disabled = false;
-    document.getElementById("animal-photo").src = animals[0].photo_path;
+    document.getElementById("animal-picked").innerHTML = animals[current_animal].name;
+    document.getElementById("animal-hp").innerHTML = animals[current_animal].max_hp; //starting hp
+    document.getElementById("animal-photo").src = animals[current_animal].photo_path;
 
-    let animal_moves = [4];
-    animal_moves[0] = animal_data['move1'];
-    animal_moves[1] = animal_data['move2'];
-    animal_moves[2] = animal_data['move3'];
-    animal_moves[3] = animal_data['move4'];
-    get_animal_moves(animal_moves);
-    update_health(animals[0], ANIMAL);
+    update_health(animals[current_animal], ANIMAL);
 }
 
 const render_robot = () => {
@@ -114,31 +156,31 @@ const render_robot = () => {
 }
 
 const render_moves = (move_number) =>{
-    if(!animals[0].move_data[move_number]['move_name']){
-        animals[0].move_data[move_number]['move_name'] = 'None';
+    if(!animals[current_animal].move_data[move_number]['move_name']){
+        animals[current_animal].move_data[move_number]['move_name'] = 'None';
     }
     switch(move_number){
         case 0:
-            document.getElementById("move1").innerHTML = animals[0].move_data[0]['move_name'];
+            document.getElementById("move1").innerHTML = animals[current_animal].move_data[0]['move_name'];
             break;
         case 1:
-            document.getElementById("move2").innerHTML = animals[0].move_data[1]['move_name'];
+            document.getElementById("move2").innerHTML = animals[current_animal].move_data[1]['move_name'];
             break;
         case 2:
-            document.getElementById("move3").innerHTML = animals[0].move_data[2]['move_name'];
+            document.getElementById("move3").innerHTML = animals[current_animal].move_data[2]['move_name'];
             break;
         case 3:
-            document.getElementById("move4").innerHTML = animals[0].move_data[3]['move_name'];
+            document.getElementById("move4").innerHTML = animals[current_animal].move_data[3]['move_name'];
             break;
     }
 }
 
-const get_animal_moves = (move_ids) => {
+const get_animal_moves = (move_ids, index) => {
     for (let i = 0; i < 4; i++){
         const a_url = "/api/moves/" + move_ids[i] + "/?format=json";
         fetch_data(a_url).then(data => {
-            animals[0].move_data[i] = data;
-            console.log(animals[0].move_data[i]);
+            animals[index].move_data[i] = data;
+            console.log(animals[index].move_data[i]);
             render_moves(i);
         });
     }
@@ -155,25 +197,13 @@ const get_robot_moves = () => {
 
 //dictate how the html page reacts to data changes
 const animal = async () => {
-
+    switch_on();
     let a_dd = document.getElementById("animal-dropdown");
-
     //dictate how to fetch animal battle stats given url of api
-    const a_url = "/api/animals/"+a_dd.value+"/?format=json";
-    fetch_data(a_url).then(data => {
-        console.log(data);
-        animal_data = data;
-        animals[0] = new Entity();
-        animals[0].name = animal_data['animal_name'];
-        animals[0].max_hp = animal_data['health'];
-        animals[0].curr_hp = animal_data['health'];
-        animals[0].attack = animal_data['attack'];
-        animals[0].defense = animal_data['defense'];
-        animals[0].speed = animal_data['speed'];
-        animals[0].level = animal_data['level'];
-        animals[0].photo_path = animal_data['photo_path'];
-        render_animal();
-    });
+    const picked = a_dd.selectedIndex;
+    current_animal = picked;
+    render_animal();
+    battle(6);
 };
 
 
@@ -192,46 +222,51 @@ const robot = async () => {
         robots[0].attack = robot_data['base_atk'];
         robots[0].defense = robot_data['base_def'];
         robots[0].speed = robot_data['base_spd'];
-        robots[0].level = animal_data['level'];
+        robots[0].level = animals[current_animal].level;
         robots[0].photo_path = robot_data['photo_path'];
         render_robot();
         get_robot_moves();
+        document.getElementById("animal-dropdown").disabled = false;
+        switch_on();
     });
-    switch_buttons();
 };
+
 
 const calc_damage = (move, attacker, target) =>{
     let base_dmg = move['base_damage'];
     let level = attacker.level;
-    let atk = attacker.attack;
-    let def = target.defense;
+    console.log("Attack Stage: "+ stages.get(attacker.atk_stage))
+    let atk = attacker.attack * stages.get(attacker.atk_stage);
+    let def = target.defense * stages.get(target.def_stage);
+    let random = (Math.floor(Math.random() * (100 - 85 + 1) + 85))/100
     let damage = ((((2 * level)/5)+2)*(atk/def)*base_dmg)/50;
+    damage *= random;
     console.log(damage);
     return Math.ceil(damage);
 }
 
 
 const edit_stats = (move, target) =>{
-    target.attack *= move['atk_multiplier'];
-    target.defense *= move['def_multiplier'];
-    target.speed *= move['spd_multiplier'];
+    target.atk_stage += move['atk_stage'];
+    target.def_stage += move['def_stage'];
+    target.spd_stage += move['spd_stage'];
 
-    if (move['atk_multiplier'] > 1) {
+    if (move['atk_stage'] > 0) {
         update_log(target.name + "'s Attack Rose!");
     }
-    if (move['def_multiplier'] > 1) {
+    if (move['def_stage'] > 0) {
         update_log(target.name + "'s Defense Rose!");
     }
-    if (move['spd_multiplier'] > 1) {
+    if (move['spd_stage'] > 0) {
         update_log(target.name + "'s Speed Rose!");
     }
-    if (move['atk_multiplier'] < 1) {
+    if (move['atk_stage'] < 0) {
         update_log(target.name + "'s Attack Fell!");
     }
-    if (move['def_multiplier'] < 1) {
+    if (move['def_stage'] < 0) {
         update_log(target.name + "'s Defense Fell!");
     }
-    if (move['spd_multiplier'] < 1) {
+    if (move['spd_stage'] < 0) {
         update_log(target.name + "'s Speed Fell!");
     }
 }
@@ -244,16 +279,21 @@ const dictate_target = (move, attacker, target, attacker_type) => {
 }
 
 const make_move = (move, attacker, target, attacker_type) =>{
+    let hit = Math.floor(Math.random() * 100);
     let move_log = "<b>" + attacker.name +
         " used " + move['move_name'] + "!" + "</b>";
     update_log(move_log);
+    if (hit > move.accuracy) {
+        update_log("But it missed");
+        return;
+    }
     if (move['base_damage'] > 0) {
         let damage = calc_damage(move, attacker, target);
         target.curr_hp -= damage;
         if(target.curr_hp < 0){
             target.curr_hp = 0;
         }
-        update_health(target, attacker_type);
+        update_health(target, attacker_type ^ 1);
         update_log(target.name + " took " + damage + " damage!");
     }
     edit_stats(move, target);
@@ -268,8 +308,13 @@ const update_log = (message) => {
 const check_win = (attacker, target) => {
     if(target.curr_hp == 0){
         let faint_msg = target.name + ' fainted!' + '<br>';
-        document.getElementById("status").innerHTML = faint_msg
+        document.getElementById("status").innerHTML = faint_msg;
         update_log(faint_msg);
+        target.fainted = true;
+        //checks if recently deceased entity is the animal that's out
+        if(animals[current_animal].fainted == true){
+            document.getElementById("animal-dropdown")[current_animal].disabled = true;
+        }
         return true;
     }
     else{
@@ -287,6 +332,9 @@ const check_win = (attacker, target) => {
 const battle = async(action) => {
     let robot_action = Math.floor(Math.random() * robots[0].move_data.length);
     console.log(action);
+    switch_off();
+    let animal_spd = animals[current_animal].speed * stages.get(animals[current_animal].spd_stage);
+    let robot_spd = robots[0].speed * stages.get(robots[0].spd_stage);
     switch(action){
         case 4:
             console.log("Items!");
@@ -294,36 +342,39 @@ const battle = async(action) => {
         case 5:
             console.log("Run!");
             break;
+        case 6:
+            console.log("Switched out!")
+            break;
         default:
-            switch_buttons();
-            if(animals[0].speed > robots[0].speed){
-                dictate_target(animals[0].move_data[action], animals[0], robots[0], ANIMAL);
-                if(check_win(animals[0], robots[0])){
+            if(animal_spd > robot_spd){
+                dictate_target(animals[current_animal].move_data[action], animals[current_animal], robots[0], ANIMAL);
+                if(check_win(animals[current_animal], robots[0])){
                     return;
                 }
                 await sleep(1000);
-                dictate_target(robots[0].move_data[robot_action], robots[0], animals[0], ROBOT);
-                if (check_win(robots[0], animals[0])) {
+                dictate_target(robots[0].move_data[robot_action], robots[0], animals[current_animal], ROBOT);
+                if (check_win(robots[0], animals[current_animal])) {
                     return;
                 }
             }
-            else if(animals[0].speed < robots[0].speed){
-                dictate_target(robots[0].move_data[robot_action], robots[0], animals[0], ROBOT);
-                if(check_win(robots[0], animals[0]))
+            else if(animal_spd < robot_spd){
+                dictate_target(robots[0].move_data[robot_action], robots[0], animals[current_animal], ROBOT);
+                if(check_win(robots[0], animals[current_animal]))
                 {
                     return;
                 }
                 await sleep(1000);
-                dictate_target(animals[0].move_data[action], animals[0], robots[0], ANIMAL);
-                if (check_win(animals[0], robots[0])) {
+                dictate_target(animals[current_animal].move_data[action], animals[current_animal], robots[0], ANIMAL);
+                if (check_win(animals[current_animal], robots[0])) {
                     return;
                 }
             }
-            switch_buttons();
+            switch_on();
             return;
     }
     await sleep(1000);
-    dictate_target(robots[0].move_data[robot_action], robots[0], animals[0], ROBOT);
+    dictate_target(robots[0].move_data[robot_action], robots[0], animals[current_animal], ROBOT);
     console.log(robot_action);
-    switch_buttons();
+    switch_on();
 };
+initialize_battle();

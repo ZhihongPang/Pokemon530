@@ -116,9 +116,9 @@ class Move(models.Model):
     infliction_chance = models.IntegerField(default=100)
     accuracy = models.IntegerField(default=100)
     base_damage = models.IntegerField(default=0)
-    atk_multiplier = models.FloatField(default=1)
-    def_multiplier = models.FloatField(default=1)
-    spd_multiplier = models.FloatField(default=1)
+    atk_stage = models.IntegerField(default=0)
+    def_stage = models.IntegerField(default=0)
+    spd_stage = models.IntegerField(default=0)
     move_description = models.CharField(max_length=500)
 
     ATTACK = 'A'
