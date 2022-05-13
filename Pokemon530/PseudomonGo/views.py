@@ -195,5 +195,5 @@ def map(request):
 def dash(request):
     return render(request, 'PseudomonGo/dash.html')
 
-def nav(request):
-    return render(request, 'PseudomonGo/nav.html')    
+def profile(request):
+    return render(request, 'PseudomonGo/profile.html')    

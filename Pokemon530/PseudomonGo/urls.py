@@ -61,6 +61,5 @@ urlpatterns = [
     path('battle/', views.battleSystem, name='battle'),
     path("map/", views.map, name="map"),
     path("dash/", views.dash, name="dash"),
-    path("nav/", views.nav, name="nav")
-
+    path("profile/", views.profile, name="profile")
 ]
