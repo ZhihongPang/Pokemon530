@@ -1,3 +1,5 @@
+{% block content %}
+{% if user.is_authenticated %}
 <html>
     <head>
         <meta charset="UTF-8">
@@ -11,7 +13,7 @@
             <input type="submit" name="Upload" value="Upload"/>     
         </form>
         <br><br>
-        {% if player_animals %}
+        <!-- {% if player_animals %}
         <ul>
             {% for animal in player_animals %}
             <b>Animal Name: </b> {{ animal.animal_name }} <br>
@@ -24,8 +26,10 @@
         {% else %} 
             <p> No animals in the database. </p>
         {% endif %}
-        <br><br>
+        <br><br> -->
         </p>
 
     </body>
 </html>
+{% endif %}
+{% endblock %}

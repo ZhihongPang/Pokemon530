@@ -1,3 +1,5 @@
+{% block content %}
+{% if user.is_authenticated %}
 <html>
     <head>
         <meta charset="UTF-8">
@@ -15,3 +17,5 @@
         </p>
     </body>
 </html>
+{% endif %}
+{% endblock %}
