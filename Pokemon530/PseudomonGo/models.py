@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 import datetime
 from django.utils import timezone
+from django.db.models import Avg
 from django_google_maps import fields as map_fields
 
 
@@ -20,7 +21,7 @@ class Player(models.Model):
 
 class EntityClass(models.Model):
     class_name = models.CharField(max_length=50)
-    class_description = models.CharField(max_length=150)
+    class_description = models.CharField(max_length=500)
 
     def __str__(self):
         return self.class_name
@@ -30,10 +31,10 @@ class Entity(models.Model):
     entity_name = models.CharField(max_length=50)
     entity_class = models.ForeignKey(EntityClass, on_delete=models.CASCADE)
     base_atk = models.IntegerField(default=75)
-    Base_def = models.IntegerField(default=50)
-    Base_hp = models.IntegerField(default=100)
-    Base_spd = models.IntegerField(default=50)
-    entity_desc = models.CharField(max_length=150)
+    base_def = models.IntegerField(default=50)
+    base_hp = models.IntegerField(default=100)
+    base_spd = models.IntegerField(default=50)
+    entity_desc = models.CharField(max_length=500)
 
     def __str__(self):
         return self.entity_name
@@ -42,8 +43,10 @@ class Entity(models.Model):
 class Animal(models.Model):
     player = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     animal_name = models.CharField(max_length=50)
-    photo_path = models.CharField(max_length=100)    
     animal_description = models.TextField(max_length=500)
+    animal_location = models.CharField(max_length=50, verbose_name="Sighted Location")
+    photo_path = models.FileField(upload_to='images/', null=True, verbose_name="", default=None)
+    pub_date = models.DateTimeField('date published', default=timezone.now)
 
     animal_species = models.ForeignKey(Entity, on_delete=models.CASCADE, default=1)
     animal_class = models.ForeignKey(EntityClass, on_delete=models.CASCADE, default=1)
@@ -53,29 +56,49 @@ class Animal(models.Model):
     speed = models.IntegerField(default=1)
     level = models.IntegerField(default=1)
     experience = models.IntegerField(default=0)
+    active = models.BooleanField(default=True)
+
+    move1 = models.ForeignKey("Move", on_delete=models.CASCADE, default=None, null=True,
+                              related_name='move1', blank=True)
+    move2 = models.ForeignKey("Move", on_delete=models.CASCADE, default=None, null=True,
+                              related_name='move2', blank=True)
+    move3 = models.ForeignKey("Move", on_delete=models.CASCADE, default=None, null=True,
+                              related_name='move3', blank=True)
+    move4 = models.ForeignKey("Move", on_delete=models.CASCADE, default=None, null=True,
+                              related_name='move4', blank=True)
+
+
+    # the default string of the animal is the animal name + its image path
 
     def __str__(self):
         return self.animal_name
 
-
-class AnimalImage(models.Model):
-    player = models.ForeignKey(Player, on_delete=models.CASCADE, default=1)
-    name = models.CharField(max_length=500)
-    animal_description = models.TextField(max_length=500)
-    image_file = models.FileField(upload_to='images/', null=True, verbose_name="")
-    pub_date = models.DateTimeField('date published',default=timezone.now)
-
-    def __str__(self):
-        return self.name + ": " + str(self.image_file)
-
     def was_published_recently(self):
         return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
     
+    # helper functions
     def has_animal_name(self):
-        return self.name
-        
+        return self.animal_name + ": " + str(self.photo_path)
+    def has_animal_location(self):
+        return self.animal_location
+    def has_animal_species(self):
+        return self.animal_species
+    def has_animal_class(self):
+        return self.animal_class
     def has_animal_description(self):
         return self.animal_description
+    
+    def avg_rating(self):
+        avg_rating = self.rating_set.all().aggregate(Avg("rating"))["rating__avg"]
+        if not avg_rating:
+            return "not rated"
+        else:
+            return round(avg_rating, 2)
+
+
+class Rating(models.Model):
+    animal = models.ForeignKey(Animal, on_delete=models.CASCADE)
+    rating = models.IntegerField()
 
 
 class StatusCondition(models.Model):
@@ -86,17 +109,18 @@ class StatusCondition(models.Model):
 
 
 class Move(models.Model):
-    entity_class = models.ManyToManyField(EntityClass)
-    entity = models.ManyToManyField(Entity)
+    entity_class = models.ManyToManyField(EntityClass, default=None, blank=True)
+    entity = models.ManyToManyField(Entity, related_name='moves')
     move_name = models.CharField(max_length=50)
-    status_inflicted = models.ForeignKey(StatusCondition, on_delete=models.CASCADE)
-    infliction_chance = models.IntegerField
+    status_inflicted = models.ForeignKey(StatusCondition, on_delete=models.CASCADE,
+                                         null=True, default=None, blank=True)
+    infliction_chance = models.IntegerField(default=100)
     accuracy = models.IntegerField(default=100)
     base_damage = models.IntegerField(default=0)
-    atk_multiplier = models.FloatField(default=1)
-    def_multiplier = models.FloatField(default=1)
-    spd_multiplier = models.FloatField(default=1)
-    move_description = models.CharField(max_length=150)
+    atk_stage = models.IntegerField(default=0)
+    def_stage = models.IntegerField(default=0)
+    spd_stage = models.IntegerField(default=0)
+    move_description = models.CharField(max_length=500)
 
     ATTACK = 'A'
     STATUS = 'S'
@@ -166,7 +190,7 @@ class Item(models.Model):
     status_cured = models.CharField(max_length=25, default='none')
     item_cost = models.IntegerField(default=0)
     item_type = models.CharField(max_length=25)
-    item_description = models.CharField(max_length=150)
+    item_description = models.CharField(max_length=500)
 
     def __str__(self):
         return self.item_name
@@ -185,3 +209,22 @@ class PlayerInventory(models.Model):
 class Rental(models.Model):
     address = map_fields.AddressField(max_length=200)
     geolocation = map_fields.GeoLocationField(max_length=100)
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    image = models.ImageField(default='default.jpg', upload_to='profile_pics')
+
+    def __str__(self):
+        return f'{self.user.username} Profile'
+
+    # Override the save method of the model
+    def save(self):
+        super().save()
+
+        img = Image.open(self.image.path)  # Open image
+
+        # resize image
+        if img.height > 300 or img.width > 300:
+            output_size = (300, 300)
+            img.thumbnail(output_size)  # Resize image
+            img.save(self.image.path)  # Save it again and override the larger image

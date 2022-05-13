@@ -1,0 +1,21 @@
+{% block content %}
+{% if user.is_authenticated %}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Animal Remove</title>
+    <body>
+        <h1>Remove Animal</h1>
+        <form enctype="multipart/form-data" method="POST" action="">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <h2>Careful, all animals with the same name will be deleted!</h2>
+            <label for="animal_name">Enter Animal Name to Remove:</label>
+            <input type="text" name="animal_name" value="">
+            <input type="submit" name="Remove" value="Confirm"/>     
+        </form>
+        </p>
+    </body>
+</html>
+{% endif %}
+{% endblock %}

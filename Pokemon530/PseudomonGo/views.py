@@ -1,25 +1,21 @@
-from pdb import lasti2lineno
-from django import views
 from django.shortcuts import render
-from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.exceptions import AuthenticationFailed, ParseError
 # from django.contrib.auth.forms import UserCreationForm
 from .forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
-
-import jwt, datetime
+from django.contrib.auth import authenticate, logout, login
+from django.contrib.auth.decorators import login_required
 
 from .serializer import *
 from .models import *
-from .forms import ImageForm
+from .forms import UploadForm, RateAnimalForm
 from .admin import *
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from Pokemon530 import settings
 
 
 '''
@@ -45,11 +41,6 @@ class EntityView(viewsets.ModelViewSet):
 class AnimalView(viewsets.ModelViewSet):
     serializer_class = AnimalSerializer
     queryset = Animal.objects.all()
-    permission_classes = [IsAuthenticated]
-
-class AnimalImageView(viewsets.ModelViewSet):
-    serializer_class = AnimalImageSerializer
-    queryset = AnimalImage.objects.all()
     permission_classes = [IsAuthenticated]
 
 class StatusConditionView(viewsets.ModelViewSet):
@@ -79,7 +70,16 @@ class RentalView(viewsets.ModelViewSet):
 Other API views go here
 '''
 
-# api for registering a user
+'''
+API for registering a user
+
+Sample JSON format for POST
+{
+    "email":"your_email@email.com",
+    "username":"your_name",
+    "password":"your_password"
+}
+'''
 class RegisterView(APIView):
     permission_classes = [AllowAny] # creating users is publicly available
 
@@ -89,66 +89,59 @@ class RegisterView(APIView):
         serializer.save()
         return Response(serializer.data)
 
-# api for logging in
+'''
+API for logging in
+
+Sample JSON format for POST
+{
+    "username":"your_name",
+    "password":"your_password"
+}
+'''
 class LoginView(APIView):
     permission_classes = [AllowAny] # let logins be publicly available
 
     def post(self, request):
-        username = request.data['username']
-        password = request.data['password']
-        user = User.objects.filter(username=username).first()
+        try:
+            username = request.data['username']
+            password = request.data['password']
+        except KeyError:
+            raise ParseError()
+        # do user auth
+        user = authenticate(username=username, password=password)
+        if user:
+            login(request, user)
         if user is None:
             raise AuthenticationFailed('User not found')
-        if not user.check_password(password):
-            raise AuthenticationFailed('Incorrect password')
+        return Response(data={'login': 'success'})
 
-        # set cookie properties for token
-        payload = {
-            'id': user.id,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
-            'iat': datetime.datetime.utcnow()
-        }
+'''
+API for checking if user is logged in
 
-        token = jwt.encode(payload, 'secret', algorithm='HS256').decode('utf-8')
-        response = Response()
-        response.set_cookie(key='pseudomongo_jwt', value=token, httponly=True)
-        response.data = {
-            'pseudomongo_jwt': token
-        }
-        return response
-
-# api for checking if user is logged in
+ONLY GET requests allowed, sample JSON payload
+{
+    "logged in as":"user_name"
+}
+'''
 class AuthenticatedUserView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        token = request.COOKIES.get('pseudomongo_jwt')
-        if not token:
-            raise AuthenticationFailed('Unauthenticated')
-        try:
-            payload = jwt.decode(token, 'secret', algorithm=['HS256'])
-        except:
-            raise AuthenticationFailed('Unauthenticated')
+        response = Response()
+        if request.user.is_authenticated:
+            response.data = {'logged in as': request.user.username}
+            return response
+        raise AuthenticationFailed('Not logged in')
 
-        user = User.objects.filter(id=payload['id']).first()
-        serializer = UserSerializer(user)
-        data = serializer.data
-        data.update({
-            'status': 'login success'
-        })
-        return Response(data)
-
-# api for deleeting the cookie -> logs out curr user
+'''
+API for logging out
+'''
 class LogoutView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        response = Response()
-        response.delete_cookie('pseudomongo_jwt')
-        response.data = {
-            'message': 'success'
-        }
-        return response
+        logout(request)
+        return Response(data={'status': 'logout success'})
 
 '''
 User sign up view
@@ -162,38 +155,86 @@ class SignUpView(generic.CreateView):
 '''
 Custom views go here
 '''
+@login_required(login_url='/accounts/login/')
 def battleSystem(request):
+    robot_class = EntityClass.objects.filter(class_name="Robot")
+    auth = request.user
     return render(request, 'PseudomonGo/battle.html', {
-        'animals': Animal.objects.all(),
-        'entities': Entity.objects.all()
+        'player': request.user,
+        'animals': Animal.objects.filter(player=request.user),
+        'robots': Entity.objects.filter(entity_class=robot_class[0]),
+        'moves': Move.objects.all().values(),
+        'items': PlayerInventory.objects.filter(player=request.user)
     })
 
-def AnimalUpload(request):    
-    last_image = AnimalImage.objects.order_by('-pub_date')[:5]
-    # image_file = last_image.image_file if last_image else None
-    form = ImageForm(request.POST or None, request.FILES or None)
-    
+# animal functions
+@login_required(login_url='/accounts/login/')
+def animalUpload(request):
+    player_animals = Animal.objects.filter(player=request.user)
+    form = UploadForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         form.save()
-        
-    context= {
-                'last_animal': last_image,
-                # 'image_file': image_file,
+    context = {
+                'player_animals': player_animals,
                 'form': form,
             }
-      
-    return render(request, 'PseudomonGo/images.html', context)
+    return render(request, 'PseudomonGo/upload.html', context)
+
+@login_required(login_url='/accounts/login/')
+def animalRemove(request):
+    player_animals = Animal.objects.filter(player=request.user)
+    remove = player_animals.filter(animal_name=request.POST.get("animal_name")) # delete all animals of the same name
+    remove.delete()
+        
+    context = {
+                'player_animals': player_animals
+            }
+    return render(request, 'PseudomonGo/remove.html', context)
+
+@login_required(login_url='/accounts/login/')
+def animalView(request):
+    player_animals = Animal.objects.filter(player=request.user)
+    context = {
+                'player_animals': player_animals
+            }
+    return render(request, 'PseudomonGo/view.html', context)
+
+@login_required(login_url='/accounts/login/')
+def animals(request):
+    all_animals = Animal.objects.all()
+    context = {
+                'all_animals': all_animals
+            }
+    return render(request, 'PseudomonGo/animals.html', context)
+
+@login_required(login_url='/accounts/login/')
+def animalReview(request, animal_id):
+    animal = get_object_or_404(Animal, id=animal_id)
+    if request.method == "POST":
+        form = RateAnimalForm(request.POST)
+        if form.is_valid():
+            rating = Rating(animal=animal, rating=form.cleaned_data["rating"])
+            rating.save()
+    else:
+        form = RateAnimalForm()
+    context = {"animal": animal, "form": form}
+    return render(request, "PseudomonGo/review.html", context)
 
 def index(request):
     return render(request, 'PseudomonGo/index.html')
 
+
 # calls map html to load
+@login_required(login_url='/accounts/login/')
 def map(request):
     return render(request, 'PseudomonGo/map.html')
+
 
 # calls map html to load
 def dash(request):
     return render(request, 'PseudomonGo/dash.html')
 
 def profile(request):
-    return render(request, 'PseudomonGo/profile.html')    
+    return render(request, 'PseudomonGo/profile.html',{
+     'player': Player.objects.filter(user=request.user).first
+    })

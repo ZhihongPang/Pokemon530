@@ -1,0 +1,35 @@
+{% block content %}
+{% if user.is_authenticated %}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Animal Upload</title>
+    </head>
+    <body>
+        <h1>Upload Animal</h1>
+        <form enctype="multipart/form-data" method="POST" action="">
+            {% csrf_token %}
+            {{ form.as_p }} <br>
+            <input type="submit" name="Upload" value="Upload"/>     
+        </form>
+        <br><br>
+        <!-- {% if player_animals %}
+        <ul>
+            {% for animal in player_animals %}
+            <b>Animal Name: </b> {{ animal.animal_name }} <br>
+            <b>Animal Description: </b> {{ animal.animal_description }} <br>
+            <b>Location Sighted: </b> {{ animal.animal_location }} <br>
+            
+            <img src="{{ MEDIA_URL }}{{ animal.photo_path }}"> <br>
+            {% endfor %}
+        </ul>
+        {% else %} 
+            <p> No animals in the database. </p>
+        {% endif %}
+        <br><br> -->
+        </p>
+
+    </body>
+</html>
+{% endif %}
+{% endblock %}
