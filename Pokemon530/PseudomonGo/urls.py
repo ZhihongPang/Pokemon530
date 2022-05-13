@@ -63,5 +63,8 @@ urlpatterns = [
     path('animals/<int:animal_id>', views.animalReview, name='animals'),
     path('battle/', views.battleSystem, name='battle'),
     path("map/", views.map, name="map"),
-    path("dash/", views.dash, name="dash")
+    path("dash/", views.dash, name="dash"),
+
+    # profile page
+    path('profile/', views.profile, name="profile"),
 ]
