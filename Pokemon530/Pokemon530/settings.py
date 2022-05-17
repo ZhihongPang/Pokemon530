@@ -166,3 +166,21 @@ EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
 # for uploaded animal images
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+
+'''
+FOR PROD ENV I.E. HEROKU (I hope I don't EVER have to do deployments)
+'''
+if 'DATABASE_URL' in os.environ:
+    import dj_database_url
+    DATABASES = {'default': dj_database_url.config()}
+
+'''
+How to push to Heroku the easiest way I could find:
+
+1. Create heroku app with `heroku create`
+2. In terminal: `heroku git:remote -a <remote_heroku_git_url_here>`
+3. Commit your changes (does not need to be in remote repo unless u have OAuth integration)
+4. `git subtree push --prefix Pokemon530 heroku master` (this is because this project had the app in a sub dir)
+5. Edit your settings to account for: STATIC FILES, POSTGRES (Heroku can't use sqlite unfortunately)
+'''
