@@ -16,7 +16,7 @@ from .serializer import *
 from .models import *
 from .forms import UploadForm, RateAnimalForm
 from .admin import *
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 
 
 '''
@@ -29,7 +29,6 @@ class UserView(viewsets.ModelViewSet):
 class PlayerView(viewsets.ModelViewSet):
     serializer_class = PlayerSerializer
     queryset = Player.objects.all()
-    permission_classes = [IsAuthenticated]
 
 class EntityClassView(viewsets.ModelViewSet):
     serializer_class = EntityClassSerializer
@@ -42,12 +41,10 @@ class EntityView(viewsets.ModelViewSet):
 class AnimalView(viewsets.ModelViewSet):
     serializer_class = AnimalSerializer
     queryset = Animal.objects.all()
-    permission_classes = [IsAuthenticated]
 
 class StatusConditionView(viewsets.ModelViewSet):
     serializer_class = StatusConditionSerializer
     queryset = StatusCondition.objects.all()
-    permission_classes = [IsAuthenticated]
 
 class MoveView(viewsets.ModelViewSet):
     serializer_class = MoveSerializer
@@ -56,12 +53,10 @@ class MoveView(viewsets.ModelViewSet):
 class ItemView(viewsets.ModelViewSet):
     serializer_class = ItemSerializer
     queryset = Item.objects.all()
-    permission_classes = [IsAuthenticated]
 
 class PlayerInventoryView(viewsets.ModelViewSet):
     serializer_class = PlayerInventorySerializer
     queryset = PlayerInventory.objects.all()
-    permission_classes = [IsAuthenticated]
 
 class RentalView(viewsets.ModelViewSet):
     serializer_class = RentalSerializer
@@ -180,6 +175,9 @@ def animalUpload(request):
         player = Player.objects.get(user=request.user)
         player.num_animals += 1
         player.save()
+
+        form.fields['player'] = request.user
+
         form.save()
         return HttpResponseRedirect("/upload")
     context = {
