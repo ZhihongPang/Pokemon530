@@ -33,6 +33,12 @@
         .row-margin-30 {
             margin-top: 3.0em;
         }
+
+        /* to remove underlines in nav bar in this one page :D */
+        a:link { text-decoration: none; }
+        a:visited { text-decoration: none; }
+        a:hover { text-decoration: none; }
+        a:active { text-decoration: none; }
     </style>
 </head>
 
@@ -41,7 +47,7 @@
     <div class="sidebar">
         <nav>
             <a href="/">Pseudomon<span>Go</span></a>
-            <ul>
+            <ul style="padding-left: 0rem">
                 <li><a href="/">Dashboard</a></li>
                 <li class="active"><a href="{% url 'battle' %}">Battle</a></li>
                 <li><a href="{% url 'map' %}">Explore</a></li>

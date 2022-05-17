@@ -1,46 +1,25 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block title %}Home{% endblock %}
 
 {% block content %}
 {% if user.is_authenticated %}
 <div>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="{% url 'home' %}">Welcome, {{ user.username }}</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-              <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
-              <a class="nav-link" href="{% url 'battle' %}">Battle</a>
-              <a class="nav-link" href="{% url 'map' %}">Map</a>
-              <a class="nav-link" href="{% url 'upload' %}">upload</a>
-              <a class="nav-link" href="{% url 'remove' %}">remove</a>
-              <a class="nav-link" href="{% url 'view' %}">view</a>
-              <a class="nav-link" href="{% url 'animals' %}">animals</a>
-
-              <!-- Would love to get these 2 to float right somehow... -->
-              <a class="nav-link text-info" href="{% url 'password_reset' %}">Reset Password</a>
-              <a class="nav-link text-danger" href="{% url 'logout' %}">Log Out</a>
-            </div>
-          </div>
-        </div>
-    </nav>
     <!-- This is where the dashboard will be -->
-    <main id="dashboard" class="text-center">
+    <main id="dashboard">
       <header>
           <div class="logo">Pseudomon<span>Go</span></div>
       </header>
       <div class="nav-btn">Menu</div>
-      <div class="container">
+      <div>
 
           <div class="sidebar">
               <nav>
                   <a href="/">Pseudomon<span>Go</span></a>
-                  <ul>
-                      <li class="active"><a href="#">Dashboard</a></li>
+                  <ul style="padding-left: 0rem">
+                      <li class="active"><a href="/">Dashboard</a></li>
                       <li><a href="{% url 'battle' %}">Battle</a></li>
                       <li><a href="{% url 'map' %}">Explore</a></li>
                       <li><a href="{% url 'view' %}">Inventory</a></li>
@@ -52,29 +31,44 @@
 
           <div class="main-content">
               <h1>Dashboard</h1>
-              <p>Overview of your Pseudomon stats! :)</p>
+              <h4>Welcome {{ user.username }}. This is an overview of your Pseudomon stats! :)</h4>
               <div class="panel-wrapper">
                   <div class="panel-head">
                       News
                   </div>
                   <div class="panel-body">
-                      Any news/updates about PseudomonGo.
+                      PseudomonGo team announcement: The project is now in the prod environment and users will be able to use the site very soon!
+                      You can start rating animals <a href="{% url 'animals' %}">HERE</a>
                   </div>
               </div>
               <div class="panel-wrapper">
                   <div class="panel-head">
                       Your Pseudomon
                   </div>
-                  <div class="panel-pseudomon">
-                      pics of the pokemon go here 
+                  <div class="panel-pseudomon container">
+                    <div class="row">
+                    {% if player_animals %}
+                    {% for animal in player_animals %}
+                    <div class="card" style="width: 18rem;">
+                        <img class="card-img-top" src="{{ MEDIA_URL }}{{ animal.photo_path }}" alt="{{ animal.animal_name }}">
+                        <p>{{ animal.animal_name }}</p>
+                    </div>
+                    
+                    {% endfor %}
+                    {% else %} 
+                    <p> No animals in the database. </p>
+                    {% endif %}
+                    </div>
                   </div>
               </div>
               <div class="panel-wrapper">
                   <div class="panel-head">
-                      need or nah?
+                      The Team Members
                   </div>
                   <div class="panel-body">
-                      do we want one more section? i have no idea what to put here 
+                      Thank You To: Bryan, Ayo, Erin, Zhi, and Sage for working on this project this semester.
+                      And congrats to the seniors in this team for graduating this semester and pulling through for their CMSC 447 class and completing this class and others.
+                      Obligatory <a href="#">Dev Page</a> for these awesome individuals!
                   </div>
               </div>
           </div>
@@ -90,11 +84,11 @@
 </nav>
 <div class="text-center" >
     <p>You are not logged in</p>
-    <a style="color: black" href="{% url 'login' %}">Log In</a>
+    <a href="{% url 'login' %}">Log In</a>
     |
-    <a style="color: black" href="{% url 'signup' %}">Sign Up</a>
+    <a href="{% url 'signup' %}">Sign Up</a>
     |
-    <a style="color: black" href="{% url 'password_reset' %}">Reset Password</a>
+    <a href="{% url 'password_reset' %}">Reset Password</a>
 </div>
 {% endif %}
 {% endblock %}

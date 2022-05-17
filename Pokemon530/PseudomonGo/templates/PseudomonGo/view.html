@@ -8,8 +8,10 @@
         type="text/css"
         href="{% static 'PseudomonGo/css/animal-view.css' %}"
     />
-
-    <h1>All Animals</h1>
+    <div class="text-white">
+      <p><a style="color: #ffffff !important;" href="{% url 'home' %}">Go Back</a></p>
+    </div>
+    <h1>Your Animals</h1>
     {% if player_animals %}
     <section class="cards">
       <ul style="display:inline">

@@ -158,11 +158,14 @@ Custom views go here
 @login_required(login_url='/accounts/login/')
 def battleSystem(request):
     robot_class = EntityClass.objects.filter(class_name="Robot")
+    robots = {}
+    if robot_class:
+        robots = Entity.objects.filter(entity_class=robot_class[0])
     auth = request.user
     return render(request, 'PseudomonGo/battle.html', {
         'player': request.user,
         'animals': Animal.objects.filter(player=request.user),
-        'robots': Entity.objects.filter(entity_class=robot_class[0]),
+        'robots': robots,
         'moves': Move.objects.all().values(),
         'items': PlayerInventory.objects.filter(player=request.user)
     })
@@ -174,6 +177,7 @@ def animalUpload(request):
     form = UploadForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         form.save()
+        return render(request, 'PseudomonGo/upload_success.html')
     context = {
                 'player_animals': player_animals,
                 'form': form,
@@ -220,8 +224,8 @@ def animalReview(request, animal_id):
     context = {"animal": animal, "form": form}
     return render(request, "PseudomonGo/review.html", context)
 
-def index(request):
-    return render(request, 'PseudomonGo/index.html')
+""" def index(request):
+    return render(request, 'PseudomonGo/index.html') """
 
 
 # calls map html to load
@@ -230,11 +234,22 @@ def map(request):
     return render(request, 'PseudomonGo/map.html')
 
 
-# calls map html to load
+""" # calls map html to load
 def dash(request):
-    return render(request, 'PseudomonGo/dash.html')
+    return render(request, 'PseudomonGo/dash.html') """
 
+@login_required(login_url='/accounts/login/')
 def profile(request):
     return render(request, 'PseudomonGo/profile.html',{
      'player': Player.objects.filter(user=request.user).first
+    })
+
+'''
+main homepage
+'''
+@login_required(login_url='/accounts/login/')
+def home(request):
+    player_animals = Animal.objects.filter(player=request.user)
+    return render(request, 'PseudomonGo/home.html', {
+        'player_animals': player_animals
     })

@@ -1,10 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Animal Remove{% endblock %}
+
 {% block content %}
 {% if user.is_authenticated %}
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Animal Remove</title>
-    <body>
+<div class="sidebar">
+    <nav>
+        <a href="/">Pseudomon<span>Go</span></a>
+        <ul style="padding-left: 0rem">
+            <li><a href="/">Dashboard</a></li>
+            <li><a href="{% url 'battle' %}">Battle</a></li>
+            <li><a href="{% url 'map' %}">Explore</a></li>
+            <li><a href="{% url 'view' %}">Inventory</a></li>
+            <li class="active"><a href="{% url 'profile' %}">Profile</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+    </nav>
+</div>
+<div class="container">
         <h1>Remove Animal</h1>
         <form enctype="multipart/form-data" method="POST" action="">
             {% csrf_token %}
@@ -14,8 +27,7 @@
             <input type="text" name="animal_name" value="">
             <input type="submit" name="Remove" value="Confirm"/>     
         </form>
-        </p>
-    </body>
-</html>
+        </p>  
+</div>
 {% endif %}
 {% endblock %}

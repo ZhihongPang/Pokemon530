@@ -18,7 +18,7 @@ body, html {
 	clear: both;
 }
 
-a {
+nav a {
 	color: #fff;
 	text-decoration: none; 
 }
@@ -180,7 +180,7 @@ header .logo span {
 }
 
 .main-content .panel-wrapper .panel-pseudomon {
-	padding: 200px 10px;
+	padding: 100px 10px;
 	font-size: 80%;
 }
 

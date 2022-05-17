@@ -1,5 +1,6 @@
 {% block content %}
 {% if user.is_authenticated %}
+<p><a  href="{% url 'home' %}">Go Back</a></p>
     <h1>{{ animal.animal_name }}</h1>
     <p>Description: {{ animal.animal_description }}</p>
     <p>Species: {{ animal.animal_species }}</p>
