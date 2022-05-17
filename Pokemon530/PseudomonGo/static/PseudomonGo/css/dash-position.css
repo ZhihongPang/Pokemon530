@@ -18,7 +18,7 @@ body, html {
 	clear: both;
 }
 
-a {
+nav a {
 	color: #fff;
 	text-decoration: none; 
 }
@@ -141,13 +141,28 @@ header .logo span {
 }
 
 .sidebar nav ul li:nth-child(6):hover {
-	background-color: #6d6d6d;
+	background-color: #5ab65f;
 }
 
 .sidebar nav ul li:nth-child(6).active {
+	background-color: #5ab65f;
+}
+
+.sidebar nav ul li:nth-child(7):hover {
+	background-color: #4d7ce2;
+}
+
+.sidebar nav ul li:nth-child(7).active {
+	background-color: #4d7ce2;
+}
+
+.sidebar nav ul li:nth-child(8):hover {
 	background-color: #6d6d6d;
 }
 
+.sidebar nav ul li:nth-child(8).active {
+	background-color: #6d6d6d;
+}
 
 .sidebar nav ul li a {
 	color: #D7D5D5;
@@ -180,7 +195,7 @@ header .logo span {
 }
 
 .main-content .panel-wrapper .panel-pseudomon {
-	padding: 200px 10px;
+	padding: 100px 10px;
 	font-size: 80%;
 }
 

@@ -16,7 +16,7 @@ from .serializer import *
 from .models import *
 from .forms import UploadForm, RateAnimalForm
 from .admin import *
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 
 
 '''
@@ -29,7 +29,6 @@ class UserView(viewsets.ModelViewSet):
 class PlayerView(viewsets.ModelViewSet):
     serializer_class = PlayerSerializer
     queryset = Player.objects.all()
-    permission_classes = [IsAuthenticated]
 
 class EntityClassView(viewsets.ModelViewSet):
     serializer_class = EntityClassSerializer
@@ -42,12 +41,10 @@ class EntityView(viewsets.ModelViewSet):
 class AnimalView(viewsets.ModelViewSet):
     serializer_class = AnimalSerializer
     queryset = Animal.objects.all()
-    permission_classes = [IsAuthenticated]
 
 class StatusConditionView(viewsets.ModelViewSet):
     serializer_class = StatusConditionSerializer
     queryset = StatusCondition.objects.all()
-    permission_classes = [IsAuthenticated]
 
 class MoveView(viewsets.ModelViewSet):
     serializer_class = MoveSerializer
@@ -56,12 +53,10 @@ class MoveView(viewsets.ModelViewSet):
 class ItemView(viewsets.ModelViewSet):
     serializer_class = ItemSerializer
     queryset = Item.objects.all()
-    permission_classes = [IsAuthenticated]
 
 class PlayerInventoryView(viewsets.ModelViewSet):
     serializer_class = PlayerInventorySerializer
     queryset = PlayerInventory.objects.all()
-    permission_classes = [IsAuthenticated]
 
 class RentalView(viewsets.ModelViewSet):
     serializer_class = RentalSerializer
@@ -159,11 +154,14 @@ Custom views go here
 @login_required(login_url='/accounts/login/')
 def battleSystem(request):
     robot_class = EntityClass.objects.filter(class_name="Robot")
+    robots = {}
+    if robot_class:
+        robots = Entity.objects.filter(entity_class=robot_class[0])
     auth = request.user
     return render(request, 'PseudomonGo/battle.html', {
         'player': request.user,
         'animals': Animal.objects.filter(player=request.user),
-        'robots': Entity.objects.filter(entity_class=robot_class[0]),
+        'robots': robots,
         'moves': Move.objects.all().values(),
         'items': PlayerInventory.objects.filter(player=request.user)
     })
@@ -177,8 +175,15 @@ def animalUpload(request):
         player = Player.objects.get(user=request.user)
         player.num_animals += 1
         player.save()
-        form.save()
-        return HttpResponseRedirect("/upload")
+
+        # Why does Django want me to make this jank duct tape code
+        # just so I can use a different foreign key for the user field??
+
+        candidate = form.save(commit=False)
+        candidate.player = User.objects.get(username=request.user.username)  # use your own profile here
+        candidate.save()
+
+        return HttpResponseRedirect("/upload-success")
     context = {
                 'player_animals': player_animals,
                 'form': form,
@@ -229,8 +234,8 @@ def animalReview(request, animal_id):
     context = {"animal": animal, "form": form}
     return render(request, "PseudomonGo/review.html", context)
 
-def index(request):
-    return render(request, 'PseudomonGo/index.html')
+""" def index(request):
+    return render(request, 'PseudomonGo/index.html') """
 
 
 # calls map html to load
@@ -239,11 +244,26 @@ def map(request):
     return render(request, 'PseudomonGo/map.html')
 
 
-# calls map html to load
+""" # calls map html to load
 def dash(request):
-    return render(request, 'PseudomonGo/dash.html')
+    return render(request, 'PseudomonGo/dash.html') """
 
+@login_required(login_url='/accounts/login/')
 def profile(request):
     return render(request, 'PseudomonGo/profile.html',{
-     'player': Player.objects.filter(user=request.user).first
+     'player': Player.objects.filter(user=request.user).first()
+    })
+
+'''
+main homepage
+'''
+@login_required(login_url='/accounts/login/')
+def home(request):
+
+    # get four most recent animals owned by player
+    last_four = Animal.objects.filter(player=request.user).order_by('-id')[:4]
+    last_four_in_ascending_order = reversed(last_four)
+
+    return render(request, 'PseudomonGo/home.html', {
+        'player_animals': last_four_in_ascending_order
     })

@@ -46,7 +46,7 @@ urlpatterns = [
     path('api/logout/', views.LogoutView.as_view(), name='logout'),
     
     # home page where the dashboard will be
-    path('', TemplateView.as_view(template_name='PseudomonGo/home.html'), name='home'),
+    path('', views.home, name='home'),
     
     # for signups, login, logout, and password resets
     path("accounts/", include("django.contrib.auth.urls")),
@@ -60,6 +60,8 @@ urlpatterns = [
     path('animals/<int:animal_id>', views.animalReview, name='animals'),
     path('battle/', views.battleSystem, name='battle'),
     path("map/", views.map, name="map"),
+    path("upload-success/", TemplateView.as_view(template_name='PseudomonGo/upload_success.html'), name='upload_success'),
+    
 
     # profile page
     path('profile/', views.profile, name="profile"),
