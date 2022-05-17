@@ -238,7 +238,6 @@ const robot = async () => {
 const calc_damage = (move, attacker, target) =>{
     let base_dmg = move['base_damage'];
     let level = attacker.level;
-    console.log("Attack Stage: "+ stages.get(attacker.atk_stage))
     let atk = attacker.attack * stages.get(attacker.atk_stage);
     let def = target.defense * stages.get(target.def_stage);
     let random = (Math.floor(Math.random() * (100 - 85 + 1) + 85))/100
@@ -248,8 +247,20 @@ const calc_damage = (move, attacker, target) =>{
     return Math.ceil(damage);
 }
 
-
 const edit_stats = (move, target) =>{
+    if(target.atk_stage == 6 || target.atk_stage == -6){
+        update_log(target.name + "'s Attack cannot be changed any further");
+        return;
+    }
+    if (target.def_stage == 6 || target.def_stage == -6) {
+        update_log(target.name + "'s Defense cannot be changed any further");
+        return;
+    }
+    if (target.spd_stage == 6 || target.spd_stage == -6) {
+        update_log(target.name + "'s Speed cannot be changed any further");
+        return;
+    }
+
     target.atk_stage += move['atk_stage'];
     target.def_stage += move['def_stage'];
     target.spd_stage += move['spd_stage'];
