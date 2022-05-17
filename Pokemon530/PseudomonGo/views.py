@@ -183,7 +183,7 @@ def animalUpload(request):
         candidate.player = User.objects.get(username=request.user.username)  # use your own profile here
         candidate.save()
 
-        return HttpResponseRedirect("/upload")
+        return HttpResponseRedirect("/upload-success")
     context = {
                 'player_animals': player_animals,
                 'form': form,
@@ -259,7 +259,11 @@ main homepage
 '''
 @login_required(login_url='/accounts/login/')
 def home(request):
-    player_animals = Animal.objects.filter(player=request.user)
+
+    # get four most recent animals owned by player
+    last_four = Animal.objects.filter(player=request.user).order_by('-id')[:4]
+    last_four_in_ascending_order = reversed(last_four)
+
     return render(request, 'PseudomonGo/home.html', {
-        'player_animals': player_animals
+        'player_animals': last_four_in_ascending_order
     })

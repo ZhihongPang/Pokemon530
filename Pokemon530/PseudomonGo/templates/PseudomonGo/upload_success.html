@@ -7,8 +7,12 @@
 {% block content %}
 {% if user.is_authenticated %}
 
-<p>animal upload successful</p>
+<div class="text-center container">
+    <div class="mt-5 alert alert-success" role="alert">
+        Animal upload successful. Check your new animal in your <a href="{% url 'view' %}" class="alert-link">views</a>
+    </div>
 <p><a href="{% url 'home' %}">return to home</a></p>
+</div>
 
 {% endif %}
 {% endblock %}

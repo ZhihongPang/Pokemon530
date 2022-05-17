@@ -6,6 +6,23 @@
 
 {% block content %}
 {% if user.is_authenticated %}
+<style>
+
+    /* What are these styles for: for the Pseudomon section to show boxes hover */
+
+    .box {
+        transition: box-shadow .3s;
+        border-radius:10px;
+        border: 1px solid #ccc;
+        background: #fff;
+        float: left;
+        
+        }
+    .box:hover {
+        box-shadow: 0 0 11px rgba(33,33,33,.2);
+        background: #f7f3e9;
+        }
+</style>
 <div>
     <!-- This is where the dashboard will be -->
     <main id="dashboard">
@@ -45,13 +62,13 @@
               </div>
               <div class="panel-wrapper">
                   <div class="panel-head">
-                      Your Pseudomon
+                      Your Most Recent Pseudomon
                   </div>
-                  <div class="panel-pseudomon container">
-                    <div class="row">
+                  <div class="panel-pseudomon container-fluid p-5">
+                    <div class="row text-center">
                     {% if player_animals %}
                     {% for animal in player_animals %}
-                    <div class="card" style="width: 18rem;">
+                    <div class="card box m-1" style="width: 18rem;">
                         <img class="card-img-top" src="{{ MEDIA_URL }}{{ animal.photo_path }}" alt="{{ animal.animal_name }}">
                         <p>{{ animal.animal_name }}</p>
                     </div>
