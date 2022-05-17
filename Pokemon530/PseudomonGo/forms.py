@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, get_user_model, password_validatio
 from django.core.exceptions import ValidationError
 import unicodedata
 from django.utils.translation import gettext_lazy as _
+from .models import *
 
 # forms for upload/removal of animals
 class UploadForm(forms.ModelForm):
@@ -91,9 +92,16 @@ class UserCreationForm(forms.ModelForm):
             except ValidationError as error:
                 self.add_error("password2", error)
 
+    def create_player_instance(self, user):
+        player = Player(user=user)
+        player.save()
+
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
         if commit:
             user.save()
+        
+        # creates a basic player for every user registered
+        self.create_player_instance(user)
         return user

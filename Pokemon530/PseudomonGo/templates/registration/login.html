@@ -9,12 +9,20 @@
       <a class="navbar-brand mb-0 h1">LOGIN</a>
   </div>
 </nav>
-<div class="text-center mt-5">
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Log In</button>
-  </form>
-  <p><a href="{% url 'password_reset' %}">Reset Password</a></p>
-</div>
+<div class="container mt-5">
+  <div class="card">
+    <div class="card-body">
+      <h2 class="mb-5">Sign in</h2>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Log In</button>
+      </form>
+      <div class="mt-5">
+      <p><a href="{% url 'password_reset' %}">Forgot Password</a></p>
+      <p>First Time? <a href="{% url 'signup' %}">Register here</a></p>
+      </div>
+    </div>
+  </div>
+</div>  
 {% endblock %}
