@@ -64,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'Pokemon530.urls'
@@ -175,12 +176,14 @@ if 'DATABASE_URL' in os.environ:
     import dj_database_url
     DATABASES = {'default': dj_database_url.config()}
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 '''
 How to push to Heroku the easiest way I could find:
 
 1. Create heroku app with `heroku create`
 2. In terminal: `heroku git:remote -a <remote_heroku_git_url_here>`
 3. Commit your changes (does not need to be in remote repo unless u have OAuth integration)
-4. `git subtree push --prefix Pokemon530 heroku master` (this is because this project had the app in a sub dir)
+4. `git subtree push --prefix <your_subdirectory_here> heroku master` (this is because this project had the app in a sub dir)
 5. Edit your settings to account for: STATIC FILES, POSTGRES (Heroku can't use sqlite unfortunately)
 '''
