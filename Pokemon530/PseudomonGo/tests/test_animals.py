@@ -67,10 +67,10 @@ class AnimalModelTests(TestCase):
     def test_animal_upload_stats(self):
         self.animal.save()
         animal_from_database = Animal.objects.last()
-        self.assertEqual(animal_from_database.health, 100, "default health is 100")
-        self.assertEqual(animal_from_database.attack, 1, "default attack is 1")
-        self.assertEqual(animal_from_database.defense, 1, "default defense is 1")
-        self.assertEqual(animal_from_database.speed, 1, "default speed is 1")
+        self.assertEqual(animal_from_database.health, 13, "default health is 100")
+        self.assertEqual(animal_from_database.attack, 6, "default attack is 1")
+        self.assertEqual(animal_from_database.defense, 6, "default defense is 1")
+        self.assertEqual(animal_from_database.speed, 6, "default speed is 1")
         self.assertEqual(animal_from_database.level, 1, "default level is 1")
         self.assertEqual(animal_from_database.experience, 0, "default experience is 0")
     
