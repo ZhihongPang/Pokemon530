@@ -1,0 +1,53 @@
+{% load static %}
+{% if user.is_authenticated %}
+<link rel="stylesheet" type="text/css" href="{% static 'PseudomonGo/css/dash-position.css' %}" />
+
+<header>
+    <div class="logo">Pseudomon<span>Go</span></div>
+</header>
+<div class="nav-btn">Menu</div>
+<div class="container">
+
+    <div class="sidebar">
+        <nav>
+            <a href="/">Pseudomon<span>Go</span></a>
+            <ul>
+                <li class="active"><a href="/">Dashboard</a></li>
+                <li><a href="{% url 'battle' %}">Battle</a></li>
+                <li><a href="#">Inventory</a></li>
+                <li><a href="{% url 'map' %}">Explore</a></li>
+                <li><a href="{% url 'profile' %}">Profile</a></li>
+                <li><a href="#">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <h1>Dashboard</h1>
+        <p>Overview of your Pseudomon stats! :)</p>
+        <div class="panel-wrapper">
+            <div class="panel-head">
+                News
+            </div>
+            <div class="panel-body">
+                Any news/updates about PseudomonGo.
+            </div>
+        </div>
+        <div class="panel-wrapper">
+            <div class="panel-head">
+                Your Pseudomon
+            </div>
+            <div class="panel-pseudomon">
+                pics of the pokemon go here 
+            </div>
+        </div>
+        <div class="panel-wrapper">
+            <div class="panel-head">
+                need or nah?
+            </div>
+            <div class="panel-body">
+                do we want one more section? i have no idea what to put here 
+            </div>
+        </div>
+    </div>
+</div>

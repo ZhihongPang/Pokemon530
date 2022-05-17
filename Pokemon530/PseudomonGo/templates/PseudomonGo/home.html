@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div>
+
+    <!-- This is where the dashboard will be -->
+    <main id="dashboard" class="text-center">
+      <header>
+          <div class="logo">Pseudomon<span>Go</span></div>
+      </header>
+      <div class="nav-btn">Menu</div>
+      <div class="container">
+
+          <div class="sidebar">
+              <nav>
+                  <a href="/">Pseudomon<span>Go</span></a>
+                  <ul>
+                      <li class="active"><a href="#">Dashboard</a></li>
+                      <li><a href="{% url 'battle' %}">Battle</a></li>
+                      <li><a href="{% url 'map' %}">Explore</a></li>
+                      <li><a href="{% url 'view' %}">Animals</a></li>
+                      <li><a href="{% url 'upload' %}">Upload</a></li>
+                      <li><a href="{% url 'remove' %}">Delete</a></li>
+                      <li><a href="{% url 'profile' %}">Profile</a></li>
+                      <li><a href="{% url 'logout' %}">Logout</a></li>
+                  </ul>
+              </nav>
+          </div>
+
+          <div class="main-content">
+              <h1>Dashboard</h1>
+              <p>Overview of your Pseudomon stats! :)</p>
+              <div class="panel-wrapper">
+                  <div class="panel-head">
+                      News
+                  </div>
+                  <div class="panel-body">
+                      Any news/updates about PseudomonGo.
+                  </div>
+              </div>
+              <div class="panel-wrapper">
+                  <div class="panel-head">
+                      Your Pseudomon
+                  </div>
+                  <div class="panel-pseudomon">
+                      pics of the pokemon go here 
+                  </div>
+              </div>
+              <div class="panel-wrapper">
+                  <div class="panel-head">
+                      need or nah?
+                  </div>
+                  <div class="panel-body">
+                      do we want one more section? i have no idea what to put here 
+                  </div>
+              </div>
+          </div>
+      </div>  
+    </main> 
+</div>
+{% else %}
+<nav class="navbar navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">PseudomonGo</a>
+      
+    </div>
+</nav>
+<div class="text-center" >
+    <p>You are not logged in</p>
+    <a style="color: black" href="{% url 'login' %}">Log In</a>
+    |
+    <a style="color: black" href="{% url 'signup' %}">Sign Up</a>
+    |
+    <a style="color: black" href="{% url 'password_reset' %}">Reset Password</a>
+</div>
+{% endif %}
+{% endblock %}

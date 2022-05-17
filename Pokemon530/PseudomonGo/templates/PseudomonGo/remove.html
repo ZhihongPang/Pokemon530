@@ -1,0 +1,64 @@
+{% block content %}
+    {% if user.is_authenticated %}
+        {% load static %}
+        {% load crispy_forms_tags %}
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Animal Remove</title>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+                  integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+                  crossorigin="anonymous">
+            <!-- JavaScript Bundle with Popper -->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+                    integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+                    crossorigin="anonymous"></script>
+        </head>
+        <body>
+        <div class="container">
+            <div class="row justify-content-center">
+                <a href="/" class="btn btn-danger" onclick="battle(5)" id="run" role=button">Back</a>
+                <div class="col-8">
+                    <h1 class="mt-2">Remove Animal</h1>
+                    <hr class="mt-0 mb-4">
+                    <form enctype="multipart/form-data" method="POST" action="">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <h2>Careful, all animals with the same name will be deleted!</h2>
+                        <label for="animal_name">Enter Animal Name to Remove:</label>
+                        <input type="text" name="animal_name" value="">
+                        <button type="submit" class="btn btn-success">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% if player_animals %}
+            <ul>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        {% for animal in player_animals %}
+                            <div class="card" style="width: 18rem;">
+                                <img src="{{ MEDIA_URL }}{{ animal.photo_path }}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ animal.animal_name }}</h5>
+                                    <p class="card-text">{{ animal.animal_description }} </p>
+                                </div>
+                                ,
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><b>Location Sighted: </b> {{ animal.animal_location }}
+                                        <br>
+                                    </li>
+                                </ul>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </ul>
+        {% else %}
+            <p> No animals in the database. </p>
+        {% endif %}
+        </p>
+        </body>
+        </html>
+    {% endif %}
+{% endblock %}

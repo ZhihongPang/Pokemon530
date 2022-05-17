@@ -1,0 +1,53 @@
+<!doctype html>
+{% load static %}
+
+<link
+rel="stylesheet"
+type="text/css"
+href="{% static 'PseudomonGo/css/bootstrap.css' %}"
+/>
+
+<html>
+    <head>
+        <title>Our Funky HTML Page</title>
+        <meta name="description" content="Our first page">
+        <meta name="keywords" content="html tutorial template">
+    </head>
+    <body>
+        <div class="card" style="width: 18rem;">
+            <img src="{% static 'PseudomonGo/img/Tigers.jpg' %}" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Look at these tigers go!!!</h5>
+                <p class="card-text">An example card! You can put any text on here, like options for a menu!</p>
+                <a href="#" class="btn btn-primary">This button goes nowhere but it can go somewhere :)</a>
+            </div>
+        </div>
+        <h1>PseudomonGo Content goes here</h1>
+        <img src="https://media.giphy.com/media/6sBo35faOCdVe/giphy.gif" alt="funny animation GIF">
+        <p>Notable links</p>
+        <ul>
+            <li><a href="http://127.0.0.1:8000/api">/api</a> (Index of APIs)</li> 
+            <li><a href="http://127.0.0.1:8000/api/register">/api/register</a> (API for user registration)</li>
+            <li><a href="http://127.0.0.1:8000/api/login">/api/login</a> (API for user login)</li>
+            <li><a href="http://127.0.0.1:8000/api/authenticated-user">/api/authenticated-user</a> (API for user authentication)</li>
+            <li><a href="http://127.0.0.1:8000/api/logout">/api/logout</a>  (API for user logging out)</li>
+            <li><a href="http://127.0.0.1:8000/upload">/upload</a> (Upload an Animal here)</li>
+            <li><a href="http://127.0.0.1:8000/remove">/remove</a> (Remove an Animal here)</li>
+            <li><a href="http://127.0.0.1:8000/review">/review</a> (Review Animals here)</li>
+            <li><a href="http://127.0.0.1:8000/map">/map</a> (displays the map)</li>
+            <li><a href="http://127.0.0.1:8000/battle">/battle</a> (Battle system demo as per story)</li>
+            <li><a href="http://127.0.0.1:8000/dash">/dash</a> (dash to help play game)</li>
+        </ul>
+        <p>
+            -- Remember to check out requirements.txt to see if you have all pip dependencies. If adding new templates or pages, head over to PseudomonGo/urls.py to config the app to route to the correct .html
+        </p>
+        <p>
+            Possibly helpful links for the project:
+            <a href="https://www.delftstack.com/howto/python/python-create-requirements.txt/#install-dependencies-from-requirements-txt-using-pip-package-installer">[Installing pip modules via requirements.txt]</a>
+            <a href="https://inloop.github.io/sqlite-viewer/">[View what is currently in your SQLite DB]</a>
+            <a href="https://docs.djangoproject.com/en/4.0/">[Official Django docs]</a>
+            <a href="https://www.digitalocean.com/community/tutorials/how-to-use-the-javascript-fetch-api-to-get-data">[Interacting with APIs with JS]</a>
+        </p>
+        <p>P.S. feel free to edit this page -Sage</p>
+    </body>
+</html>
