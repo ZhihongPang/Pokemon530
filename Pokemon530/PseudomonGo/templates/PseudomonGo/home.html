@@ -5,29 +5,7 @@
 {% block content %}
 {% if user.is_authenticated %}
 <div>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="{% url 'home' %}">Welcome, {{ user.username }}</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-              <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
-              <a class="nav-link" href="{% url 'battle' %}">Battle</a>
-              <a class="nav-link" href="{% url 'map' %}">Map</a>
-              <a class="nav-link" href="{% url 'upload' %}">upload</a>
-              <a class="nav-link" href="{% url 'remove' %}">remove</a>
-              <a class="nav-link" href="{% url 'view' %}">view</a>
-              <a class="nav-link" href="{% url 'animals' %}">animals</a>
 
-              <!-- Would love to get these 2 to float right somehow... -->
-              <a class="nav-link text-info" href="{% url 'password_reset' %}">Reset Password</a>
-              <a class="nav-link text-danger" href="{% url 'logout' %}">Log Out</a>
-            </div>
-          </div>
-        </div>
-    </nav>
     <!-- This is where the dashboard will be -->
     <main id="dashboard" class="text-center">
       <header>
@@ -43,7 +21,9 @@
                       <li class="active"><a href="#">Dashboard</a></li>
                       <li><a href="{% url 'battle' %}">Battle</a></li>
                       <li><a href="{% url 'map' %}">Explore</a></li>
-                      <li><a href="{% url 'view' %}">Inventory</a></li>
+                      <li><a href="{% url 'view' %}">Animals</a></li>
+                      <li><a href="{% url 'upload' %}">Upload</a></li>
+                      <li><a href="{% url 'remove' %}">Delete</a></li>
                       <li><a href="{% url 'profile' %}">Profile</a></li>
                       <li><a href="{% url 'logout' %}">Logout</a></li>
                   </ul>
