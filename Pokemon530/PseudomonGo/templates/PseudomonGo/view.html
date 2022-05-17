@@ -1,40 +1,92 @@
-{% block content %}
-{% if user.is_authenticated %}
-<main id=app>
-    <title>Animals</title>
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="apple-touch-icon" href="icon.png">
+    <!-- Place favicon.ico in the root directory -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+          crossorigin="anonymous">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+            crossorigin="anonymous"></script>
     {% load static %}
     <link
-        rel="stylesheet"
-        type="text/css"
-        href="{% static 'PseudomonGo/css/animal-view.css' %}"
+            rel="stylesheet"
+            type="text/css"
+            href="{% static 'PseudomonGo/css/animal-view.css' %}"
     />
-    <div class="text-white">
-      <p><a style="color: #ffffff !important;" href="{% url 'home' %}">Go Back</a></p>
-    </div>
-    <h1>Your Animals</h1>
-    {% if player_animals %}
-    <section class="cards">
-      <ul style="display:inline">
-          {% for animal in player_animals %}
-          <div class="card animal animated">
-            <b>Animal Name: </b> {{ animal.animal_name }} <br>
-            <b>Animal Description: </b> {{ animal.animal_description }} <br>
-            <b>Location Sighted: </b> {{ animal.animal_location }} <br>
-            <b>Rating: </b> {{ animal.avg_rating }} <br>
-            
-            <img src="{{ MEDIA_URL }}{{ animal.photo_path }}"> <br>
-          </div>
-          
-          {% endfor %}
-      </ul>
-    </section>
-    <style class="hover"></style>
-      {% else %} 
-          <p> No animals in the database. </p>
-      {% endif %}
-    
-</main>
-<script src="{% static 'PseudomonGo/js/animal-view.js' %}"></script>
-{% endif %}
+
+    <meta name="theme-color" content="#fafafa">
+</head>
+
+<body>
+
+<!-- Add your site or application content here -->
+{% block content %}
+    {% if user.is_authenticated %}
+        <main id=app>
+            <h1 class="bd-title mb-0" id="content">{{ player.username }}'s Animals</h1>
+            {% if player_animals %}
+                <section class="cards">
+                    <ul style="display:inline">
+                        <div class="container">
+                            <div class="row">
+                                {% for animal in player_animals %}
+                                    <div class="card animal animated" style="width: 18rem; height: 30rem;">
+                                        <b>Animal Name: </b> {{ animal.animal_name }} <br>
+                                        <b>Animal Description: </b> {{ animal.animal_description }} <br>
+                                        <b>Location Sighted: </b> {{ animal.animal_location }} <br>
+                                        <b>Rating: </b> {{ animal.avg_rating }} <br>
+
+                                        <img src="{{ MEDIA_URL }}{{ animal.photo_path }}"> <br>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </ul>
+                </section>
+                <style class="hover"></style>
+            {% else %}
+                <p> No animals in the database. </p>
+            {% endif %}
+
+        </main>
+        <script src="{% static 'PseudomonGo/js/animal-view.js' %}"></script>
+    {% endif %}
 {% endblock %}
- 
+
+<script src="js/vendor/modernizr-3.11.2.min.js"></script>
+<script src="js/plugins.js"></script>
+<script src="js/main.js"></script>
+
+<!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
+<script>
+    window.ga = function () {
+        ga.q.push(arguments)
+    };
+    ga.q = [];
+    ga.l = +new Date;
+    ga('create', 'UA-XXXXX-Y', 'auto');
+    ga('set', 'anonymizeIp', true);
+    ga('set', 'transport', 'beacon');
+    ga('send', 'pageview')
+</script>
+<script src="https://www.google-analytics.com/analytics.js" async></script>
+</body>
+
+</html>
+

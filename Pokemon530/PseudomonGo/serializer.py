@@ -28,6 +28,10 @@ class PlayerSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AnimalSerializer(serializers.ModelSerializer):
+    health = serializers.ReadOnlyField()
+    attack = serializers.ReadOnlyField()
+    defense = serializers.ReadOnlyField()
+    speed = serializers.ReadOnlyField()
     class Meta:
         model = Animal
         fields = '__all__'

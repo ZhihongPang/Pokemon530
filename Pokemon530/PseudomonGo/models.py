@@ -4,6 +4,9 @@ import datetime
 from django.utils import timezone
 from django.db.models import Avg
 from django_google_maps import fields as map_fields
+from PIL import Image
+
+import math
 
 
 # Create your models here.
@@ -50,10 +53,27 @@ class Animal(models.Model):
 
     animal_species = models.ForeignKey(Entity, on_delete=models.CASCADE, default=1)
     animal_class = models.ForeignKey(EntityClass, on_delete=models.CASCADE, default=1)
-    health = models.IntegerField(default=100)
-    attack = models.IntegerField(default=1)
-    defense = models.IntegerField(default=1)
-    speed = models.IntegerField(default=1)
+
+    @property
+    def health(self):
+        hp = math.floor(0.01*(2*self.animal_species.base_hp)*self.level) + self.level + 10
+        return hp
+
+    @property
+    def attack(self):
+        attack = math.floor(0.01 * (2 * self.animal_species.base_atk) * self.level) + 5
+        return attack
+
+    @property
+    def defense(self):
+        defense = math.floor(0.01 * (2 * self.animal_species.base_atk) * self.level) + 5
+        return defense
+
+    @property
+    def speed(self):
+        speed = math.floor(0.01 * (2 * self.animal_species.base_atk) * self.level) + 5
+        return speed
+
     level = models.IntegerField(default=1)
     experience = models.IntegerField(default=0)
     active = models.BooleanField(default=True)
@@ -67,9 +87,6 @@ class Animal(models.Model):
     move4 = models.ForeignKey("Move", on_delete=models.CASCADE, default=None, null=True,
                               related_name='move4', blank=True)
 
-
-    # the default string of the animal is the animal name + its image path
-
     def __str__(self):
         return self.animal_name
 
@@ -79,12 +96,16 @@ class Animal(models.Model):
     # helper functions
     def has_animal_name(self):
         return self.animal_name + ": " + str(self.photo_path)
+
     def has_animal_location(self):
         return self.animal_location
+
     def has_animal_species(self):
         return self.animal_species
+
     def has_animal_class(self):
         return self.animal_class
+
     def has_animal_description(self):
         return self.animal_description
     
@@ -209,6 +230,7 @@ class PlayerInventory(models.Model):
 class Rental(models.Model):
     address = map_fields.AddressField(max_length=200)
     geolocation = map_fields.GeoLocationField(max_length=100)
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

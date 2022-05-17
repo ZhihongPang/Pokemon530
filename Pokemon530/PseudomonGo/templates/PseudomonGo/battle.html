@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Loads sidebar -->
-    <link rel="stylesheet" type="text/css" href="{% static 'PseudomonGo/css/dash-position.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'PseudomonGo/css/dash-position.css' %}"/>
 
     <!-- Bootstrap CSS -->
     <link
@@ -43,30 +43,15 @@
 </head>
 
 <body>
-    <!--Navigation bar-->
-    <div class="sidebar">
-        <nav>
-            <a href="/">Pseudomon<span>Go</span></a>
-            <ul style="padding-left: 0rem">
-                <li><a href="/">Dashboard</a></li>
-                <li class="active"><a href="{% url 'battle' %}">Battle</a></li>
-                <li><a href="{% url 'map' %}">Explore</a></li>
-                <li><a href="{% url 'view' %}">Inventory</a></li>
-                <li><a href="{% url 'profile' %}">Profile</a></li>
-                <li><a href="{% url 'logout' %}">Logout</a></li>
-            </ul>
-        </nav>
-    </div>
-    <!--end of Navigation bar-->
-</body>
+<!--Navigation bar-->
+<!--end of Navigation bar-->
 
-<body>
-    
 <h1 class="text-center mb-5">Battle Demo: Player {{ player }}</h1>
 <div class="d-flex justify-content-center align-items-start">
     <div class="p-2">
         <label for="animal">Pick</label>
-        <select class="form-select" disabled id="animal-dropdown" onchange="switch_animal();" aria-label="Animal Select">
+        <select class="form-select" disabled id="animal-dropdown" onchange="switch_animal();"
+                aria-label="Animal Select">
             {% for a in animals %}
                 <option value="{{ a.id }}">{{ a.animal_name }}</option>
             {% endfor %}
@@ -87,14 +72,18 @@
                 </div>
                 <p class="card-text">Health: <span id="animal-hp" class="text-success"></span></p>
                 <div class="container">
-                    <div class="d-flex align-items-start flex-column entire row" style="height: 200px;">
-                        <button type="button" disabled id="move1" onclick="battle(0)" class="btn btn-success btn-lg mb-auto p-2"><span
+                    <div class="d-flex align-items-start flex-column entire row" style="height: 250px;">
+                        <button type="button" disabled id="move1" onclick="battle(0)"
+                                class="btn btn-success btn-lg mb-auto p-2"><span
                                 id="move1" class="text"></span></button>
-                        <button type="button" disabled id="move2" onclick="battle(1)" class="btn btn-success btn-lg mb-auto p-2"><span
+                        <button type="button" disabled id="move2" onclick="battle(1)"
+                                class="btn btn-success btn-lg mb-auto p-2"><span
                                 id="move2" class="text"></span></button>
-                        <button type="button" disabled id="move3" onclick="battle(2)" class="btn btn-success btn-lg mb-auto p-2"><span
+                        <button type="button" disabled id="move3" onclick="battle(2)"
+                                class="btn btn-success btn-lg mb-auto p-2"><span
                                 id="move3" class="text"></span></button>
-                        <button type="button" disabled id="move4" onclick="battle(3)" class="btn btn-success btn-lg mb-auto p-2"><span
+                        <button type="button" disabled id="move4" onclick="battle(3)"
+                                class="btn btn-success btn-lg mb-auto p-2"><span
                                 id="move4" class="text"></span></button>
                     </div>
                     <div class="d-flex justify-content-center flex-row">
@@ -109,7 +98,7 @@
                                 {% endfor %}
                             </ul>
                         </div>
-                        <button type="button" disabled id="run" onclick="battle(5)" class="btn btn-danger">Run</button>
+                        <a href="/" class="btn btn-danger" onclick = "battle(5)" id="run" role=button">Run</a>
                     </div>
                 </div>
             </div>
@@ -152,15 +141,7 @@
     <h2>Status: <span id="status" class="text-danger">just started</span></h2>
     <h2 id="winner" class="text-success"></h2>
 </div>
-<div class="text-center mt-5 ml-5 mr-5 border border-warning">
-    <p>
-        💡How it works💡: Battle demo is getting JavaScript from /static/ and getting animal data via our
-        (api/animals/pk) every time the option changes in the dropdown
-        -- same with robots (api/robots/pk).
-    </p>
-    <p><strong>TODO</strong> After match ends, HTTP PUT needs to occur to send data to app server about player/animal
-        stats post Robot match. Also implement <strong>DEFEND</strong>, etc...</p>
-</div>
+
 {{ moves.dict|json_script:"moves" }}
 <script src="{% static 'PseudomonGo/battle.js' %}"></script>
 </body>
