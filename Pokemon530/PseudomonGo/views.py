@@ -176,9 +176,13 @@ def animalUpload(request):
         player.num_animals += 1
         player.save()
 
-        form.fields['player'] = request.user
+        # Why does Django want me to make this jank duct tape code
+        # just so I can use a different foreign key for the user field??
 
-        form.save()
+        candidate = form.save(commit=False)
+        candidate.player = User.objects.get(username=request.user.username)  # use your own profile here
+        candidate.save()
+
         return HttpResponseRedirect("/upload")
     context = {
                 'player_animals': player_animals,
