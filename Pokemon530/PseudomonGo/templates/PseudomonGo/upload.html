@@ -18,6 +18,7 @@
         <body>
         <div class="container">
             <div class="row justify-content-center">
+                <a href="/" class="btn btn-danger" onclick="battle(5)" id="run" role=button">Back</a>
                 <div class="col-8">
                     <h1 class="mt-2">Upload Animal</h1>
                     <hr class="mt-0 mb-4">
@@ -29,34 +30,6 @@
                 </div>
             </div>
         </div>
-        <br><br>
-        {% if player_animals %}
-        <ul>
-            <div class="container">
-                <div class="row justify-content-center">
-                    <h1 class="mt-2">Your Animals</h1>
-                    {% for animal in player_animals %}
-                        <div class="card" style="width: 18rem;">
-                            <img src="{{ MEDIA_URL }}{{ animal.photo_path }}" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ animal.animal_name }}</h5>
-                                <p class="card-text">{{ animal.animal_description }} </p>
-                            </div>,
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item"><b>Location Sighted: </b> {{ animal.animal_location }} <br>
-                                </li>
-                            </ul>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </ul>
-        {% else %} 
-            <p> No animals in the database. </p>
-        {% endif %}
-        <br><br>
-        </p>
-
         </body>
         </html>
     {% endif %}

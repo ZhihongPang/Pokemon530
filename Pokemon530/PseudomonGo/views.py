@@ -174,6 +174,9 @@ def animalUpload(request):
     player_animals = Animal.objects.filter(player=request.user)
     form = UploadForm(request.POST or None, request.FILES or None)
     if form.is_valid():
+        player = Player.objects.get(user=request.user)
+        player.num_animals += 1
+        player.save()
         form.save()
         return HttpResponseRedirect("/upload")
     context = {
@@ -185,9 +188,12 @@ def animalUpload(request):
 @login_required(login_url='/accounts/login/')
 def animalRemove(request):
     player_animals = Animal.objects.filter(player=request.user)
-    remove = player_animals.filter(animal_name=request.POST.get("animal_name")) # delete all animals of the same name
+    remove = player_animals.filter(animal_name=request.POST.get("animal_name"))  # delete all animals of the same name
+    if remove:
+        player = Player.objects.get(user=request.user)
+        player.num_animals -= 1
+        player.save()
     remove.delete()
-        
     context = {
                 'player_animals': player_animals
             }
@@ -197,8 +203,9 @@ def animalRemove(request):
 def animalView(request):
     player_animals = Animal.objects.filter(player=request.user)
     context = {
-                'player_animals': player_animals
-            }
+        'player': request.user,
+        'player_animals': player_animals
+    }
     return render(request, 'PseudomonGo/view.html', context)
 
 @login_required(login_url='/accounts/login/')
