@@ -15,7 +15,9 @@
                     <li><a href="/">Dashboard</a></li>
                     <li><a href="{% url 'battle' %}">Battle</a></li>
                     <li><a href="{% url 'map' %}">Explore</a></li>
-                    <li><a href="{% url 'view' %}">Inventory</a></li>
+                    <li><a href="{% url 'view' %}">Animals</a></li>
+                    <li><a href="{% url 'upload' %}">Upload</a></li>
+                    <li><a href="{% url 'remove' %}">Delete</a></li>
                     <li class="active"><a href="{% url 'profile' %}">Profile</a></li>
                     <li><a href="{% url 'logout' %}">Logout</a></li>
                 </ul>
@@ -68,9 +70,7 @@
                     </table>
                 </div>
                 <div class="col-md-4">
-                    <a class="nav-link text-warning" href="{% url 'password_reset' %}">Reset Password</a>
-                    <a class="nav-link" href="{% url 'upload' %}">Upload an animal</a>
-                    <a class="nav-link" href="{% url 'remove' %}">Remove an animal</a>
+                    <a class="nav-link" href="{% url 'password_reset' %}">Reset Password</a>
                 </div>
             </div>
         </div>

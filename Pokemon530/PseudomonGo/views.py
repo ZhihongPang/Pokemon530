@@ -249,7 +249,7 @@ def dash(request):
 @login_required(login_url='/accounts/login/')
 def profile(request):
     return render(request, 'PseudomonGo/profile.html',{
-     'player': Player.objects.filter(user=request.user).first
+     'player': Player.objects.filter(user=request.user).first()
     })
 
 '''
