@@ -13,6 +13,11 @@ class UploadForm(forms.ModelForm):
         fields = ["animal_name", "animal_description", "animal_location",
                   "photo_path", "animal_species", "animal_class"]
 
+class RemoveForm(forms.ModelForm):
+    class Meta:
+        model = Animal
+        fields = ["animal_name"]
+
 class RateAnimalForm(forms.Form):
     rating = forms.TypedChoiceField(
         choices=(("5", "⭐⭐⭐⭐⭐"), ("4", "⭐⭐⭐⭐"), ("3", "⭐⭐⭐"), ("2", "⭐⭐"), ("1", "⭐")),
