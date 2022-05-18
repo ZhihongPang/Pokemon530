@@ -183,6 +183,14 @@ def animalUpload(request):
 
         candidate = form.save(commit=False)
         candidate.player = User.objects.get(username=request.user.username)  # use your own profile here
+
+        moves = Move.objects.all()
+        if moves and len(moves) >= 4:
+            candidate.move1 = Move.objects.all()[0]
+            candidate.move2 = Move.objects.all()[1]
+            candidate.move3 = Move.objects.all()[2]
+            candidate.move4 = Move.objects.all()[3]
+
         candidate.save()
 
         return HttpResponseRedirect("/upload-success")
