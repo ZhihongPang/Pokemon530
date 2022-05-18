@@ -150,7 +150,7 @@ const render_animal = () =>{
 const render_robot = () => {
     document.getElementById("robot-picked").innerHTML = robots[0].name;
     document.getElementById("robot-hp").innerHTML = robots[0].max_hp; //starting hp
-    document.getElementById("robot-photo").src = "/media/images/" + robots[0].name + ".webp";
+    document.getElementById("robot-photo").src = "/media/images/" + robots[0].name + ".png";
 
     update_health(robots[0], ROBOT);
 }
@@ -209,6 +209,17 @@ const switch_animal = async () => {
     battle(6);
 };
 
+const calc_robot_stats = (hp, atk, def, spd, lvl) => {
+    let bot_hp = Math.floor(0.01 * (2 * hp) * lvl) + lvl + 10;
+    let bot_atk = Math.floor(0.01 * (2 * atk) * lvl) + 5;
+    let bot_def = Math.floor(0.01 * (2 * def) * lvl) + 5;
+    let bot_spd = Math.floor(0.01 * (2 * spd) * lvl) + 5;
+    robots[0].max_hp = bot_hp;
+    robots[0].curr_hp = bot_hp;
+    robots[0].attack = bot_atk;
+    robots[0].defense = bot_def;
+    robots[0].speed = bot_spd;
+}
 
 const robot = async () => {
     let r_dd = document.getElementById("robot-dropdown");
@@ -220,11 +231,8 @@ const robot = async () => {
         robot_data = data;
         robots[0] = new Entity();
         robots[0].name = robot_data['entity_name'];
-        robots[0].max_hp = robot_data['base_hp'];
-        robots[0].curr_hp = robot_data['base_hp'];
-        robots[0].attack = robot_data['base_atk'];
-        robots[0].defense = robot_data['base_def'];
-        robots[0].speed = robot_data['base_spd'];
+        calc_robot_stats(robot_data['base_hp'], robot_data['base_atk'], robot_data['base_def'], robot_data['base_spd'],
+            animals[current_animal].level);
         robots[0].level = animals[current_animal].level;
         robots[0].photo_path = robot_data['photo_path'];
         render_robot();
