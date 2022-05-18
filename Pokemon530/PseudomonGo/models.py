@@ -6,6 +6,7 @@ from django.db.models import Avg
 from django_google_maps import fields as map_fields
 from PIL import Image
 
+import os
 import math
 
 
@@ -53,6 +54,9 @@ class Animal(models.Model):
 
     animal_species = models.ForeignKey(Entity, on_delete=models.CASCADE, default=1)
     animal_class = models.ForeignKey(EntityClass, on_delete=models.CASCADE, default=1)
+
+    def filename(self):
+        return os.path.basename(self.photo_path.name)
 
     @property
     def health(self):

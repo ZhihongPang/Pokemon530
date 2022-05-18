@@ -39,6 +39,7 @@
 {% block content %}
     {% if user.is_authenticated %}
         <main id=app>
+            <a href="/" class="btn btn-danger" role=button">Back</a>
             <h1 class="bd-title mb-0" id="content">{{ player.username }}'s Animals</h1>
             {% if player_animals %}
                 <section class="cards">

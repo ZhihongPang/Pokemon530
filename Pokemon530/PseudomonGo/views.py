@@ -11,12 +11,14 @@ from django.views import generic
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
+from django.conf import settings
 
 from .serializer import *
 from .models import *
-from .forms import UploadForm, RateAnimalForm
+from .forms import UploadForm, RateAnimalForm, RemoveForm
 from .admin import *
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+import os
 
 
 '''
@@ -193,12 +195,14 @@ def animalUpload(request):
 @login_required(login_url='/accounts/login/')
 def animalRemove(request):
     player_animals = Animal.objects.filter(player=request.user)
-    remove = player_animals.filter(animal_name=request.POST.get("animal_name"))  # delete all animals of the same name
-    if remove:
+    form = RemoveForm(request.POST or None)
+    if form.is_valid():
+        deleted_animal = player_animals.get(animal_name=form.cleaned_data['animal_name'])
+        os.remove(os.path.join(settings.MEDIA_ROOT, 'images/'+deleted_animal.filename()))
         player = Player.objects.get(user=request.user)
         player.num_animals -= 1
         player.save()
-    remove.delete()
+        deleted_animal.delete()
     context = {
                 'player_animals': player_animals
             }
