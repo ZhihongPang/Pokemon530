@@ -143,6 +143,7 @@ const render_animal = () =>{
     document.getElementById("animal-picked").innerHTML = animals[current_animal].name;
     document.getElementById("animal-hp").innerHTML = animals[current_animal].max_hp; //starting hp
     document.getElementById("animal-photo").src = animals[current_animal].photo_path;
+    document.getElementById("animal-lvl").innerHTML = animals[current_animal].level;
 
     update_health(animals[current_animal], ANIMAL);
 }
@@ -159,6 +160,7 @@ const render_moves = (move_number) =>{
     if(!animals[current_animal].move_data[move_number]['move_name']){
         animals[current_animal].move_data[move_number]['move_name'] = 'None';
     }
+    console.log("Move Name: ");
     switch(move_number){
         case 0:
             document.getElementById("move1").innerHTML = animals[current_animal].move_data[0]['move_name'];
@@ -180,7 +182,6 @@ const get_animal_moves = (move_ids, index) => {
         const a_url = "/api/moves/" + move_ids[i] + "/?format=json";
         fetch_data(a_url).then(data => {
             animals[index].move_data[i] = data;
-            console.log(animals[index].move_data[i]);
             render_moves(i);
         });
     }
@@ -190,7 +191,6 @@ const get_robot_moves = () => {
     let i = 0;
     while(robot_data['moves'][i]){
         robots[0].move_data[i] = robot_data['moves'][i];
-        console.log(robots[0].move_data[i]);
         i++;
     }
 }
@@ -205,6 +205,9 @@ const switch_animal = async () => {
     current_animal = picked;
     await sleep(1000);
     update_log("Go " + animals[current_animal].name + "!");
+    for (let i = 0; i < 4; i++) {
+        render_moves(i);
+    }
     render_animal();
     battle(6);
 };
@@ -296,7 +299,7 @@ const dictate_target = (move, attacker, target, attacker_type) => {
     if(move['target'] == 'O'){
         make_move(move, attacker, target, attacker_type);
     } else if (move['target'] == 'S') {
-        make_move(move, attacker, attacker, attacker_type);
+        make_move(move, attacker, attacker, attacker_type^1);
     }
 }
 
@@ -309,16 +312,21 @@ const make_move = (move, attacker, target, attacker_type) =>{
         update_log("But it missed");
         return;
     }
+    let damage = calc_damage(move, attacker, target);
+    target.curr_hp -= damage;
+    if(target.curr_hp < 0){
+        target.curr_hp = 0;
+    }
+    update_health(target, attacker_type ^ 1);
     if (move['base_damage'] > 0) {
-        let damage = calc_damage(move, attacker, target);
-        target.curr_hp -= damage;
-        if(target.curr_hp < 0){
-            target.curr_hp = 0;
-        }
-        update_health(target, attacker_type ^ 1);
         update_log(target.name + " took " + damage + " damage!");
     }
-    edit_stats(move, target);
+    else if (move['base_damage'] < 0) {
+        update_log(target.name + " healed " + (-1)*damage + " damage!");
+    }
+    if(move['move_type'] == "S"){
+        edit_stats(move, target);
+    }
 }
 
 const update_log = (message) => {
@@ -352,7 +360,8 @@ const check_win = (attacker, target) => {
 *  5 - Run
 */
 const battle = async(action) => {
-    let robot_action = Math.floor(Math.random() * robots[0].move_data.length);
+    let robot_action = Math.floor(Math.random() * (robots[0].move_data.length))
+    console.log("Robot Move: "+robot_action);
     console.log(action);
     switch_off();
     let animal_spd = animals[current_animal].speed * stages.get(animals[current_animal].spd_stage);
