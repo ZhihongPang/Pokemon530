@@ -1,19 +1,73 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="apple-touch-icon" href="icon.png">
+    <!-- Place favicon.ico in the root directory -->
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/main.css">
+
+    <meta name="theme-color" content="#fafafa">
+</head>
+
+<body>
+<!-- Add your site or application content here -->
+
 {% block content %}
-{% if user.is_authenticated %}
-<p><a  href="{% url 'home' %}">Go Back</a></p>
-    <h1>{{ animal.animal_name }}</h1>
-    <p>Description: {{ animal.animal_description }}</p>
-    <p>Species: {{ animal.animal_species }}</p>
-    <p>Class: {{ animal.animal_class }}</p>
-    <p><img src="{{ MEDIA_URL }}{{ animal.photo_path }}"></p>
-    <p>Avg rating: {{ animal.avg_rating }}</p>
-    <hr>
-    <h2>Rate this animal:</h2>
-    <form method="POST" action="{% url 'animals' animal.id %}">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit" value="Rate">
-    </form>
-{% endif %}
+    {% if user.is_authenticated %}
+        <div class="container-fluid">
+            <a href="/" class="btn btn-danger" role=button">Back</a>
+            <h1>{{ animal.animal_name }}</h1>
+            <p>Description: {{ animal.animal_description }}</p>
+            <p>Species: {{ animal.animal_species }}</p>
+            <p>Class: {{ animal.animal_class }}</p>
+            <p><img src="{{ MEDIA_URL }}{{ animal.photo_path }}"></p>
+            <p>Avg rating: {{ animal.avg_rating }}</p>
+            <hr>
+            <h2>Rate this animal:</h2>
+            <form method="POST" action="{% url 'animals' animal.id %}">
+                {% csrf_token %}
+                {{ form }}
+                <input type="submit" value="Rate">
+            </form>
+        </div>
+    {% endif %}
 {% endblock %}
-© 2022 GitHub, Inc.
+<script src="js/vendor/modernizr-3.11.2.min.js"></script>
+<script src="js/plugins.js"></script>
+<script src="js/main.js"></script>
+
+<!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
+<script>
+    window.ga = function () {
+        ga.q.push(arguments)
+    };
+    ga.q = [];
+    ga.l = +new Date;
+    ga('create', 'UA-XXXXX-Y', 'auto');
+    ga('set', 'anonymizeIp', true);
+    ga('set', 'transport', 'beacon');
+    ga('send', 'pageview')
+</script>
+<script src="https://www.google-analytics.com/analytics.js" async></script>
+</body>
+
+</html>

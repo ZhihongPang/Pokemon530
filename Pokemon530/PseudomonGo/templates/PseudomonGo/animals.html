@@ -1,36 +1,90 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="apple-touch-icon" href="icon.png">
+    <!-- Place favicon.ico in the root directory -->
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/main.css">
+
+    <meta name="theme-color" content="#fafafa">
+</head>
+
+<body>
+
+<!-- Add your site or application content here -->
 {% extends 'base.html' %}
-
 {% block title %}All Animals {% endblock %}
-
 {% block content %}
-{% if user.is_authenticated %}
-<div class="sidebar">
-    <nav>
-        <a href="/">Pseudomon<span>Go</span></a>
-        <ul style="padding-left: 0rem">
-            <li><a href="/">Dashboard</a></li>
-            <li><a href="{% url 'battle' %}">Battle</a></li>
-            <li><a href="{% url 'map' %}">Explore</a></li>
-            <li><a href="{% url 'view' %}">Animals</a></li>
-            <li><a href="{% url 'upload' %}">Upload</a></li>
-            <li><a href="{% url 'remove' %}">Delete</a></li>
-            <li><a href="{% url 'profile' %}">Profile</a></li>
-            <li><a href="{% url 'logout' %}">Logout</a></li>
-        </ul>
-    </nav>
-</div>
-
-<div class="container">
-    {% if all_animals %}
-    <ul>
-        {% for animal in all_animals %}
-        <li><a class="text-secondary" href="{% url 'animals' animal.id %}">{{ animal.animal_name }}: </a><img src="{{ MEDIA_URL }}{{ animal.photo_path }}"></li>
-        {% endfor %}
-    </ul>
-    {% else %} 
-        <p> No animals in the database. </p>
-        <a class="nav-link" href="{% url 'upload' %}">Upload an animal</a>
+    {% if user.is_authenticated %}
+        <div class="text-center">
+            <a href="/" class="btn btn-danger" role=button">Back</a>
+        </div>
+        <h1 class="text-center mb-5">Choose an Animal</h1>
+        <div class="container-fluid">
+            {% if all_animals %}
+                <ul>
+                    <div class="container">
+                        <div class="row justify-content-md-center">
+                            {% for animal in all_animals %}
+                                <div class="card" style="width: 18rem;">
+                                    <img src="{{ MEDIA_URL }}{{ animal.photo_path }}" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ animal.animal_name }}</h5>
+                                        <p class="card-text">{{ animal.animal_description }}</p>
+                                        <a href="{% url 'animals' animal.id %}" class="btn btn-primary">Review</a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </ul>
+            {% else %}
+                <div class="container-fluid">
+                    <div class="text-center">
+                        <p> No animals in the database. </p>
+                        <a href="{% url 'upload' %}" class="btn btn-primary" role=button">Upload an animal</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
     {% endif %}
-</div>
-{% endif %}
 {% endblock %}
+<script src="js/vendor/modernizr-3.11.2.min.js"></script>
+<script src="js/plugins.js"></script>
+<script src="js/main.js"></script>
+
+<!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
+<script>
+    window.ga = function () {
+        ga.q.push(arguments)
+    };
+    ga.q = [];
+    ga.l = +new Date;
+    ga('create', 'UA-XXXXX-Y', 'auto');
+    ga('set', 'anonymizeIp', true);
+    ga('set', 'transport', 'beacon');
+    ga('send', 'pageview')
+</script>
+<script src="https://www.google-analytics.com/analytics.js" async></script>
+</body>
+
+</html>

@@ -46,7 +46,7 @@
 <!--Navigation bar-->
 <!--end of Navigation bar-->
 
-<h1 class="text-center mb-5">Battle Demo: Player {{ player }}</h1>
+<h1 class="text-center mb-5">Battle: Player {{ player }}</h1>
 <div class="d-flex justify-content-center align-items-start">
     <div class="p-2">
         <label for="animal">Pick</label>
@@ -70,7 +70,10 @@
                          aria-valuemax="100"
                          style="width: 100%"></div>
                 </div>
-                <p class="card-text">Health: <span id="animal-hp" class="text-success"></span></p>
+                <div class="column">
+                    <p class="card-text">Health: <span id="animal-hp" class="text-success"></span> | LvL: <span
+                            id="animal-lvl" class="text-success"></span></p>
+                </div>
                 <div class="container">
                     <div class="d-flex align-items-start flex-column entire row" style="height: 250px;">
                         <button type="button" disabled id="move1" onclick="battle(0)"
@@ -92,7 +95,7 @@
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                 Item
                             </button>
-                            <ul class="dropdown-menu" aria-labelledby="move1">
+                            <ul class="dropdown-menu" aria-labelledby="items">
                                 {% for i in items %}
                                     <li><a class="dropdown-item" href="#">{{ i.item.item_name }}</a></li>
                                 {% endfor %}
